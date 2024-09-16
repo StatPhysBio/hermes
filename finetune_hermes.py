@@ -34,7 +34,7 @@ if __name__ == '__main__':
         print(f'Finetuning model {i+1}/{len(single_model_dirs)}: {model_dir_name}')
 
         input_model_dir = os.path.join(hermes_models_dir, model_dir_name)
-        output_model_dir = os.path.join(this_file_dir, 'trained_models', finetuning_params['model_version'] + f"_finetuned_with_{finetuning_params['finetuning_version']}", model_dir_name)
+        output_model_dir = os.path.join(this_file_dir, 'trained_models', finetuning_params['model_version'] + f"_{finetuning_params['finetuning_version']}", model_dir_name)
 
         finetune_single_model(input_model_dir, output_model_dir, finetuning_params)
 

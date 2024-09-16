@@ -40,7 +40,9 @@ if __name__ == '__main__':
                         help='Root to store outputs.')
     
     parser.add_argument('-hf', '--hermes_folder', type=str, default=THIS_FOLDER,
-                        help='Path to the Hermes folder, containing the run_hcnn_on_pdbfiles.py script.')
+                        help='Path to the Hermes folder, containing the run_hermes_on_pdbfiles.py script.')
+    
+    parser.add_argument('-bs', '--batch_size', type=int, default=512)
     
     parser.add_argument('-A',  '--account', type=str, default='stf')
     parser.add_argument('-P',  '--partition', type=str, default='compute')
@@ -96,14 +98,14 @@ if __name__ == '__main__':
                 dumpfiles_folder=args.dumpfiles_folder
             )
 
-            slurm_script += f'\npython {args.hermes_folder}/run_hcnn_on_pdbfiles.py \
+            slurm_script += f'\npython {args.hermes_folder}/run_hermes_on_pdbfiles.py \
                                     -m {old_hcnn_name} \
                                     -pd {args.folder_with_pdbs}\
                                     -pn {file_with_pdbids_and_chains} \
                                     -o {output_filepath} \
                                     -r probas logprobas logits \
                                     -v 1 \
-                                    -bs 512'
+                                    -bs {args.batch_size}'
             
             slurm_script_filepath = 'job.slurm'
             with open(slurm_script_filepath, 'w') as f:
