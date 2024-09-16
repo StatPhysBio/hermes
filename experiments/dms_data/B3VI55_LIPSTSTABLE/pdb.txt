@@ -1,0 +1,56 @@
+Important Note: The colabfold generated structure is high accuracy, but may not have the structural characteristics that this stable variant has. PDB ids AND alphafold unsatisfactory, because this DMS file is the study of a LGK mutant created in this study "LGK.1 (L140I, S142A, A373C)" to be more temperature stable. Thus, its sequence differs slightly (by 3 amino acid swaps) to all the LGK models' sequences.
+
+Justin R. Klesmith, John-Paul Bacik, Ryszard Michalczyk, and Timothy A. Whitehead ACS Synthetic Biology 2015 4 (11), 1235-1243 DOI: 10.1021/acssynbio.5b00131
+"Analysis of the native crystal structure of LGK", LGK is levoglucosan kinase, paper links to http://dx.doi.org/10.1074/jbc.M115.674614. THe protein was studied with the goal of increasing the effectiveness of it as a catalyst. The study creates specifically thermostable versions of the protein, the best of which is LGK.3, with a PDB id of 4ZXZ. I would not classify those structures as the protein used in the DMS experiments, because the DMS study references a different study where the crystal structure of native LGK was analyzed, and that study performs crystallization of LGK in "magnesium crystallization buffer", and other buffers for the other complexes, but nothing with just the LGK. The PDB ids referenced by the DMS study are the same as those in the structure study.
+
+DMS Seq:
+MPIATSTGDNVLDFTVLGLNSGTSMDGIDCALCHFYQKTPDAPMEFELLEYGEVPLAQPIKQRVMRMILEDTTSPSELSEVNVILGEHFADAVRQFAAERNVDLSTIDAIASHGQTIWLLSMPEEGQVKSALTMAEGAIIAARTGITSITDFRISDQAAGRQGAPLIAFFDALLLHHPTKLRACQNIGGIANVCFIPPDVDGRRTDEYYDFDTGPGNVFIDAVVRHFTNGEQEYDKDGAMGKRGKVDQELVDDFLKMPYFQLDPPKTTGREVFRDTLAHDLIRRAEAKGLSPDDIVATTTRITAQAIVDHYRRYAPSQEIDEIFMCGGGAYNPNIVEFIQQSYPNTKIMMLDEAGVPAGAKEAITFAWQGMECLVGRSIPVPTRVETRQHYVLGKVSPGLNYRSVMKKGMAFGGDAQQLPWVSEMIVKKKGKVITNNWA
+Alignment Seq:
+MPIATSTGDNVLDFTVLGLNSGTSMDGIDCALCHFYQKTPDAPMEFELLEYGEVPLAQPIKQRVMRMILEDTTSPSELSEVNVILGEHFADAVRQFAAERNVDLSTIDAIASHGQTIWLLSMPEEGQVKSALTMAEGAIIAARTGITSITDFRISDQAAGRQGAPLIAFFDALLLHHPTKLRACQNIGGIANVCFIPPDVDGRRTDEYYDFDTGPGNVFIDAVVRHFTNGEQEYDKDGAMGKRGKVDQELVDDFLKMPYFQLDPPKTTGREVFRDTLAHDLIRRAEAKGLSPDDIVATTTRITAQAIVDHYRRYAPSQEIDEIFMCGGGAYNPNIVEFIQQSYPNTKIMMLDEAGVPAGAKEAITFAWQGMECLVGRSIPVPTRVETRQHYVLGKVSPGLNYRSVMKKGMAFGGDAQQLPWVSEMIVKKKGKVITNNWA
+
+DMS Seq Range: 1-439, Alignment Seq Range: 1-439
+Same sequence
+100.0% identity in 439 residues overlap; Score: 2293.0; Gap frequency: 0.0%
+
+-4ZXZ: Crystal structure of a highly thermal stable but inactive levoglucosan kinase.
+Method: X-RAY DIFFRACTION 2.2 Å
+Seq Length: 447
+Alignment Sequence Identity: 92%, E-Value: 8.753e-269, Region: 1-438
+DMS Sequence Identity: 92%, E-Value: 8.753e-269, Region: 1-438
+More mismatches than other structures, also is inactive.
+
+
+-4ZFV: Entity 1, Lipomyces starkeyi levoglucosan kinase bound to ADP and magnesium.
+Method: X-RAY DIFFRACTION 1.5 Å
+Seq Length: 447
+Alignment Sequence Identity: 99%, E-Value: 2.751e-296, Region: 1-439
+DMS Sequence Identity: 99%, E-Value: 2.751e-296, Region: 1-439
+A couple mismatched amino acids, extra end of sequence amino acids, The second PDB id included in the provided pdb file
+
+-4YH5: Entity 1, Lipomyces starkeyi levoglucosan kinase bound to ADP and Manganese
+Method: X-RAY DIFFRACTION 1.9 Å
+Seq Length: 447
+Alignment Sequence Identity: 99%, E-Value: 2.751e-296, Region: 1-439
+DMS Sequence Identity: 99%, E-Value: 2.751e-296, Region: 1-439
+A couple mismatched amino acids, extra end of sequence amino acids, The first PDB id included in the provided pdb file
+
+-5BVC: Entity 1, Crystal structure of Lipomyces starkeyi levoglucosan kinase bound to ADP, magnesium and levoglucosan in an alternate orientation
+Method: X-RAY DIFFRACTION 2 Å
+Seq Length: 447
+Alignment Sequence Identity: 99%, E-Value: 2.751e-296, Region: 1-439
+DMS Sequence Identity: 99%, E-Value: 2.751e-296, Region: 1-439
+A couple mismatched amino acids, extra end of sequence amino acids, also included in the provided pdb file
+
++DMS Seq EBI Query:
+Levoglucosan kinase OS=Lipomyces starkeyi OX=29829 PE=1 SV=1
+Swiss Prot ID: B3VI55
+Length: 439
+Identities: 99.3
+Positives: 99.8
+
++Alignment Seq EBI Query:
+Levoglucosan kinase OS=Lipomyces starkeyi OX=29829 PE=1 SV=1
+Swiss Prot ID: B3VI55
+Length: 439
+Identities: 99.3
+Positives: 99.8

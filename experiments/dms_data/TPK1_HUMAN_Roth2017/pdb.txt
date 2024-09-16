@@ -1,0 +1,34 @@
+Important Note: Correct alpha fold, pdb is correct but slightly longer sequence.
+
+Weile, J. et al. A framework for exhaustively mapping functional missense variants. Mol. Syst. Biol. 13, 957 (2017). https://doi.org/10.15252/msb.20177908
+THe paper references the pdb id 3S4Y.
+
+DMS Seq:
+MEHAFTPLEPLLSTGNLKYCLVILNQPLDNYFRHLWNKALLRACADGGANRLYDITEGERESFLPEFINGDFDSIRPEVREYYATKGCELISTPDQDHTDFTKCLKMLQKKIEEKDLKVDVIVTLGGLAGRFDQIMASVNTLFQATHITPFPIIIIQEESLIYLLQPGKHRLHVDTGMEGDWCGLIPVGQPCMQVTTTGLKWNLTNDVLAFGTLVSTSNTYDGSGVVTVETDHPLLWTMAIKS
+Alignment Seq:
+MEHAFTPLEPLLSTGNLKYCLVILNQPLDNYFRHLWNKALLRACADGGANRLYDITEGERESFLPEFINGDFDSIRPEVREYYATKGCELISTPDQDHTDFTKCLKMLQKKIEEKDLKVDVIVTLGGLAGRFDQIMASVNTLFQATHITPFPIIIIQEESLIYLLQPGKHRLHVDTGMEGDWCGLIPVGQPCMQVTTTGLKWNLTNDVLAFGTLVSTSNTYDGSGVVTVETDHPLLWTMAIKS
+
+DMS Seq Range: 1-243, Alignment Seq Range: 1-243
+Same sequence
+100.0% identity in 243 residues overlap; Score: 1295.0; Gap frequency: 0.0%
+
+-3S4Y: Entity 1, Crystal structure of human thiamin pyrophosphokinase 1
+Method: X-RAY DIFFRACTION 1.8 Å
+Seq Length: 247
+Alignment Sequence Identity: 100%, E-Value: 4.615e-155, Region: 19-247
+DMS Sequence Identity: 100%, E-Value: 4.615e-155, Region: 19-247
+Extra amino acids on the end relative to alignment sequence, missing amino acids at beginning, uses the right organism relative to other possible pdb ids
+
++DMS Seq EBI Query:
+Thiamin pyrophosphokinase 1 OS=Homo sapiens OX=9606 GN=TPK1 PE=1 SV=1
+Swiss Prot ID: Q9H3S4
+Length: 243
+Identities: 100
+Positives: 100
+
++Alignment Seq EBI Query:
+Thiamin pyrophosphokinase 1 OS=Homo sapiens OX=9606 GN=TPK1 PE=1 SV=1
+Swiss Prot ID: Q9H3S4
+Length: 243
+Identities: 100
+Positives: 100

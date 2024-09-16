@@ -1,0 +1,48 @@
+Important Note: Used predicted alpha fold structure because protein is from a virus. Alpha fold structure created using the DMS sequence, which is not the full length of the protein. We are looking for the HIV Env protein, (group M subtype/clade A). The alphafold database and the pdb have no suitable structures. The PDB 6B0N is the closest, but it is too short, and has gaps and swaps relative to the DMS and alignment.
+
+Hugh K Haddox, Adam S Dingens, Sarah K Hilton, Julie Overbaugh, Jesse D Bloom (2018) Mapping mutational effects along the evolutionary landscape of HIV envelope eLife 7:e34420 https://doi.org/10.7554/eLife.34420
+The initial paper only analyzed the closed prefusion. BG505 env has been studied extensively, referred to as a BG505 SOSIP.664 gp140. 
+
+DMS Seq:
+AENLWVTVYYGVPVWKDAETTLFCASDAKAYETEKHNVWATHACVPTDPNPQEIHLENVTEEFNMWKNNMVEQMHTDIISLWDQSLKPCVKLTPLCVTLQCTNVTNNITDDMRGELKNCSFNMTTELRDKKQKVYSLFYRLDVVQINENQGNRSNNSNKEYRLINCNTSAITQACPKVSFEPIPIHYCAPAGFAILKCKDKKFNGTGPCPSVSTVQCTHGIKPVVSTQLLLNGSLAEEEVMIRSENITNNAKNILVQFNTPVQINCTRPNNNTRKSIRIGPGQAFYATGDIIGDIRQAHCNVSKATWNETLGKVVKQLRKHFGNNTIIRFANSSGGDLEVTTHSFNCGGEFFYCNTSGLFNSTWISNTSVQGSNSTGSNDSITLPCRIKQIINMWQRIGQAMYAPPIQGVIRCVSNITGLILTRDGGSTNSTTETFRPGGGDMRDNWRSELYKYKVVKIEPLGVAPTRAKRRVVGREKRAVGIGAVFLGFLGAAGSTMGAASMTLTVQARNLLSGIVQQQSNLLRAIEAQQHLLKLTVWGIKQLQARVLAVERYLRDQQLLGIWGCSGKLICTTNVPWNSSWSNRNLSEIWDNMTWLQWDKEISNYTQIIYGLLEESQNQQEKNEQDLLALDKWASLWNWFDISNWLWYIKIFIMIVGGLIGLRIVFAVL
+Alignment Seq:
+IICSAAENLWVTVYYGVPVWKDAETTLFCASDAKAYETEKHNVWATHACVPTDPNPQEIHLENVTEEFNMWKNNMVEQMHTDIISLWDQSLKPCVKLTPLCVTLQCTNVTNNITDDMRGELKNCSFNMTTELRDKKQKVYSLFYRLDVVQINENQGNRSNNSNKEYRLINCNTSAITQACPKVSFEPIPIHYCAPAGFAILKCKDKKFNGTGPCPSVSTVQCTHGIKPVVSTQLLLNGSLAEEEVMIRSENITNNAKNILVQFNTPVQINCTRPNNNTRKSIRIGPGQAFYATGDIIGDIRQAHCNVSKATWNETLGKVVKQLRKHFGNNTIIRFANSSGGDLEVTTHSFNCGGEFFYCNTSGLFNSTWISNTSVQGSNSTGSNDSITLPCRIKQIINMWQRIGQAMYAPPIQGVIRCVSNITGLILTRDGGSTNSTTETFRPGGGDMRDNWRSELYKYKVVKIEPLGVAPTRAKRRVVGREKRAVGIGAVFLGFLGAAGSTMGAASMTLTVQARNLLSGIVQQQSNLLRAIEAQQHLLKLTVWGIKQLQARVLAVERYLRDQQLLGIWGCSGKLICTTNVPWNSSWSNRNLSEIWDNMTWLQWDKEISNYTQIIYGLLEESQNQQEKNEQDLLALDKWASLWNWFDISNWLWYIKIFIMIVGGLIGLRIVFAVLSVIHRVRQGYS
+
+DMS Seq Range: 30-699, Alignment Seq Range: 25-710
+Difference only on front and end of sequence
+100.0% identity in 670 residues overlap; Score: 3580.0; Gap frequency: 0.0%
+
+-6B0N: Entity 3, Crystal structure of the cleavage-independent prefusion HIV Env glycoprotein trimer of the clade A BG505 isolate (NFL construct) in complex with Fabs PGT122 and PGV19 at 3.39 A
+Method: X-RAY DIFFRACTION 3.4 Å
+Seq Length: 638
+Alignment Sequence Identity: Sequence Identity: 98%, E-Value: 0, Region: 1-638
+DMS Sequence Identity: 98%, E-Value: 0, Region: 1-638
+Some swaps, unmatched in middle and end, somewhat low precision method
+
+-4ZMJ: Crystal Structure of Ligand-Free BG505 SOSIP.664 HIV-1 Env Trimer
+Method: X-RAY DIFFRACTION 3.31 Å
+Seq Length: 481
+Alignment Sequence Identity: 99%, E-Value: 0, Region: 1-479
+DMS Sequence Identity: 99%, E-Value: 0, Region: 1-479
+Too short, likely because missing the ligands
+
+-7T0O: Entity 1, cryoEM reconstruction of the HIV gp140 in complex with the extracellular domains of CD4 and the adnectin domain of Combinectin. The gp140 and CD4 coordinates from entry 6EDU were rigid body fitted to the EM map along withe the crystal structure of CD4+adnectin
+Method: ELECTRON MICROSCOPY 8.7 Å
+Seq Length: 650
+Alignment Sequence Identity: 99%, E-Value: 0, Region: 1-634
+DMS Sequence Identity: 99%, E-Value: 0, Region: 1-634
+Some swaps, unmatched gaps in middle and end, low precision method
+
++DMS Seq EBI Query:
+Envelope glycoprotein gp160 OS=Human immunodeficiency virus type 1 group M subtype A (isolate Z321) OX=11692 GN=env PE=3 SV=1
+Swiss Prot ID: P05881
+Length: 856
+Identities: 80.8
+Positives: 93.2
+
++Alignment Seq EBI Query:
+Envelope glycoprotein gp160 OS=Human immunodeficiency virus type 1 group M subtype A (isolate Z321) OX=11692 GN=env PE=3 SV=1
+Swiss Prot ID: P05881
+Length: 856
+Identities: 80.9
+Positives: 93.4

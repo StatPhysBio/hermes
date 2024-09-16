@@ -1,0 +1,56 @@
+Important Note: The alpha fold structure and the pdb structure differ because the alpha fold is the entire protein, and the pdb is only the domain.
+
+McLaughlin Jr, R., Poelwijk, F., Raman, A. et al. The spatial architecture of protein function and adaptation. Nature 491, 138–142 (2012). https://doi.org/10.1038/nature11500
+The paper references the pdb 1BE9, which may be the proper representation because what the paper is measuring is the ability for the protein to bond to a ligand, and it is sequenced after bonding. 
+5HDY also seems to be a good representation of the protein, and it has the right amino-acid sequence, and a different ligant (small molecule, not peptide).
+
+DMS Seq:
+PRRIVIHRGSTGLGFNIVGGEDGEGIFISFILAGGPADLSGELRKGDQILSVNGVDLRNASHEQAAIALKNAGQTVTIIAQYK
+Alignment Seq:
+DLLGEEDIPREPRRIVIHRGSTGLGFNIVGGEDGEGIFISFILAGGPADLSGELRKGDQILSVNGVDLRNASHEQAAIALKNAGQTVTIIAQYKPEEYSRF
+
+DMS Seq Range: 311-393, Alignment Seq Range: 300-400
+DMS missing starting and ending amino acids
+100.0% identity in 83 residues overlap; Score: 416.0; Gap frequency: 0.0%
+
+-1TQ3: Entity 1, Higher resolution crystal structure of the third PDZ domain of post synaptic PSD-95 protein
+Method: X-RAY DIFFRACTION 1.89 Å
+Seq Length: 119
+Alignment Sequence Identity: 98%, E-Value: 1.078e-60, Region: 4-104
+DMS Sequence Identity: 100%, E-Value: 3.61e-48, Region: 15-97
+Matches DMS, a few mutations at start relative to alignment
+
+-1BE9: THE THIRD PDZ DOMAIN FROM THE SYNAPTIC PROTEIN PSD-95 IN COMPLEX WITH A C-TERMINAL PEPTIDE DERIVED FROM CRIPT.
+Method: X-RAY DIFFRACTION 1.82 Å
+Seq Length: 119
+Alignment Sequence Identity: 97%, E-Value: 1.49e-60, Region: 4-104
+DMS Sequence Identity: 99%, E-Value: 4.991e-48, Region: 15-97
+A few mutations relative to both DMS and alignment
+
+-5HDY: Entity 1, The third PDZ domain from the synaptic protein PSD-95
+Method: X-RAY DIFFRACTION 1.801 Å
+Seq Length: 119
+Alignment Sequence Identity: 98%, E-Value: 1.078e-60, Region: 4-104
+DMS Sequence Identity: 100%, E-Value: 3.61e-48, Region: 15-97
+Matches DMS, a few mutations at start relative to alignment
+
+-2XKX: Entity 1, Single particle analysis of PSD-95 in negative stain
+Method: ELECTRON MICROSCOPY 22.9 Å, SOLUTION SCATTERING
+Seq Length: 721
+Alignment Sequence Identity: 100%, E-Value: 8.575e-62, Region: 297-397
+DMS Sequence Identity: 100%, E-Value: 3.602e-48, Region: 308-390
+Matches in the proper region
+
++DMS Seq EBI Query:
+Disks large homolog 4 OS=Rattus norvegicus OX=10116 GN=Dlg4 PE=1 SV=1
+Swiss Prot ID: P31016
+Length: 724
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+Disks large homolog 4 OS=Rattus norvegicus OX=10116 GN=Dlg4 PE=1 SV=1
+Swiss Prot ID: P31016
+Length: 724
+Identities: 100.0
+Positives: 100.0

@@ -1,0 +1,12 @@
+{
+    "systems": [
+        "output_RASH_HUMAN_Kuriyan__3tgp",
+        "output_RASH_HUMAN_Kuriyan__4q21",
+        "output_RASH_HUMAN_Kuriyan__AF-P01112-F1-model_v4"
+    ],
+    "dms_columns": [
+        "attenuated",
+        "regulated",
+        "unregulated"
+    ]
+}

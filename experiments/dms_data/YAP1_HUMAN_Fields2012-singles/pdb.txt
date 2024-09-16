@@ -1,0 +1,39 @@
+Important Note: Colabfold structure generated with DMS sequence, is of the WW domain. alpha fold correct, no satisfactory pdb.
+
+Araya, C. L. et al. A fundamental protein property, thermodynamic stability, revealed solely from large-scale measurements of protein function. Proc. Natl Acad. Sci. USA 109, 16858–16863 (2012). https://doi.org/10.1073/pnas.1209751109
+This paper analyzes the change in the hYAP65 WW domain's thermodynamic stability through its change in function effectiveness. "measure the ability of 47,000 unique variants of the hYAP65 WW domain to bind to their polyproline peptide ligand"
+
+DMS Seq:
+DVPLPAGWEMAKTSSGQRYFLNHIDQTTTQDPR
+Alignment Seq:
+DVPLPAGWEMAKTSSGQRYFLNHIDQTTTWQDPRKA
+
+DMS Seq Range: 170-203, Alignment Seq Range: 170-205
+DMS missing 2 ending amino acids relative to alignment, gap in position 199, no swaps
+97.1% identity in 34 residues overlap; Score: 165.0; Gap frequency: 2.9%
+
+-2LAY: Entity 1, Structure of the first WW domain of human YAP in complex with a phosphorylated human Smad1 derived peptide
+Seq Length: 36
+Alignment Sequence Identity: 100%, E-Value: 3.849e-21, Region: 1-36
+DMS Sequence Identity: 97%, E-Value: 8.542e-17, Region: 1-34
+Match to part of the alignment sequence, only length of listed part of the sequence
+
+-5YDX: Entity 1, NMR structure of YAP1-2 WW1 domain with LATS1 PPxY motif complex
+Seq Length: 59
+Alignment Sequence Identity: 100%, E-Value: 3.849e-21, Region: 7-42
+DMS Sequence Identity: 97%, E-Value: 8.542e-17, Region: 7-40
+Has extra starting and ending amino acids relative to alignment.
+
++DMS Seq EBI Query:
+Transcriptional coactivator YAP1 OS=Homo sapiens OX=9606 GN=YAP1 PE=1 SV=2
+Swiss Prot ID: P46937
+Length: 504
+Identities: 97.1
+Positives: 97.1
+
++Alignment Seq EBI Query:
+Transcriptional coactivator YAP1 OS=Homo sapiens OX=9606 GN=YAP1 PE=1 SV=2
+Swiss Prot ID: P46937
+Length: 504
+Identities: 100.0
+Positives: 100.0

@@ -1,0 +1,36 @@
+Important Note: The pdb strucuture is of low precision.
+
+Pokusaeva, V. et al. Experimental assay of a fitness landscape on a macroevolutionary scale. bioRxiv Preprint at https://www.biorxiv.org/content/early/2018/04/06/222778 (2018). https://doi.org/10.1101/222778
+Paper mentions the protein encoded by the gene in question is 220 amino acids, same as alignment which matches the alphafold structure.
+
+DMS Seq:
+ALVKRITNTKIQIAISLKGSVNHTGIGFLDHMIHALAKHSGWSLIVECILHITTCGIALGQAFKGFSGFASNRPYAVVELGLQREKVGDLSCEIPHFLEAEASRITLHVDLRGKNDHHRSESAFKALAVAIREATSPNGTND
+Alignment Seq:
+MTEQKALVKRITNETKIQIAISLKGGPLAIEHSIFPEKEAEAVAEQATQSQVINVHTGIGFLDHMIHALAKHSGWSLIVECIGDLHIDDHHTTEDCGIALGQAFKEALGAVRGVKRFGSGFAPLDEALSRAVVDLSNRPYAVVELGLQREKVGDLSCEMIPHFLESFAEASRITLHVDCLRGKNDHHRSESAFKALAVAIREATSPNGTNDVPSTKGVLM
+
+DMS Seq Range: 6-211, Alignment Seq Range: 1-220
+DMS sequence has many gaps, not useful for comparison
+74.4% identity in 156 residues overlap; Score: 374.0; Gap frequency: 23.1%
+
+-6EZM: Entity 1, Imidazoleglycerol-phosphate dehydratase from Saccharomyces cerevisiae
+Method: ELECTRON MICROSCOPY 3.2 Å
+Seq Length: 220
+Alignment Sequence Identity: 100%, E-Value: 2.402e-143, Region: 1-220
+DMS Sequence Identity: 67%, E-Value: 4.706e-65, Region: 6-211
+Note the poor matching DMS is due to inconsistencies in the DMS sequence, exact match to alignment
+
++DMS Seq EBI Query:
+Imidazoleglycerol-phosphate dehydratase OS=Saccharomyces cerevisiae (strain ATCC 204508 / S288c) OX=559292 GN=HIS3 PE=1 SV=2
+Swiss Prot ID: P06633
+Length: 220
+Identities: 67.5
+Positives: 68.4
+
++Alignment Seq EBI Query:	
+Imidazoleglycerol-phosphate dehydratase OS=Saccharomyces cerevisiae (strain ATCC 204508 / S288c) OX=559292 GN=HIS3 PE=1 SV=2
+Swiss Prot ID: P06633
+Length: 220
+Identities: 100.0
+Positives: 100.0
+
+

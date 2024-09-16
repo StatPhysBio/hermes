@@ -1,0 +1,35 @@
+{
+    "acetamide_normalized_fitness": {
+        "pearson": [
+            0.2699975131647314,
+            4.316055324601646e-111
+        ],
+        "spearman": [
+            0.3854589009752338,
+            8.689165041793715e-234
+        ],
+        "count": 6629
+    },
+    "isobutyramide_normalized_fitness": {
+        "pearson": [
+            0.4990324138151404,
+            0.0
+        ],
+        "spearman": [
+            0.5062644675513827,
+            0.0
+        ],
+        "count": 6568
+    },
+    "propionamide_normalized_fitness": {
+        "pearson": [
+            0.33876628115678836,
+            9.780503725445829e-178
+        ],
+        "spearman": [
+            0.3968676599544779,
+            4.863384006368439e-249
+        ],
+        "count": 6631
+    }
+}

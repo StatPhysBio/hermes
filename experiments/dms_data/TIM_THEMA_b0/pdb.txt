@@ -1,0 +1,36 @@
+Important Note: Correct pdb structure, alpha fold has some mutation relative to alignment, but it is the correct protein.
+
+Chan, Y., Venev, S., Zeldovich, K. et al. Correlation of fitness landscapes from three orthologous TIM barrels originates from sequence and structure constraints. Nat Commun 8, 14614 (2017). https://doi.org/10.1038/ncomms14614
+This paper analyzes function affects of mutations on 3 different indole-3-glycerol phosphate synthase (IGPS) proteins.
+
+DMS Seq:
+ERVKIIAEFKLADAISILTESRPILAKDFYGADAILIIARLGMDSLVEVHRPKIIGINTRDDTVVVAESGKVNAVLVGTS
+Alignment Seq:
+MRRLWEIVEAKKKDILEIDGENLIVQRRNHRFLEVLSGKERVKIIAEFKKASPSAGDINADASLEDFIRMYDELADAISILTEKHYFKGDPAFVRAARNLTSRPILAKDFYIDTVQVKLASSVGADAILIIARILTAEQIKEIYEAAEELGMDSLVEVHSREDLEKVFSVIRPKIIGINTRDLDTFEIKKNVLWELLPLVPDDTVVVAESGIKDPRELKDLRGKVNAVLVGTSIMKAENPRRFLEEMRAWSE
+
+DMS Seq Range: 40-233, Alignment Seq Range: 1-252
+DMS missing beginning and ending amino acids, multiple gaps, not good comparison
+56.5% identity in 23 residues overlap; Score: 64.0; Gap frequency: 0.0%
+
+-1I4N: Entity 1, CRYSTAL STRUCTURE OF INDOLEGLYCEROL PHOSPHATE SYNTHASE FROM THERMOTOGA MARITIMA
+Method: X-RAY DIFFRACTION 2.5 Å
+Seq Length: 251
+Alignment Sequence Identity: 100%, E-Value: 1.457e-155, Region: 1-251
+DMS Sequence Identity: 41%, E-Value: 1.906e-16, Region: 39-232
+Missing one amino acid relative to alignment
+
+-1J5T: Entity 1, Crystal structure of indole-3-glycerol phosphate synthase (TM0140) from Thermotoga maritima at 3.0 A resolution
+Seq Length: 242
+Alignment Sequence Identity: 99%, E-Value: 8.903e-141, Region: 12-242
+DMS Sequence Identity: 41%, E-Value: 1.906e-16, Region: 30-223
+A few swaps relative to alignment
+
++DMS Seq EBI Query:
+N/A
+
++Alignment Seq EBI Query:
+Indole-3-glycerol phosphate synthase OS=Thermotoga maritima (strain ATCC 43589 / DSM 3109 / JCM 10099 / NBRC 100826 / MSB8) OX=243274 GN=trpC PE=1 SV=3
+Swiss Prot ID: Q56319
+Length: 252
+Identities: 99.6
+Positives: 99.6

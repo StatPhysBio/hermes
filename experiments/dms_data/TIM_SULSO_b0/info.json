@@ -1,0 +1,9 @@
+{
+    "systems": [
+        "output_TIM_SULSO_b0__1igs",
+        "output_TIM_SULSO_b0__AF-Q06121-F1-model_v4"
+    ],
+    "dms_columns": [
+        "fitness"
+    ]
+}

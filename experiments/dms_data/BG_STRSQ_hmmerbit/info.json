@@ -1,0 +1,10 @@
+{
+    "systems": [
+        "output_BG_STRSQ_hmmerbit__1gnx",
+        "output_BG_STRSQ_hmmerbit__1gon",
+        "output_BG_STRSQ_hmmerbit__rank_1_model_4_ptm_seed_0_unrelaxed"
+    ],
+    "dms_columns": [
+        "enrichment"
+    ]
+}

@@ -1,0 +1,48 @@
+Important Note: Generated colabfold with DMS sequence. Possible alpha fold is correct protein, but one amino acid short. No satisfactory pdb.
+
+Weile, J. et al. A framework for exhaustively mapping functional missense variants. Mol. Syst. Biol. 13, 957 (2017). https://doi.org/10.15252/msb.20177908
+The paper references the 3UIP PDB id, but their use of the structure indicates that it does not need to be a perfect match to the protein they are mutating.
+
+DMS Seq:
+MSGIALSRLAQERKAWRKDHPFGFVAVPTKNPDGTMNLMNWECAIPGKKGTPWEGGLFKLRMLFKDDYPSSPPKCKFEPPLFHPNVYPSGTVCLSILEEDKDWRPAITIKQILLGIQELLNEPNIQDPAQAEAYTIYCQNRVEYEKRVRAQAKKFAPSY
+Alignment Seq:
+MSGIALSRLAQERKAWRKDHPFGFVAVPTKNPDGTMNLMNWECAIPGKKGTPWEGGLFKLRMLFKDDYPSSPPKCKFEPPLFHPNVYPSGTVCLSILEEDKDWRPAITIKQILLGIQELLNEPNIQDPAQAEAYTIYCQNRVEYEKRVRAQAKKFAPS
+
+DMS Seq Range: 1-159, Alignment Seq Range: 1-158
+Alignment missing the end amino acid relative to DMS sequence
+100.0% identity in 158 residues overlap; Score: 861.0; Gap frequency: 0.0%
+
+-5FQ2: Entity 1, Crystal structure of human SUMO E1 UFD domain in complex with Ubc9 in a P422 space group
+Method: X-RAY DIFFRACTION 2.201 Å
+Seq Length: 161
+Alignment Sequence Identity: 100%, E-Value: 1.765e-107, Region: 4-161
+DMS Sequence Identity: 100%, E-Value: 1.682e-107, Region: 4-161
+Has extra initial amino acids
+
+-1KPS: Entity 1, Structural Basis for E2-mediated SUMO conjugation revealed by a complex between ubiquitin conjugating enzyme Ubc9 and RanGAP1
+Method: X-RAY DIFFRACTION 2.5 Å
+Seq Length: 159
+Alignment Sequence Identity: 100%, E-Value: 1.682e-107, Region: 2-159
+DMS Sequence Identity: 100%, E-Value: 1.765e-107, Region: 2-159
+Shifted by 1 compared to DMS sequence
+
+-3UIP: Entity 1, Complex between human RanGAP1-SUMO1, UBC9 and the IR1 domain from RanBP2 containing IR2 Motif II
+Method: X-RAY DIFFRACTION 2.293 Å
+Seq Length: 158
+Alignment Sequence Identity: 100%, E-Value: 1.682e-107, Region: 1-158
+DMS Sequence Identity: 100%, E-Value: 1.765e-107, Region: 1-158
+Perfect alignment match
+
++DMS Seq EBI Query:
+SUMO-conjugating enzyme UBC9 OS=Homo sapiens OX=9606 GN=UBE2I PE=1 SV=1
+Swiss Prot ID: P63279
+Length: 158
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+SUMO-conjugating enzyme UBC9 OS=Homo sapiens OX=9606 GN=UBE2I PE=1 SV=1
+Swiss Prot ID: P63279
+Length: 158
+Identities: 100.0
+Positives: 100.0

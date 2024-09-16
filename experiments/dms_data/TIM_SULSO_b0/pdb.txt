@@ -1,0 +1,42 @@
+Important Note: Correct alpha fold and pdb.
+
+Chan, Y., Venev, S., Zeldovich, K. et al. Correlation of fitness landscapes from three orthologous TIM barrels originates from sequence and structure constraints. Nat Commun 8, 14614 (2017). https://doi.org/10.1038/ncomms14614
+This paper analyzes function affects of mutations on 3 different indole-3-glycerol phosphate synthase (IGPS) proteins.
+
+DMS Seq:
+NITAIIAEYKYAVGLSILTESIPILMKDFIGADTVLLIVKMEPLIEINDEGARFIGINSRSNVVKVAESGGVNAFLIGSS
+Alignment Seq:
+MPRYLKGWLKDVVQLSLRRPSFRASRQRPIISLNERILEFNKRNITAIIAEYKRKSPSGLDVERDPIEYSKFMERYAVGLSILTEEKYFNGSYETLRKIASSVSIPILMKDFIVKESQIDDAYNLGADTVLLIVKILTERELESLLEYARSYGMEPLIEINDENDLDIALRIGARFIGINSRDLETLEINKENQRKLISMIPSNVVKVAESGISERNEIEELRKLGVNAFLIGSSLMRNPEKIKEFIL
+
+DMS Seq Range: 44-235, Alignment Seq Range: 1-248
+DMS missing beginning and ending amino acids, multiple gaps, not good comparison
+57.7% identity in 26 residues overlap; Score: 58.0; Gap frequency: 0.0%
+
+-1IGS: Entity 1, INDOLE-3-GLYCEROLPHOSPHATE SYNTHASE FROM SULFOLOBUS SOLFATARICUS AT 2.0 A RESOLUTION
+Method: X-RAY DIFFRACTION 2 Å
+Seq Length: 248
+Alignment Sequence Identity: 100%, E-Value: 8.005e-155, Region: 1-248
+DMS N/A
+Perfect match to alignment
+
+-1JUK: Entity 1, INDOLE-3-GLYCEROLPHOSPHATE SYNTHASE FROM SULFOLOBUS SOLFATARICUS IN A TRIGONAL CRYSTAL FORM
+Seq Length: 248
+Alignment Sequence Identity: 100%, E-Value: 8.005e-155, Region: 1-248
+DMS N/A
+Perfect match to alignment
+
+-1JUL: Entity 1, INDOLE-3-GLYCEROLPHOSPHATE SYNTHASE FROM SULFOLOBUS SOLFATARICUS IN A SECOND ORTHORHOMBIC CRYSTAL FORM
+Seq Length: 248
+Alignment Sequence Identity: 100%, E-Value: 8.005e-155, Region: 1-248
+DMS N/A
+Perfect match to alignment
+
++DMS Seq EBI Query:
+N/A
+
++Alignment Seq EBI Query:
+Indole-3-glycerol phosphate synthase OS=Saccharolobus solfataricus (strain ATCC 35092 / DSM 1617 / JCM 11322 / P2) OX=273057 GN=trpC PE=1 SV=1
+Swiss Prot ID: Q06121
+Length: 248 
+Identities: 100.0
+Positives: 100.0

@@ -1,0 +1,9 @@
+{
+    "systems": [
+        "output_UBC9_HUMAN_Roth2017__3uip",
+        "output_UBC9_HUMAN_Roth2017__rank_1_model_5_ptm_seed_0_unrelaxed"
+    ],
+    "dms_columns": [
+        "screenscore"
+    ]
+}

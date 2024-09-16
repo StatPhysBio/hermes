@@ -1,0 +1,33 @@
+Important Note: Generated colabfold using DMS sequence. No alpha fold because virus, no satisfactory PDB.
+
+Qi, H. et al. A quantitative high-resolution genetic profile rapidly identifies sequence determinants of hepatitis C viral fitness and drug sensitivity. PLoS Pathog. 10, e1004064 (2014). https://doi.org/10.1371/journal.ppat.1004064
+This paper is about the domain IA of the NS5A protein for Hepatitis C, which they mutated and studied the impact on replication fitness and Daclatasvir (HCV drug) resistance.
+
+DMS Seq:
+DFKNWLTSKLFPKLPGLPFISCQKGYKGVWAGTGIMTTRCPCGANISGNVRLGSMRITGPKTCMNTWQGTFPINCYTEGQCAPKPP
+Alignment Seq:
+SGSWLRDVWDWVCTILTDFKNWLTSKLFPKLPGLPFISCQKGYKGVWAGTGIMTTRCPCGANISGNVRLGSMRITGPKTCMNTWQGTFPINCYTEGQCAPKPPTNYKTAIWRVA
+
+DMS Seq Range: 1994-2079, Alignment Seq Range: 1977-2090
+DMS missing beginning and ending amino acids
+100.0% identity in 86 residues overlap; Score: 496.0; Gap frequency: 0.0%
+
+-3FQM: Entity 1, Crystal structure of a novel dimeric form of HCV NS5A domain I protein
+Seq Length: 112
+Alignment Sequence Identity: 68%, E-Value: 3.21e-37, Region: 3-84
+DMS Sequence Identity: 70%, E-Value: 2.695e-32, Region: 3-72
+All pdb ids have low match percentage
+
++DMS Seq EBI Query:
+Genome polyprotein OS=Hepatitis C virus genotype 2a (isolate JFH-1) OX=356411 PE=1 SV=3
+Swiss Prot ID: Q99IB8
+Length: 3033
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+Genome polyprotein OS=Hepatitis C virus genotype 2a (isolate JFH-1) OX=356411 PE=1 SV=3
+Swiss Prot ID: Q99IB8
+Length: 3033
+Identities: 100.0
+Positives: 100.0

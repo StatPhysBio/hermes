@@ -1,0 +1,14 @@
+{
+    "systems": [
+        "output_RL401_YEAST_Fraser2016__2g3q",
+        "output_RL401_YEAST_Fraser2016__AF-P0CH09-F1-model_v4",
+        "output_RL401_YEAST_Fraser2016__rank_1_model_4_ptm_seed_0_unrelaxed"
+    ],
+    "dms_columns": [
+        "Caffeine",
+        "DMSO",
+        "DTT",
+        "HU",
+        "MG132"
+    ]
+}

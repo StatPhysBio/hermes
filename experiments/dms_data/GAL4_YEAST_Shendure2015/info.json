@@ -1,0 +1,13 @@
+{
+    "systems": [
+        "output_GAL4_YEAST_Shendure2015__3coq"
+    ],
+    "dms_columns": [
+        "NONSEL_24h",
+        "SEL_A_24h",
+        "SEL_A_40h",
+        "SEL_B_40h",
+        "SEL_C_40h",
+        "SEL_C_64h"
+    ]
+}

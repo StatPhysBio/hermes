@@ -1,0 +1,38 @@
+Important Note: Generated colabfold using alignment sequence because the DMS sequence has many gaps. No alpha fold because virus. Somewhat confident about PDB being correct, because it has both proteins, but it is not the correct length.
+
+Mann, J. K. et al. The fitness landscape of HIV-1 gag: advanced modeling approaches and validation of model predictions by in vitro testing. PLoS Comput. Biol. 10, e1003776 (2014). https://doi.org/10.1371/journal.pcbi.1003776
+This article is about HIV-1 clade B Gag p24 and p17 proteins.
+
+DMS Seq:
+AIVSAAPQTTMHRTLGDKSNAK
+Alignment Seq:
+PIVQNLQGQMVHQAISPRTLNAWVKVVEEKAFSPEVIPMFSALSEGATPQDLNTMLNTVGGHQAAMQMLKETINEEAAEWDRLHPVHAGPIAPGQMREPRGSDIAGTTSTLQEQIGWMTHNPPIPVGEIYKRWIILGLNKIVRMYSPTSILDIRQGPKEPFRDYVDRFYKTLRAEQASQEVKNWMTETLLVQNANPDCKTILKALGPGATLEEMMTACQGVGGPGHKARVL
+
+DMS Seq Range: 146-331, Alignment Seq Range: 133-363
+DMS contains many gaps, not useful for alignment
+57.1% identity in 7 residues overlap; Score: 19.0; Gap frequency: 0.0%
+
+2GOL: Xray Structure of Gag278
+Method: X-RAY DIFFRACTION 2.2 Å
+Length: 277
+Alignment Sequence Identity: Sequence Identity: 100%, E-Value: 3.068e-94, Region: 1-146
+DMS N/A
+Has correct proteins p17 and p24, wrong length.
+
+
+-5O2U: Entity 1, Llama VHH in complex with p24
+Method: X-RAY DIFFRACTION 2.76 Å
+Seq Length: 500
+Alignment Sequence Identity: 100%, E-Value: 2.616e-155, Region: 133-363
+DMS N/A
+Aligns to proper part of alignment sequence
+
++DMS Seq EBI Query:
+N/A
+
++Alignment Seq EBI Query:
+Gag polyprotein OS=Human immunodeficiency virus type 1 group M subtype B (isolate NY5) OX=11698 GN=gag PE=1 SV=3
+Swiss Prot ID: P12493
+Length: 500
+Identities: 100.0
+Positives: 100.0

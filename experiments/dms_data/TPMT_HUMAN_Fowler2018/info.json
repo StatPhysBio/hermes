@@ -1,0 +1,10 @@
+{
+    "systems": [
+        "output_TPMT_HUMAN_Fowler2018__2bzg",
+        "output_TPMT_HUMAN_Fowler2018__2h11",
+        "output_TPMT_HUMAN_Fowler2018__AF-P51580-F1-model_v4"
+    ],
+    "dms_columns": [
+        "score"
+    ]
+}

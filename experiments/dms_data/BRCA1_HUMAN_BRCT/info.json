@@ -1,0 +1,10 @@
+{
+    "systems": [
+        "output_BRCA1_HUMAN_BRCT__1jnx",
+        "output_BRCA1_HUMAN_BRCT__1t29"
+
+    ],
+    "dms_columns": [
+        "function_score"
+    ]
+}

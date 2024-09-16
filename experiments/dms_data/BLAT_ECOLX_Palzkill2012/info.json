@@ -1,0 +1,9 @@
+{
+    "systems": [
+        "output_BLAT_ECOLX_Palzkill2012__1bq9",
+        "output_BLAT_ECOLX_Palzkill2012__AF-BLAT-F1-model_v4"
+    ],
+    "dms_columns": [
+        "SelectionOne"
+    ]
+}

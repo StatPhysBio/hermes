@@ -1,0 +1,11 @@
+{
+    "systems": [
+        "output_AMIE_PSEAE_Whitehead__2uxy",
+        "output_AMIE_PSEAE_Whitehead__AF-P11436-F1-model_v4"
+    ],
+    "dms_columns": [
+        "acetamide_normalized_fitness",
+        "isobutyramide_normalized_fitness",
+        "propionamide_normalized_fitness"
+    ]
+}

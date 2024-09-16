@@ -1,0 +1,42 @@
+Important Note: The alpha fold structure is correct. The pdb structure is more complicated, because it matches the DMS sequence, but the DMS sequence starts at the 24th residue position, but it seems to me that that is a domain. However, the paper states the enzyme in question is the same length as the pdb sequence.
+
+Figliuzzi, M., Jacquier, H., Schug, A., Tenaillon, O. & Weigt, M. Coevolutionary landscape inference and the context-dependence of mutations in beta-lactamase TEM-1. Mol. Biol. Evol. 33, 268–280 (2016). https://doi.org/10.1073/pnas.1215206110
+Confident 1XPB is correct given paper is on TEM1.
+
+DMS Seq:
+HPETLVKVKDAEDQLGARVGYIELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRVDAGQEQLGRRIHYSQNDLVEYSPVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRLDRWEPELNEAIPNDERDTTMPAAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPLLRSALPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIAEIGASLIKHW
+Alignment Seq:
+HPETLVKVKDAEDQLGARVGYIELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRVDAGQEQLGRRIHYSQNDLVEYSPVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRLDRWEPELNEAIPNDERDTTMPAAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPLLRSALPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIAEIGASLIKHW
+
+DMS Seq Range: 24-286, Alignment Seq Range: 24-286
+The two alignment files contain the same first sequence, same sequence as DMS.
+100.0% identity in 263 residues overlap; Score: 1348.0; Gap frequency: 0.0%
+
+-1XPB: Entity 1, STRUCTURE OF BETA-LACTAMASE TEM1
+Method: X-RAY DIFFRACTION 1.9 Å
+Seq Length: 263
+Alignment Sequence Identity: Sequence Identity: 100%, E-Value: 3.203e-171, Region: 1-263
+DMS Sequence Identity: 100%, E-Value: 3.203e-171, Region: 1-263
+Same sequence as both
+
+-1ZG4: Entity 1, TEM1 beta lactamase
+Method: X-RAY DIFFRACTION 1.55 Å
+Seq Length: 286
+Alignment Sequence Identity: 99%, E-Value: 1.549e-170, Region: 24-286
+DMS Sequence Identity: 99%, E-Value: 1.549e-170, Region: 24-286
+Extra amino acids at beginning. Two amino acid swaps relative to both sequences, in the same spots. First PDB id in provided PDBs
+
+
++DMS Seq EBI Query:
+Beta-lactamase TEM OS=Escherichia coli OX=562 GN=bla PE=1 SV=1
+Swiss Prot ID: P62593
+Length: 286
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+Beta-lactamase TEM OS=Escherichia coli OX=562 GN=bla PE=1 SV=1
+Swiss Prot ID: P62593
+Length: 286
+Identities: 100.0
+Positives: 100.0

@@ -1,0 +1,41 @@
+Important Note: Generated colabfold structure with the alignment sequence because it begins with the first amino acid. The possible pdb is a complex with DNA, the possible alpha fold strucuture slightly differs from the sequence because the protein sequence used is a more stable variant with a few mutations compared to the true wild type.
+
+Rockah-Shmuel, L., Tóth-Petróczy, Á. & Tawfik, D. S. Systematic mapping of protein mutational space by prolonged drift reveals the deleterious effects of seemingly neutral mutations. PLoS Comput. Biol. 11, e1004421 (2015). https://doi.org/10.1371/journal.pcbi.1004421
+The paper studies to the "crystal structure of M.HaeIII (PDB id 1dct)" from Haemophilus aegyptius. However, it does not mutate it in complex with DNA.
+
+DMS Seq:
+NLISLFSGAGGLDLGFQKAGFRIIAANEYDKSIWKTYESNHSAKLIKGDISKISSDEFPKCDGIIGGPPCQSWSEGGSLRGIDDPRGKLFYEYIRILKQKKPKFFLAENVKGMLAQRHNKAVQEFIQEFDNAGYDVHIILLNANDYGVAQDRKRVFYIGFRKELNINYLPPIPHLIKPTLKDVIWDLKDNPIPALDKNKTNGNKCIYPNHEYFIGSYSTIFMSRNRVRQWNEPAFTVQASGRQCQLHPQAPVMLKVSKNLNKFVEGKEHLYRRLTVRECARVQGFPDDFIFHYESLNDGYKMIGNAVPVNLAYEIAKTIKSALEIRKGN
+Alignment Seq:
+MNLISLFSGAGGLDLGFQKAGFRIIAANEYDKSIWKTYESNHSAKLIKGDISKISSDEFPKCDGIIGGPPCQSWSEGGSLRGIDDPRGKLFYEYIRILKQKKPKFFLAENVKGMLAQRHNKAVQEFIQEFDNAGYDVHIILLNANDYGVAQDRKRVFYIGFRKELNINYLPPIPHLIKPTLKDVIWDLKDNPIPALDKNKTNGNKCIYPNHEYFIGSYSTIFMSRNRVRQWNEPAFTVQASGRQCQLHPQAPVMLKVSKNLNKFVEGKEHLYRRLTVRECARVQGFPDDFIFHYESLNDGYKMIGNAVPVNLAYEIAKTIKSALEIRKGN
+
+DMS Seq Range: 2-330, Alignment Seq Range: 1-330
+DMS missing first amino acid
+100.0% identity in 329 residues overlap; Score: 1753.0; Gap frequency: 0.0%
+
+-1DCT: Entity 3, DNA (CYTOSINE-5) METHYLASE FROM HAEIII COVALENTLY BOUND TO DNA
+Method: X-RAY DIFFRACTION 2.8 Å
+Seq Length: 324
+Alignment Sequence Identity: 99%, E-Value: 3.145e-220, Region: 1-324
+DMS Sequence Identity: 99%, E-Value: 1.988e-219, Region: 2-324
+A few mismatches
+
+-3UBT: Entity 1, Crystal Structure of C71S Mutant of DNA Cytosine-5 Methyltransferase M.HaeIII Bound to DNA
+Method: X-RAY DIFFRACTION 2.502 Å
+Seq Length: 331
+Alignment Sequence Identity: 98%, E-Value: 5.228e-222, Region: 1-330
+DMS Sequence Identity: 98%, E-Value: 3.305e-221, Region: 2-330
+A few mismatches, is a mutant
+
++DMS Seq EBI Query:
+Type II methyltransferase M.HaeIII OS=Haemophilus aegyptius OX=197575 GN=haeIIIM PE=1 SV=1
+Swiss Prot ID: P20589
+Length: 330
+Identities: 98.5
+Positives: 99.1
+
++Alignment Seq EBI Query:
+Type II methyltransferase M.HaeIII OS=Haemophilus aegyptius OX=197575 GN=haeIIIM PE=1 SV=1
+Swiss Prot ID: P20589
+Length: 330
+Identities: 98.5
+Positives: 99.1

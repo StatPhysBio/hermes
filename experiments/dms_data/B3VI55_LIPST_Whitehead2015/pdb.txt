@@ -1,0 +1,55 @@
+Important Note: High confidence for the alpha fold model because it is the precise protein mentioned in the study, somewhat confident about the PDB model because the study measures the stability and the "flux" (ability to catalyze LG) of the protein. The flux is likely measured with the protein in complex with Mg, LG, and ADP because that is what the protein does when it acts as a catalyst, if so, 4ZLU is the correct PDB id (the study also mentions it). The reason not is that it is in complex, which may be wrong, and it is too long.
+
+Justin R. Klesmith, John-Paul Bacik, Ryszard Michalczyk, and Timothy A. Whitehead ACS Synthetic Biology 2015 4 (11), 1235-1243 DOI: 10.1021/acssynbio.5b00131
+"Analysis of the native crystal structure of LGK", LGK is levoglucosan kinase, paper links to http://dx.doi.org/10.1074/jbc.M115.674614. THe protein was studied with the goal of increasing the effectiveness of it as a catalyst. The study bonds the protein in different complexes in addition to DMS, as they work to improve the protein. If I had to chose a structure that would match their protein used, I would choose PDB: 4ZLU, because it is mentioned as the structure of LGK, the protein, but it is a complex.
+
+DMS Seq:
+MPIATSTGDNVLDFTVLGLNSGTSMDGIDCALCHFYQKTPDAPMEFELLEYGEVPLAQPIKQRVMRMILEDTTSPSELSEVNVILGEHFADAVRQFAAERNVDLSTIDAIASHGQTIWLLSMPEEGQVKSALTMAEGAILASRTGITSITDFRISDQAAGRQGAPLIAFFDALLLHHPTKLRACQNIGGIANVCFIPPDVDGRRTDEYYDFDTGPGNVFIDAVVRHFTNGEQEYDKDGAMGKRGKVDQELVDDFLKMPYFQLDPPKTTGREVFRDTLAHDLIRRAEAKGLSPDDIVATTTRITAQAIVDHYRRYAPSQEIDEIFMCGGGAYNPNIVEFIQQSYPNTKIMMLDEAGVPAGAKEAITFAWQGMEALVGRSIPVPTRVETRQHYVLGKVSPGLNYRSVMKKGMAFGGDAQQLPWVSEMIVKKKGKVITNNWA
+Alignment Seq:
+MPIATSTGDNVLDFTVLGLNSGTSMDGIDCALCHFYQKTPDAPMEFELLEYGEVPLAQPIKQRVMRMILEDTTSPSELSEVNVILGEHFADAVRQFAAERNVDLSTIDAIASHGQTIWLLSMPEEGQVKSALTMAEGAILASRTGITSITDFRISDQAAGRQGAPLIAFFDALLLHHPTKLRACQNIGGIANVCFIPPDVDGRRTDEYYDFDTGPGNVFIDAVVRHFTNGEQEYDKDGAMGKRGKVDQELVDDFLKMPYFQLDPPKTTGREVFRDTLAHDLIRRAEAKGLSPDDIVATTTRITAQAIVDHYRRYAPSQEIDEIFMCGGGAYNPNIVEFIQQSYPNTKIMMLDEAGVPAGAKEAITFAWQGMEALVGRSIPVPTRVETRQHYVLGKVSPGLNYRSVMKKGMAFGGDAQQLPWVSEMIVKKKGKVITNNWA
+
+DMS Seq Range: 1-439, Alignment Seq Range: 1-439
+Same sequence
+100.0% identity in 439 residues overlap; Score: 2288.0; Gap frequency: 0.0%
+
+-4ZLU: Lipomyces starkeyi levoglucosan kinase bound to levoglucosan, ADP and magnesium.
+Method: X-RAY DIFFRACTION 1.8 Å
+Seq Length: 447
+Alignment Sequence Identity: 100%, E-Value: 8.598e-298, Region: 1-439
+DMS Sequence Identity: 100%, E-Value: 8.598e-298, Region: 1-439
+Extra amino acids at end of sequence
+
+-4ZFV: Entity 1, Lipomyces starkeyi levoglucosan kinase bound to ADP and magnesium.
+Method: X-RAY DIFFRACTION 1.5 Å
+Seq Length: 447
+Alignment Sequence Identity: 100%, E-Value: 8.598e-298, Region: 1-439
+DMS Sequence Identity: 100%, E-Value: 8.598e-298, Region: 1-439
+Extra amino acids at end of sequence
+
+-4YH5: Entity 1, Lipomyces starkeyi levoglucosan kinase bound to ADP and Manganese
+Method: X-RAY DIFFRACTION 1.9 Å
+Seq Length: 447
+Alignment Sequence Identity: 100%, E-Value: 8.598e-298, Region: 1-439
+DMS Sequence Identity: 100%, E-Value: 8.598e-298, Region: 1-439
+Extra amino acids at end of sequence
+
+-5BVC: Entity 1, Crystal structure of Lipomyces starkeyi levoglucosan kinase bound to ADP, magnesium and levoglucosan in an alternate orientation
+Method: X-RAY DIFFRACTION 2 Å
+Seq Length: 447
+Alignment Sequence Identity: 100%, E-Value: 8.598e-298, Region: 1-439
+DMS Sequence Identity: 100%, E-Value: 8.598e-298, Region: 1-439
+Extra amino acids at end of sequence
+
++DMS Seq EBI Query:
+Levoglucosan kinase OS=Lipomyces starkeyi OX=29829 PE=1 SV=1
+Swiss Prot ID: B3VI55
+Length: 439
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+Levoglucosan kinase OS=Lipomyces starkeyi OX=29829 PE=1 SV=1
+Swiss Prot ID: B3VI55
+Length: 439
+Identities: 100.0
+Positives: 100.0

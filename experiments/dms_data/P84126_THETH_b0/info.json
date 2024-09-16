@@ -1,0 +1,9 @@
+{
+    "systems": [
+        "output_P84126_THETH_b0__1vc4",
+        "output_P84126_THETH_b0__rank_1_model_5_ptm_seed_0_unrelaxed"
+    ],
+    "dms_columns": [
+        "fitness"
+    ]
+}

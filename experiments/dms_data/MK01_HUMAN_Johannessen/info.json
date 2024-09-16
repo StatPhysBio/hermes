@@ -1,0 +1,12 @@
+{
+    "systems": [
+        "output_MK01_HUMAN_Johannessen__4g6n",
+        "output_MK01_HUMAN_Johannessen__AF-P28482-F1-model_v4"
+    ],
+    "dms_columns": [
+        "ETP_AVERAGE",
+        "DOX_Average",
+        "SCH_Average",
+        "VRT_AVERAGE"
+    ]
+}

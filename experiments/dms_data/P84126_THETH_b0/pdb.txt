@@ -1,0 +1,29 @@
+Important Note: Generated colabfold sequence with the alignment because the DMS has many gaps. The pdb has one swap, there is no satisfactory alpha fold protein.
+
+Chan, Y., Venev, S., Zeldovich, K. et al. Correlation of fitness landscapes from three orthologous TIM barrels originates from sequence and structure constraints. Nat Commun 8, 14614 (2017). https://doi.org/10.1038/ncomms14614
+The paper is a DMS of the protein indole-3-glycerol phosphate synthase, from the bacteria Thermus Thermophilus. The pdb id IVC4 is mentioned in the paper.
+
+DMS Seq;
+PGLSVIAEVKGARAVSVLTEDLPLLRKDFVGASAALLIVALGLEALVEVHGAEVLGINNRFGGVLVAESGLFDAVLIGTS
+Alignment Seq:
+MRPDLSRVPGVLGEIARKRASEVAPYPLPEPPSVPSFKEALLRPGLSVIAEVKRQSPSEGLIREVDPVEAALAYARGGARAVSVLTEPHRFGGSLLDLKRVREAVDLPLLRKDFVVDPFMLEEARAFGASAALLIVALLGELTGAYLEEARRLGLEALVEVHTERELEIALEAGAEVLGINNRDLATLHINLETAPRLGRLARFRGFGGVLVAESGYSRKEELKALEGLFDAVLIGTSLMRAPDLEAALRELVG
+
+DMS Seq Range: 44-238, Alignment Seq Range: 1-254
+DMS sequence contains multiple large gaps, meaning that sequence is a poor reference for comparison (note low overlap)
+81.2% identity in 16 residues overlap; Score: 56.0; Gap frequency: 0.0%
+
+-1VC4: Entity 1, Crystal Structure of Indole-3-Glycerol Phosphate Synthase (TrpC) from Thermus Thermophilus At 1.8 A Resolution
+Seq Length: 254
+Alignment Sequence Identity: 100%, E-Value: 1.454e-154, Region: 1-254
+DMS Sequence Identity: 41%, E-Value: 1.01e-16, Region: 44-238
+Almost perfect match, one mismatch in position 204
+
++DMS Seq EBI Query:
+N/A
+
++Alignment Seq EBI Query:
+Indole-3-glycerol phosphate synthase OS=Deinococcus radiodurans (strain ATCC 13939 / DSM 20539 / JCM 16871 / LMG 4051 / NBRC 15346 / NCIMB 9279 / R1 / VKM B-1422) OX=243230 GN=trpC PE=3 SV=1
+Swiss Prot ID: Q9RUG0
+Length: 267
+Identities: 54.4
+Positives: 73.6

@@ -1,0 +1,9 @@
+{
+    "systems": [
+        "output_UBE4B_MOUSE_Klevit2013-singles__AF-Q9ES00-F1-model_v4",
+        "output_UBE4B_MOUSE_Klevit2013-singles__rank_1_model_1_ptm_seed_0_unrelaxed"
+    ],
+    "dms_columns": [
+        "log2_ratio"
+    ]
+}

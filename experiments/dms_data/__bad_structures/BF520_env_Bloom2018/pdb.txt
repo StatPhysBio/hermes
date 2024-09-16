@@ -1,0 +1,48 @@
+Important Note: Used predicted colabfold structure because protein is from a virus. We are looking for the HIV Env protein, (group M subtype/clade A). The BG520 Env protein has not been studied as much as BF520, so a BF520 structure is the best option. However, the alphafold database and the pdb have no suitable structures. The PDB 6B0N is the closest, but it is too short, and has gaps and swaps relative to the DMS and alignment.
+
+Hugh K Haddox, Adam S Dingens, Sarah K Hilton, Julie Overbaugh, Jesse D Bloom (2018) Mapping mutational effects along the evolutionary landscape of HIV envelope eLife 7:e34420 https://doi.org/10.7554/eLife.34420
+BF520 is an HIV strain, and the structure of BF520's env protein has not been studied, whereas the structure of BG505's env protein has been. However, the structure of  "BG505 and BF520 env are identical at 721 of the 836 pairwise-alignable protein sites", so it may be reasonable to use BG505 structure.
+
+DMS Seq:
+AGNLWVTVYYGVPVWKDAETTLFCASDAKAYDAEVHNIWATHACVPTDPNPQEINLENVTEEFNMWKNNMVEQMHTDIISLWDQGLKPCVKLTPLCVTLDCHNVTYNITSDMKEEITNCSYNVTTVIRDKKQKVSSLFYKLDVVQIGGNNRTNSQYRLINCNTSAITQACPKVTFEPIPIHYCAPAGFAILKCKDEKFNGTGLCKNVSTVQCTHGIKPVVSTQLLLNGSLAEGEVRIRSENITNNAKNIIVQLASPVTINCIRPNNNTRKSVHLGPGQAFYATDGIIGEIRQAHCNVSKKEWNSTLQKVANQLRPYFKNNTIIKFANSSGGDLEITTHSFNCGGEFFYCNTSGLFNSTWEFNSTWNNSNSTENITLQCRIKQIINMWQRAGQAIYAPPIPGVIRCKSNITGLILTRDGGSNKNTSETFRPGGGDMRDNWRSELYKYKVVKIEPIGVAPTRAKRRVVEREKRAVGIGAVFIGFLGAAGSTMGAASVTLTVQARQLLSGIVQQQSNLLRAIEAQQHLLKLTVWGIKQLQARVLAVERYLKDQQLLGIWGCSGKLICTTNVPWNSSWSNKSQDEIWGNMTWLQWDKEVSNYTQIIYTLIEESQNQQEKNEQDLLALDKWASLWNWFNISQWLWYIKIFIIIVGGLIGLRIVFAVL
+Alignment Seq:
+MICSVAGNLWVTVYYGVPVWKDAETTLFCASDAKAYDAEVHNIWATHACVPTDPNPQEINLENVTEEFNMWKNNMVEQMHTDIISLWDQGLKPCVKLTPLCVTLDCHNVTYNITSDMKEEITNCSYNVTTVIRDKKQKVSSLFYKLDVVQIGGNNRTNSQYRLINCNTSAITQACPKVTFEPIPIHYCAPAGFAILKCKDEKFNGTGLCKNVSTVQCTHGIKPVVSTQLLLNGSLAEGEVRIRSENITNNAKNIIVQLASPVTINCIRPNNNTRKSVHLGPGQAFYATDGIIGEIRQAHCNVSKKEWNSTLQKVANQLRPYFKNNTIIKFANSSGGDLEITTHSFNCGGEFFYCNTSGLFNSTWEFNSTWNNSNSTENITLQCRIKQIINMWQRAGQAIYAPPIPGVIRCKSNITGLILTRDGGSNKNTSETFRPGGGDMRDNWRSELYKYKVVKIEPIGVAPTRAKRRVVEREKRAVGIGAVFIGFLGAAGSTMGAASVTLTVQARQLLSGIVQQQSNLLRAIEAQQHLLKLTVWGIKQLQARVLAVERYLKDQQLLGIWGCSGKLICTTNVPWNSSWSNKSQDEIWGNMTWLQWDKEVSNYTQIIYTLIEESQNQQEKNEQDLLALDKWASLWNWFNISQWLWYIKIFIIIVGGLIGLRIVFAVLSVINRVRQGYSPLSFQTRT
+
+DMS Seq Range: 30-691, Alignment Seq Range: 25-710
+DMS missing first 5 and end of amino acids relative to alignment sequence
+100.0% identity in 662 residues overlap; Score: 3539.0; Gap frequency: 0.0%
+
+-6B0N: Entity 3, Crystal structure of the cleavage-independent prefusion HIV Env glycoprotein trimer of the clade A BG505 isolate (NFL construct) in complex with Fabs PGT122 and PGV19 at 3.39 A
+Method: X-RAY DIFFRACTION 3.4 Å
+Seq Length: 638
+Alignment Sequence Identity: 83%, E-Value: 0, Region: 1-638
+DMS: Sequence Identity: 83%, E-Value: 0, Region: 1-638
+Multiple gaps and amino acid swaps, low precision microscopy method
+
+-6PWU: Entity 1, Structure of full-length, fully glycosylated, non-modified HIV-1 gp160 bound to PG16 Fab
+Method: ELECTRON MICROSCOPY 6.2 Å
+Seq Length: 858
+Alignment Sequence Identity: 82%, E-Value: 0, Region: 25-716
+DMS Sequence Identity: 82%, E-Value: 0, Region: 30-697
+Multiple gaps and amino acid swaps, low precision microscopy method
+
+-7N6W: Entity 1, Structure of uncleaved HIV-1 JR-FL Env glycoprotein trimer in state U2 bound to small Molecule HIV-1 Entry Inhibitor BMS-378806
+Method: ELECTRON MICROSCOPY 4.7 Å
+Seq Length: 848
+Alignment Sequence Identity: 76%, E-Value: 0, Region: 26-711
+DMS Sequence Identity: 76%, E-Value: 0, Region: 33-694
+Multiple gaps and amino acid swaps, low precision microscopy method
+
++DMS Seq EBI Query:
+Envelope glycoprotein gp160 OS=Human immunodeficiency virus type 1 group M subtype H (isolate 90CF056) OX=388826 GN=env PE=3 SV=1
+Swiss Prot ID: O70902
+Length: 845
+Identities: 77.3
+Positives: 91.3
+
++Alignment Seq EBI Query:
+Envelope glycoprotein gp160 OS=Human immunodeficiency virus type 1 group M subtype H (isolate 90CF056) OX=388826 GN=env PE=3 SV=1
+Swiss Prot ID: O70902
+Length: 845
+Identities: 77.4
+Positives: 91.6

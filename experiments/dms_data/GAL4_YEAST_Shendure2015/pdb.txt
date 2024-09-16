@@ -1,0 +1,48 @@
+Important Note: The colabfold generated structure is only for the Zn2Cys6-class domain, used the alignment sequence to generate. The correct wild type strain (BY4741) does not match the strain of the alpha fold structure. The pdb structure is not satisfactory.
+
+Kitzman, J., Starita, L., Lo, R. et al. Massively parallel single-amino-acid mutagenesis. Nat Methods 12, 203–206 (2015). https://doi.org/10.1038/nmeth.3223
+The paper references the PDB 3COQ, the reason why a binding with DNA may be the correct structure is " Gal4 binds DNA as a homodimer via a Zn2Cys6-class domain centered on a pair of Zn2+ ions, which help to maintain the fold of the DNA-binding residues"
+
+DMS Seq:
+KLLSSIEQACDICRLKKLKCSKEKPKCAKCLKNNWECRYSPKTKRSPLTRAHLTEVESRLERLE
+Alignment Seq:
+MKLLSSIEQACDICRLKKLKCSKEKPKCAKCLKNNWECRYSPKTKRSPLTRAHLTEVESRLERLEQLFLLIFPRE
+
+DMS Seq Range: 2-65, Alignment Seq Range: 1-75
+DMS missing starting and ending amino acids relative to alignment
+100.0% identity in 64 residues overlap; Score: 343.0; Gap frequency: 0.0%
+
+-3COQ: Entity 3, Structural Basis for Dimerization in DNA Recognition by Gal4
+Method: X-RAY DIFFRACTION 2.4 Å
+Seq Length: 89
+Alignment Sequence Identity: 100%, E-Value: 1.106e-39, Region: 1-68
+DMS Sequence Identity: 100%, E-Value: 6.604e-33, Region: 1-58
+missing starting amino acids, and extra ending amino acids, appears to be a complex with DNA
+
+-1AW6: Entity 1, GAL4 (CD), NMR, 24 STRUCTURES
+Method: SOLUTION NMR
+Seq Length: 43
+Alignment Sequence Identity: 100%, E-Value: 3.65e-23, Region: 1-43
+DMS Sequence Identity: 100%, E-Value: 1.424e-22, Region: 2-43
+Shorter than both DMS and Alignment seq
+
+-1D66: Entity 3, DNA RECOGNITION BY GAL4: STRUCTURE OF A PROTEIN/DNA COMPLEX
+Method: X-RAY DIFFRACTION 2.40 Å
+Seq Length: 66
+Alignment Sequence Identity: 100%, E-Value: 3.306e-37, Region: 1-65
+DMS Sequence Identity: 100%, E-Value: 3.288e-36, Region: 2-65
+Extra starting amino acid relative to DMS, less ending, is a complex with DNA
+
++DMS Seq EBI Query:
+Regulatory protein GAL4 OS=Saccharomyces cerevisiae (strain ATCC 204508 / S288c) OX=559292 GN=GAL4 PE=1 SV=2
+Swiss Prot ID: P04386
+Length: 881
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+Regulatory protein GAL4 OS=Saccharomyces cerevisiae (strain ATCC 204508 / S288c) OX=559292 GN=GAL4 PE=1 SV=2
+Swiss Prot ID: P04386
+Length: 881
+Identities: 100.0
+Positives: 100.0

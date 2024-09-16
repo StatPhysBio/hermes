@@ -1,0 +1,41 @@
+Important Note: Alpha fold correct structure, the possible pdb structure is slightly short.
+
+Matreyek, K.A., Starita, L.M., Stephany, J.J. et al. Multiplex assessment of protein variant abundance by massively parallel sequencing. Nat Genet 50, 874–882 (2018). https://doi.org/10.1038/s41588-018-0122-z
+This paper is about TPMT, a pharmacogene whose protein function is "required to metabolize thiopurine drugs", and the paper mentions the pdb id 2H11.
+
+DMS Seq:
+MDGTRTSLDIEEYSDTEVQKNQVLTLEEWQDKWVNGKTAFHQEQGHQLLKKHLDTFLKGKSGLRVFFPLCGKAVEMKWFADRGHSVVGVEISELGIQEFFTEQNLSYSEEPITEIPGTKVFKSSSGNISLYCCSIFDLPRTNIGKFDMIWDRGALVAINPGDRKCYADTMFSLLGKKFQYLLCVLSYDPTKHPGPPFYVPHAEIERLFGKICNIRCLEKVDAFEERHKSWGIDCLFEKLYLLTEK
+Alignment Seq:
+MDGTRTSLDIEEYSDTEVQKNQVLTLEEWQDKWVNGKTAFHQEQGHQLLKKHLDTFLKGKSGLRVFFPLCGKAVEMKWFADRGHSVVGVEISELGIQEFFTEQNLSYSEEPITEIPGTKVFKSSSGNISLYCCSIFDLPRTNIGKFDMIWDRGALVAINPGDRKCYADTMFSLLGKKFQYLLCVLSYDPTKHPGPPFYVPHAEIERLFGKICNIRCLEKVDAFEERHKSWGIDCLFEKLYLLTEK
+
+DMS Seq Range: 1-245, Alignment Seq Range: 1-245
+Same Sequence
+100.0% identity in 245 residues overlap; Score: 1324.0; Gap frequency: 0.0%
+
+-2BZG: Entity 1, Crystal structure of thiopurine S-methyltransferase
+Method: X-RAY DIFFRACTION 1.58 Å
+Seq Length: 232
+Alignment Sequence Identity: 100%, E-Value: 2.105e-159, Region: 3-232
+DMS Sequence Identity: 100%, E-Value: 2.105e-159, Region: 3-232
+Missing starting and ending amino acids relative to sequence
+
+-2H11: Entity 1, Amino-terminal Truncated Thiopurine S-Methyltransferase Complexed with S-Adenosyl-L-Homocysteine
+Method: X-RAY DIFFRACTION 1.89 Å
+Seq Length: 232
+Alignment Sequence Identity: 100%, E-Value: 2.105e-159, Region: 3-232
+DMS Sequence Identity: 100%, E-Value: 2.105e-159, Region: 3-232
+Missing starting and ending amino acids relative to sequence
+
++DMS Seq EBI Query:
+Thiopurine S-methyltransferase OS=Homo sapiens OX=9606 GN=TPMT PE=1 SV=1
+Swiss Prot ID: P51580
+Length: 245
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+Thiopurine S-methyltransferase OS=Homo sapiens OX=9606 GN=TPMT PE=1 SV=1
+Swiss Prot ID: P51580
+Length: 245
+Identities: 100.0
+Positives: 100.0

@@ -1,0 +1,34 @@
+Important Note: alpha fold structure is correct, pdb structure is 1 amino acid short, and was modeled using solution NMR.
+
+Kelsic, E. D. et al. RNA structural determinants of optimal codons revealed by MAGE-Seq. Cell Syst. 3, 563–571 (2016). https://doi.org/10.1016/j.cels.2016.11.004
+The strain of ecoli studied in the paper is EcNR2, but there are no models of the IF1 protein from this strain
+
+DMS Seq:
+MAKEDNIEMQGTVLETLPNTMFRVELENGHVVTAHISGKMRKNYIRILTGDKVTVELTPYDLSKGRIVFRSR
+Alignment Seq:
+MAKEDNIEMQGTVLETLPNTMFRVELENGHVVTAHISGKMRKNYIRILTGDKVTVELTPYDLSKGRIVFRSR
+
+DMS Seq Range: 1-72, Alignment Seq Range: 1-72
+Same sequence
+100.0% identity in 72 residues overlap; Score: 365.0; Gap frequency: 0.0%
+
+-1AH9: Entity 1, THE STRUCTURE OF THE TRANSLATIONAL INITIATION FACTOR IF1 FROM ESCHERICHIA COLI, NMR, 19 STRUCTURES
+Method: SOLUTION NMR
+Seq Length: 71
+Alignment Sequence Identity: 100%, E-Value: 2.129e-41, Region: 1-71
+DMS Sequence Identity: 100%, E-Value: 2.129e-41, Region: 1-71
+Missing first amino acid
+
++DMS Seq EBI Query:
+Translation initiation factor IF-1 OS=Escherichia coli (strain K12) OX=83333 GN=infA PE=1 SV=2
+Swiss Prot ID: P69222
+Length: 72
+Identities: 100
+Positives: 100
+
++Alignment Seq EBI Query:
+Translation initiation factor IF-1 OS=Escherichia coli (strain K12) OX=83333 GN=infA PE=1 SV=2
+Swiss Prot ID: P69222
+Length: 72
+Identities: 100
+Positives: 100

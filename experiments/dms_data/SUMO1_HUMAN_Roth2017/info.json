@@ -1,0 +1,10 @@
+{
+    "systems": [
+        "output_SUMO1_HUMAN_Roth2017__4wjq",
+        "output_SUMO1_HUMAN_Roth2017__6xoi",
+        "output_SUMO1_HUMAN_Roth2017__AF-P63165-F1-model_v4"
+    ],
+    "dms_columns": [
+        "screenscore"
+    ]
+}

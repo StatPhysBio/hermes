@@ -1,0 +1,40 @@
+Important Note: Generated colabfold structure using DMS. Alpha fold is correct, possible pdb too short.
+
+Starita, L. M. et al. Activity-enhancing mutations in an E3 ubiquitin ligase identified by high-throughput mutagenesis. Proc. Natl Acad. Sci. USA 110, E1263–E1272 (2013). https://doi.org/10.1073/pnas.1303309110
+This paper analyzes mouse ubiquitin, they "generate a sequence–function map of the U-box of the murine E3 ligase ubiquitination factor E4B (Ube4b)"
+
+DMS Seq:
+IEKFKLLAEKVEEIVAKNARAEIDYSDAPDEFRDPLMDTLMTDPVRLPSGTVMDRSIILRHLLNSPTDPFNRQMLTESMLEPVPELKEQIQAWMREKQSSDH
+Alignment seq:
+IAIEKFKLLAEKVEEIVAKNARAEIDYSDAPDEFRDPLMDTLMTDPVRLPSGTVMDRSIILRHLLNSPTDPFNRQMLTESMLEPVPELKEQIQAWMREKQSSDH
+
+DMS Seq Range: 1072-1173, Alignment Seq Range: 1070-1173
+Alignment has 2 extra starting amino acids
+100.0% identity in 102 residues overlap; Score: 521.0; Gap frequency: 0.0%
+
+-2KR4: Entity 1, U-box domain of the E3 Ubiquitin Ligase E4B
+Method: SOLUTION NMR
+Seq Length: 85
+Alignment Sequence Identity: 100%, E-Value: 3.959e-48, Region: 4-85
+DMS Sequence Identity: 100%, E-Value: 3.959e-48, Region: 4-85
+Correct protein, may not be aligned properly
+
+-3L1X: Entity 1, Crystal Structure of U-box Domain of Human E4B Ubiquitin Ligase
+Seq Length: 112
+Alignment Sequence Identity: 97%, E-Value: 1.368e-54, Region: 6-100
+DMS Sequence Identity: 97%, E-Value: 1.703e-54, Region: 6-100
+Not the right region, multiple swaps, and from a human, not a mouse
+
++DMS Seq EBI Query:
+Ubiquitin conjugation factor E4 B OS=Mus musculus OX=10090 GN=Ube4b PE=1 SV=3
+Swiss Prot ID: Q9ES00
+Length: 1173
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+Ubiquitin conjugation factor E4 B OS=Mus musculus OX=10090 GN=Ube4b PE=1 SV=3
+Swiss Prot ID: Q9ES00
+Length: 1173
+Identities: 100.0
+Positives: 100.0

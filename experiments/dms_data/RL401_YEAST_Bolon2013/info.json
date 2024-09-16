@@ -1,0 +1,10 @@
+{
+    "systems": [
+        "output_RL401_YEAST_Bolon2013__2g3q",
+        "output_RL401_YEAST_Bolon2013__AF-P0CH09-F1-model_v4",
+        "output_RL401_YEAST_Bolon2013__rank_1_model_4_ptm_seed_0_unrelaxed"
+    ],
+    "dms_columns": [
+        "selection_coefficient"
+    ]
+}

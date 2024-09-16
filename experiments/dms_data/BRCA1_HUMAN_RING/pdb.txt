@@ -1,0 +1,35 @@
+Important Note: High confidence in 1JM7 as it is mentioned by the paper. The PDB structure is different from the alpha fold structure, because the alpha fold is the entire protein, and the pdb is a domain.
+
+Findlay, G.M., Daza, R.M., Martin, B. et al. Accurate classification of BRCA1 variants with saturation genome editing. Nature 562, 217–222 (2018). https://doi.org/10.1038/s41586-018-0461-z
+The paper studies two domains of the BRCA1 protein, this directory focuses on the RING domain.
+
+
+DMS Sequence:
+MDLSALRVEEVQNVINAMQKILECPICLELIKEPVSTKCDHIFCKFCMLKLLNQKKGPSQCPLCKNDITKRSLQESTRFSQLVEELLKIICAFQLDTGLEY
+Alignment Sequence:
+MDLSALRVEEVQNVINAMQKILECPICLELIKEPVSTKCDHIFCKFCMLKLLNQKKGPSQCPLCKNDITKRSLQESTRFSQLVEELLKIICAFQLDTGLEYANSYNFAKK
+
+DMS Seq Range: 1-101, Alignment Seq Range: 1-110
+DMS missing ending amino acids, DMS sequence in weird order
+100.0% identity in 101 residues overlap; Score: 527.0; Gap frequency: 0.0%
+
+-1JM7: Entity 1, Solution structure of the BRCA1/BARD1 RING-domain heterodimer
+Method: SOLUTION NMR
+Seq Length: 112
+Alignment Sequence Identity: 100%, E-Value: 1.458e-69, Region: 1-110
+DMS Sequence Identity: 100%, E-Value: 3.634e-63, Region: 1-101
+Two extra amino acids on the end relative to alignment sequence, I don't know about precision of this method.
+
++DMS Seq EBI Query:
+Breast cancer type 1 susceptibility protein OS=Homo sapiens OX=9606 GN=BRCA1 PE=1 SV=2
+Swiss Prot ID:P38398
+Length: 1863
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+Breast cancer type 1 susceptibility protein OS=Homo sapiens OX=9606 GN=BRCA1 PE=1 SV=2
+Swiss Prot ID:P38398
+Length: 1863
+Identities: 100.0
+Positives: 100.0

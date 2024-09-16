@@ -1,0 +1,31 @@
+{
+    "systems": [
+        "output_KKA2_KLEPN_Mikkelsen2014__1nd4",
+        "output_KKA2_KLEPN_Mikkelsen2014__AF-P00552-F1-model_v4"
+    ],
+    "dms_columns": [
+        "Ami11_avg",
+        "Ami12_avg",
+        "Ami14_avg",
+        "Ami18_avg",
+        "G41811_avg",
+        "G41812_avg",
+        "G41814_avg",
+        "Kan11_avg",
+        "Kan12_avg",
+        "Kan14_avg",
+        "Kan18_avg",
+        "Neo11_avg",
+        "Neo12_avg",
+        "Neo14_avg",
+        "Neo18_avg",
+        "Paro11_avg",
+        "Paro12_avg",
+        "Paro14_avg",
+        "Paro18_avg",
+        "Ribo11_avg",
+        "Ribo12_avg",
+        "Ribo14_avg",
+        "Ribo18_avg"
+    ]
+}

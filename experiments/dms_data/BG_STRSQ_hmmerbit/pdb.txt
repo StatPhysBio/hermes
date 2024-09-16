@@ -1,0 +1,30 @@
+Important Note: Used colabfold to generate structure. Possible alpha fold and pdb structure are the correct protein, and the PDB id is mentioned in the paper. However, they are both missing the end of the sequence relative to DMS and alignment, because "The Bgl3 construct has 500 amino acid positions." Whereas the structures have 479.
+
+Romero et al. Dissecting enzyme function with microfluidic-based deep mutational scanning, Proceedings of the National Academy of Sciences. 2015. https://doi.org/10.1073/pnas.1422285112
+The paper studies beta glucosidase from Streptomyces sp, and one of the reasons is that it "has been solved to high resolution". So, I feel somewhat confident about 1GNX being a good structure.
+
+DMS Seq:
+MVPAAQQTAMAPDAALTFPEGFLWGSATASYQIEGAAAEDGRTPSIWDTYARTPGRVRNGDTGDVATDHYHRWREDVALMAELGLGAYRFSLAWPRIQPTGRGPALQKGLDFYRRLADELLAKGIQPVATLYHWDLPQELENAGGWPERATAERFAEYAAIAADALGDRVKTWTTLNEPWCSAFLGYGSGVHAPGRTDPVAALRAAHHLNLGHGLAVQALRDRLPADAQCSVTLNIHHVRPLTDSDADADAVRRIDALANRVFTGPMLQGAYPEDLVKDTAGLTDWSFVRDGDLRLAHQKLDFLGVNYYSPTLVSEADGSGTHNSDGHGRSAHSPWPGADRVAFHQPPGETTAMGWAVDPSGLYELLRRLSSDFPALPLVITENGAAFHDYADPEGNVNDPERIAYVRDHLAAVHRAIKDGSDVRGYFLWSLLDNFEWAHGYSKRFGAVYVDYPTGTRIPKASARWYAEVARTGVLPTAGDPNSSSVDKLAAALEHHHHHH
+Alignment Seq:
+MVPAAQQTAMAPDAALTFPEGFLWGSATASYQIEGAAAEDGRTPSIWDTYARTPGRVRNGDTGDVATDHYHRWREDVALMAELGLGAYRFSLAWPRIQPTGRGPALQKGLDFYRRLADELLAKGIQPVATLYHWDLPQELENAGGWPERATAERFAEYAAIAADALGDRVKTWTTLNEPWCSAFLGYGSGVHAPGRTDPVAALRAAHHLNLGHGLAVQALRDRLPADAQCSVTLNIHHVRPLTDSDADADAVRRIDALANRVFTGPMLQGAYPEDLVKDTAGLTDWSFVRDGDLRLAHQKLDFLGVNYYSPTLVSEADGSGTHNSDGHGRSAHSPWPGADRVAFHQPPGETTAMGWAVDPSGLYELLRRLSSDFPALPLVITENGAAFHDYADPEGNVNDPERIAYVRDHLAAVHRAIKDGSDVRGYFLWSLLDNFEWAHGYSKRFGAVYVDYPTGTRIPKASARWYAEVARTGVLPTAGDPNSSSVDKLAAALEHHHHHH
+
+DMS Seq Range: 1-501, Alignment Seq Range: 1-501
+Same sequence
+100.0% identity in 501 residues overlap; Score: 2700.0; Gap frequency: 0.0%
+
+-1GNX: Entity 1, b-glucosidase from Streptomyces sp
+Method: X-RAY DIFFRACTION 1.68 Å
+Seq Length: 479
+Alignment Sequence Identity: 100%, E-Value: 0, Region: 1-479
+DMS Sequence Identity: 100%, E-Value: 0, Region: 1-479
+Missing end of sequence amino acids
+
+-1GON: Entity 1, b-glucosidase from Streptomyces sp
+Method: X-RAY DIFFRACTION 2.2 Å
+Seq Length: 479
+Alignment Sequence Identity: 100%, E-Value: 0, Region: 1-479
+DMS Sequence Identity: 100%, E-Value: 0, Region: 1-479
+Missing end of sequence amino acids, method too low accuracy
+
++DMS Seq EBI Query:
+N/A because does not have the correct protein in the databases queried.

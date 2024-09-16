@@ -1,0 +1,55 @@
+Important Note: Correct alpha fold structure. No satisfactory pdb structure.
+
+Weile, J. et al. A framework for exhaustively mapping functional missense variants. Mol. Syst. Biol. 13, 957 (2017). https://doi.org/10.15252/msb.20177908
+The paper mentions PDB 4WJQ, but it is too short and in complex
+
+DMS Seq:
+MSDQEAKPSTEDLGDKKEGEYIKLKVIGQDSSEIHFKVKMTTHLKKLKESYCQRQGVPMNSLRFLFEGQRIADNHTPKELGMEEEDVIEVYQEQTGGHSTV
+Alignment Seq:
+MSDQEAKPSTEDLGDKKEGEYIKLKVIGQDSSEIHFKVKMTTHLKKLKESYCQRQGVPMNSLRFLFEGQRIADNHTPKELGMEEEDVIEVYQEQTGGHSTV
+
+DMS Seq Range: 1-101, Alignment Seq Range: 1-101
+Same sequence
+100.0% identity in 101 residues overlap; Score: 525.0; Gap frequency: 0.0%
+
+-2N1V: Entity 1, Solution structure of human SUMO1
+Method: SOLUTION NMR
+Seq Length: 111
+Alignment Sequence Identity: 100%, E-Value: 6.049e-58, Region: 15-111
+DMS Sequence Identity: 100%, E-Value: 6.049e-58, Region: 15-111
+Slightly offset, too long
+
+-6XOI: Entity 3, Structure of SUMO1-ML00752641 adduct bound to SAE
+Method: X-RAY DIFFRACTION 2 Å
+Seq Length: 101
+Alignment Sequence Identity: 100%, E-Value: 7.839e-61, Region: 1-101
+DMS Sequence Identity: 100%, E-Value: 7.839e-61, Region: 1-101
+Exact match
+
+-6JXV: Entity 1, SUMO1 bound to phosphorylated SLS4-SIM peptide from ICP0
+Method: SOLUTION NMR
+Seq Length: 101
+Alignment Sequence Identity: 100%, E-Value: 7.839e-61, Region: 1-101
+DMS Sequence Identity: 100%, E-Value: 7.839e-61, Region: 1-101
+Exact match
+
+-6XOG: Entity 3, Structure of SUMO1-ML786519 adduct bound to SAE
+Method: X-RAY DIFFRACTION 1.98 Å
+Seq Length: 101
+Alignment Sequence Identity: 100%, E-Value: 7.839e-61, Region: 1-101
+DMS Sequence Identity: 100%, E-Value: 7.839e-61, Region: 1-101
+Exact match
+
++DMS Seq EBI Query:
+Small ubiquitin-related modifier 1 OS=Homo sapiens OX=9606 GN=SUMO1 PE=1 SV=1
+Swiss Prot ID: P63165
+Length: 101
+Identities: 100
+Positives: 100
+
++Alignment Seq EBI Query:
+Small ubiquitin-related modifier 1 OS=Homo sapiens OX=9606 GN=SUMO1 PE=1 SV=1
+Swiss Prot ID: P63165
+Length: 101
+Identities: 100
+Positives: 100

@@ -1,0 +1,10 @@
+{
+    "systems": [
+        "output_IF1_ECOLI_Kishony__1ah9",
+        "output_IF1_ECOLI_Kishony__AF-P69222-F1-model_v4"
+    ],
+    "dms_columns": [
+        "fitness_min",
+        "fitness_rich"
+    ]
+}

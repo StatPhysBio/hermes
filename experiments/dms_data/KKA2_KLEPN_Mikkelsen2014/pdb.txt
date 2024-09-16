@@ -1,0 +1,34 @@
+Important Note: pdb and alpha fold correct.
+
+Alexandre Melnikov, Peter Rogov, Li Wang, Andreas Gnirke, Tarjei S. Mikkelsen, Comprehensive mutational scanning of a kinase in vivo reveals substrate-dependent fitness landscapes, Nucleic Acids Research, Volume 42, Issue 14, 18 August 2014, Page e112, https://doi.org/10.1093/nar/gku511
+The paper contains "mutational scanning of APH(3′)II, a Tn5 transposon-derived kinase that confers resistance to aminoglycoside antibiotics", which is the same as the pdb, which the paper also uses.
+
+DMS Seq:
+MIEQDGLHAGSPAAWVERLFGYDWAQQTIGCSDAAVFRLSAQGRPVLFVKTDLSGALNELQDEAARLSWLATTGVPCAAVLDVVTEAGRDWLLLGEVPGQDLLSSHLAPAEKVSIMADAMRRLHTLDPATCPFDHQAKHRIERARTRMEAGLVDQDDLDEEHQGLAPAELFARLKARMPDGEDLVVTHGDACLPNIMVENGRFSGFIDCGRLGVADRYQDIALATRDIAEELGGEWADRFLVLYGIAAPDSQRIAFYRLLDEFF
+Alignment Seq:
+MIEQDGLHAGSPAAWVERLFGYDWAQQTIGCSDAAVFRLSAQGRPVLFVKTDLSGALNELQDEAARLSWLATTGVPCAAVLDVVTEAGRDWLLLGEVPGQDLLSSHLAPAEKVSIMADAMRRLHTLDPATCPFDHQAKHRIERARTRMEAGLVDQDDLDEEHQGLAPAELFARLKARMPDGEDLVVTHGDACLPNIMVENGRFSGFIDCGRLGVADRYQDIALATRDIAEELGGEWADRFLVLYGIAAPDSQRIAFYRLLDEFF
+
+DMS Seq Range: 1-264, Alignment Seq Range: 1-264
+Same sequence
+100.0% identity in 264 residues overlap; Score: 1378.0; Gap frequency: 0.0%
+
+-1ND4: Entity 1, Crystal structure of aminoglycoside-3'-phosphotransferase-IIa
+Method: X-RAY DIFFRACTION 2.10 Å
+Seq Length: 264
+Alignment Sequence Identity: 100%, E-Value: 8.171e-177, Region: 1-264
+DMS Sequence Identity: 100%, E-Value: 8.171e-177, Region: 1-264
+Same sequence
+
++DMS Seq EBI Query:
+Aminoglycoside 3'-phosphotransferase OS=Escherichia coli OX=562 GN=aphA1 PE=3 SV=2
+Swiss Prot ID: P00552
+Length: 264
+Identities: 100
+Positives: 100
+
++Alignment Seq EBI Query:
+Aminoglycoside 3'-phosphotransferase OS=Escherichia coli OX=562 GN=aphA1 PE=3 SV=2
+Swiss Prot ID: P00552
+Length: 264
+Identities: 100
+Positives: 100

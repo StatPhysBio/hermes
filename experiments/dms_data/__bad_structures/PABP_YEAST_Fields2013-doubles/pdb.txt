@@ -1,0 +1,34 @@
+Important Note: Used the alignment sequence to generate colabfold structure because the DMS sequence has gaps. The paper uses a modified protein with only 3 out of 4 domains which makes the protein significantly more reactive to amino acid swaps. No satisfactory PDB.
+
+Melamed, D., Young, D. L., Gamble, C. E., Miller, C. R. & Fields, S. Deep mutational scanning of an RRM domain of the Saccharomyces cerevisiae poly(A)-binding protein. RNA 19, 1537–1551 (2013). https://doi.org/10.1261/rna.040709.113
+This paper is about RNA recognition motifs, specifically the "poly(A)-binding protein (Pab1)" of yeast. 577 amino acids initally, but they remove large sections of the protein in DMS testing. "Based on these observations, we chose the Pab1(1–343) fragment as the scaffold into which mutations would be introduced."
+
+DMS Seq:
+GNIFIKNLHPDIDNKALYDTFSVFDILSSKIATDENGKSKGFGFVHFEEGAAKEAIDALNGMLLNGQEIYVA
+Alignment Seq:
+QRDPSLRKKGSGNIFIKNLHPDIDNKALYDTFSVFGDILSSKIATDENGKSKGFGFVHFEEEGAAKEAIDALNGMLLNGQEIYVAPHLSRKERDSQ
+
+DMS Seq Range: 126-199, Alignment Seq Range: 115-210
+DMS missing starting and ending amino acids, some gaps
+97.3% identity in 74 residues overlap; Score: 338.0; Gap frequency: 2.7%
+
+-6R5K: Entity 2, Cryo-EM structure of a poly(A) RNP bound to the Pan2-Pan3 deadenylase
+Method: ELECTRON MICROSCOPY 4.8 Å
+Seq Length: 581
+Alignment Sequence Identity: 100%, E-Value: 9.646e-59, Region: 119-214
+DMS Sequence Identity: 97%, E-Value: 2.46e-39, Region: 130-203
+Matches alignment, just shifted, all other sequences have many mismatches
+
++DMS Seq EBI Query:
+Polyadenylate-binding protein, cytoplasmic and nuclear OS=Saccharomyces cerevisiae (strain ATCC 204508 / S288c) OX=559292 GN=PAB1 PE=1 SV=4
+Swiss Prot ID: P04147
+Length: 577
+Identities: 97.3
+Positives: 97.3
+
++Alignment Seq EBI Query:
+Polyadenylate-binding protein, cytoplasmic and nuclear OS=Saccharomyces cerevisiae (strain ATCC 204508 / S288c) OX=559292 GN=PAB1 PE=1 SV=4
+Swiss Prot ID: P04147
+Length: 577
+Identities: 100.0
+Positives: 100.0

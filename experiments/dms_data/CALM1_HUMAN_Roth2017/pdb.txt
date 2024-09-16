@@ -1,0 +1,41 @@
+Important Note: Both pdb and alpha fold structures are a perfect match.
+
+Adzhubei, I. A. et al. A method and server for predicting damaging missense mutations. Nat. Methods 7, 248–249 (2010). https://doi.org/10.15252/msb.20177908
+The paper mentions the 4DJC pdb id as what it used in a machine learning method. However, I am not sure that their structure chosen structure is more representative.
+
+DMS Seq:
+MADQLTEEQIAEFKEAFSLFDKDGDGTITTKELGTVMRSLGQNPTEAELQDMINEVDADGNGTIDFPEFLTMMARKMKDTDSEEEIREAFRVFDKDGNGYISAAELRHVMTNLGEKLTDEEVDEMIREADIDGDGQVNYEEFVQMMTAK
+Alignment Seq:
+MADQLTEEQIAEFKEAFSLFDKDGDGTITTKELGTVMRSLGQNPTEAELQDMINEVDADGNGTIDFPEFLTMMARKMKDTDSEEEIREAFRVFDKDGNGYISAAELRHVMTNLGEKLTDEEVDEMIREADIDGDGQVNYEEFVQMMTAK
+
+DMS Seq Range: 1-149, Alignment Seq Range: 1-149
+Same sequence, DMS sequence in formatted unusually
+100.0% identity in 149 residues overlap; Score: 759.0; Gap frequency: 0.0%
+
+-4BW8: Entity 1, Calmodulin with small bend in central helix
+Method: X-RAY DIFFRACTION 1.80 Å
+Seq Length: 149
+Alignment Sequence Identity: 100%, E-Value: 7.982e-91, Region: 1-149
+DMS Sequence Identity: 100%, E-Value: 7.982e-91, Region: 1-149
+Exact match, not a complex
+
+-4DJC: 1.35 A crystal structure of the NaV1.5 DIII-IV-Ca/CaM complex
+Method: X-RAY DIFFRACTION 1.35 Å
+Seq Length: 152
+Alignment
+DMS Sequence Identity: 100%, E-Value: 8.015e-91, Region: 4-152
+Sequence length too long, in a complex
+
++DMS Seq EBI Query:
+Calmodulin-1 OS=Homo sapiens OX=9606 GN=CALM1 PE=1 SV=1
+Swiss Prot ID: P0DP23
+Length: 149
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+Calmodulin-1 OS=Homo sapiens OX=9606 GN=CALM1 PE=1 SV=1
+Swiss Prot ID: P0DP23
+Length: 149
+Identities: 100.0
+Positives: 100.0

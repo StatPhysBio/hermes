@@ -1,0 +1,41 @@
+Important Note: The alpha fold is the entire protein, the PDB is the catalytic domain that was the focus of the study.
+
+Bandaru, P. et al. Deconstruction of the Ras switching cycle through saturation mutagenesis. eLife 6, e27810 (2017). https://doi.org/10.7554/eLife.27810
+This paper is about signaling proteins called Ras, specifically the GTPase domain and how the signals change given mutations and other regulating proteins. This paper mentions the pdb id 4Q21.
+
+DMS Seq:
+TEYKLVVVGAGGVGKSALTIQLIQNHFVDEYDPTIEDSYRKQVVIDGETCLLDILDTAGQEEYSAMRDQYMRTGEGFLCVFAINNTKSFEDIHQYREQIKRVKDSDDVPMVLVGNKCDLAARTVESRQAQDLARSYGIPYIETSAKTRQGVEDAFYTLVREIRQH
+Alignment Seq:
+MTEYKLVVVGAGGVGKSALTIQLIQNHFVDEYDPTIEDSYRKQVVIDGETCLLDILDTAGQEEYSAMRDQYMRTGEGFLCVFAINNTKSFEDIHQYREQIKRVKDSDDVPMVLVGNKCDLAARTVESRQAQDLARSYGIPYIETSAKTRQGVEDAFYTLVREIRQHKLRKLNPPDESGPGCMSCKCVLS
+
+DMS Seq Range: 2-166, Alignment Seq Range: 1-189
+DMS missing ending amino acids
+100.0% identity in 165 residues overlap; Score: 527.0; Gap frequency: 0.0%
+
+-3TGP: Entity 1, Room temperature H-ras
+Method: X-RAY DIFFRACTION 1.3075 Å
+Seq Length: 166
+Alignment Sequence Identity: 100%, E-Value: 9.272e-106, Region: 1-166
+DMS Sequence Identity: 100%, E-Value: 1.972e-105, Region: 2-166
+Same sequence as DMS, this is the catalytic domain.
+
+-4Q21: Entity 1, MOLECULAR SWITCH FOR SIGNAL TRANSDUCTION: STRUCTURAL DIFFERENCES BETWEEN ACTIVE AND INACTIVE FORMS OF PROTOONCOGENIC RAS PROTEINS
+Method: X-RAY DIFFRACTION 2 Å
+Seq Length: 189
+Alignment Sequence Identity: 100%, E-Value: 1.045e-123, Region: 1-189
+DMS Sequence Identity: 100%, E-Value: 1.972e-105, Region: 2-166
+Same sequence as alignment
+
++DMS Seq EBI Query:
+GTPase HRas OS=Homo sapiens OX=9606 GN=HRAS PE=1 SV=1
+Swiss Prot ID: P01112
+Length: 189	
+Identities: 100.0
+Positives: 100.0
+
++Alignment Seq EBI Query:
+GTPase HRas OS=Homo sapiens OX=9606 GN=HRAS PE=1 SV=1
+Swiss Prot ID: P01112
+Length: 189	
+Identities: 100.0
+Positives: 100.0
