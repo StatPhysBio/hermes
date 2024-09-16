@@ -4,11 +4,10 @@ Code for the paper [HERMES: Holographic Equivariant neuRal network model for Mut
 
 ![Schematic of HERMES](hermes.png)
 
-**|-----------------------------|**
-**| HAVE TO REWRITE THIS README |**
-**|-----------------------------|**
 
 ## Running on Colab
+
+**TODO: re-make colab with new models and new repository**
 
 You can run predictions easily on the [Google Colab Notebook](https://colab.research.google.com/drive/1JQxkXeGZJYYcPNglN3rYUYiOuUOkwJPL?usp=sharing).
 
@@ -19,8 +18,8 @@ NOTE: Currently, there is a conflict between `openmm` and `pytorch`, whereby it'
 
 **Step 1:** Create environment and install pytorch.
 ```bash
-conda create -n protholo python=3.9
-conda activate protholo
+conda create -n hermes python=3.9
+conda activate hermes
 ```
 
 Install `pytorch==1.13.1` with or without CUDA depending on whether you have a GPU available, following https://pytorch.org/get-started/previous-versions/. For example:
@@ -43,7 +42,7 @@ Installing `zernikegrams` will also install other necessary packages such as `op
 To download pyrosetta, after obtaining a license from the link above, follow instructions [here](https://www.pyrosetta.org/downloads#h.6vttn15ac69d). We recommend downloading the .whl file and installing with pip. Our models were trained and evaluated using version `PyRosetta4.Release.python39.linux.release-335`. We do not foresee issues with using alternative versions, but cannot guarantee compatibility at this time.
 
 
-**Step 4:** Install `protein_holography_web` as a package. This will install some of the other necessary packages as well.
+**Step 4:** Install `hermes` as a package. This will install some of the other necessary packages as well.
 ```bash
 pip install .
 ```
@@ -60,46 +59,42 @@ Installation tips:
 
 ## Provided pre-trained and fine-tuned models
 
-We are in the process of re-naming models in the repository. For now, please **use the old names**.\\
-[new name] <--> [old name]
+You can find all the models in the `trained_models/` directory. Some notable models:
 
-We provide the following pre-trained models:
-- `HERMES_Bp_000` <--> `HCNN_biopython_proteinnet_extra_mols_0p00`: trained on ~10k CASP12 ProteinNet chains, using the preprocessing pipeline from the RaSP paper based on Biopython, *except we keep extra ligands and ions (not water)*.
-- `HERMES_Bp_050` <--> `HCNN_biopython_proteinnet_extra_mols_0p50`: same as above, but trained on data with added gaussian noise with standard deviation of 0.5 Angstrom.
-- `HERMES_Py_000` <--> `HCNN_pyrosetta_proteinnet_extra_mols_0p00`: trained on ~10k CASP12 ProteinNet chains, using *pyrosetta* to preprocess protein structures as described in the HCNN paper. This procedure includes ligands and ions, excludes water, and - constrary to RaSP - does **not** substitute non-canonical amino-acids.
-- `HERMES_Py_050` <--> `HCNN_pyrosetta_proteinnet_extra_mols_0p50`: same as above, but trained on data with added gaussian noise with standard deviation of 0.5 Angstrom.
+- `hermes_{bp/py}_{000/050}`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains.
+- `hermes_{bp/py}_{000/050}_ft_ros_ddg_st`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress ddG values of stability for 35 proteins computed with Rosetta.
+- `hermes_{bp/py}_{000/050}_ft_cdna117k_ddg_st`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress ddG values of stability from the cdna117k dataset. *These are the best models for protein stability prediction*.
+- `hermes_{bp/py}_{000/050}_ft_skempi_ddg_bi`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress ddG values of binding for the SKEMPI dataset. *Use these for predicting mutation effects on binding.*.
 
-We also provide the same models fine-tuned on stability ddG values computed with Rosetta:
-- `HERMES_Bp_000_FT_Ros_ddG` <--> `HCNN_biopython_proteinnet_extra_mols_0p00_finetuned_with_rosetta_ddg_all`
-- `HERMES_Bp_050_FT_Ros_ddG` <--> `HCNN_biopython_proteinnet_extra_mols_0p50_finetuned_with_rosetta_ddg_with_0p50_all`
-- `HERMES_Py_000_FT_Ros_ddG` <--> `HCNN_pyrosetta_proteinnet_extra_mols_0p00_finetuned_with_rosetta_ddg_all`
-- `HERMES_Py_050_FT_Ros_ddG` <--> `HCNN_pyrosetta_proteinnet_extra_mols_0p50_finetuned_with_rosetta_ddg_with_0p50_all`
+`bp` indicates Biopython preprocessing (open source but slower), whereas `py` indicates PyRosetta preprocessing (faster but requires a license). `000` indicates no noise added during training, whereas `050` indicates noise was added during training. `ft` indicates the model was fine-tuned on a specific dataset. `ros_ddg_st` indicates the model was fine-tuned on Rosetta ddG stability data. `cdna117k_ddg_st` indicates the model was fine-tuned on the cdna117k ddG stability data. `skempi_ddg_bi` indicates the model was fine-tuned on the SKEMPI ddG binding data.
 
-Please see the paper for a comprehensive benchmarking evaluation. The tl;dr is: fine-tuned models work better, and all four perform similarly. Pre-trained-only models work better with 0.50 Angstrom noise, and with pyrosetta preprocessing.
+Please see the paper for a comprehensive benchmarking evaluation.
 
-Note that, to use the pyrosetta models, a local installation of pyrosetta is necessary.
+Note that, to use the pyrosetta models, a local installation of pyrosetta is necessary, whereas the biopython models use a fully open-source pipeline.
 
 
 ## Getting site-level mutation probabilities and embeddings for all sites in PDB files
 
-The script `run_hcnn_on_pdbfiles.py` can be given as input a set of PDB files - with optionally pdb-specific chains - and it will output a csv file where every row is a uniquely-identified site, and columns are the site's mutation probabilities. If embeddings are requested, they will be outputted in a separate file called `{CSV_FILENAME}-embeddings.npy`.
+The script `run_hermes_on_pdbfiles.py` can be given as input a set of PDB files - with optionally pdb-specific chains - and it will output a csv file where every row is a uniquely-identified site, and columns are the site's mutation probabilities. If embeddings are requested, they will be outputted in a separate file called `{CSV_FILENAME}-embeddings.npy`.
 
 ```bash
-usage: run_hcnn_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBIDS_AND_CHAINS] [-pp PARALLELISM] -o OUTPUT_FILEPATH [-r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]] [-an {0,1}] [-el {0,1}] [-bs BATCH_SIZE] [-v {0,1}] [-lb {0,1}]
+usage: run_hermes_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBIDS_AND_CHAINS] [-pp PARALLELISM] -o OUTPUT_FILEPATH
+                                 [-r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]] [-an {0,1}] [-el {0,1}] [-bs BATCH_SIZE] [-v {0,1}] [-lb {0,1}]
 
 optional arguments:
   -h, --help            show this help message and exit
   -m MODEL_VERSION, --model_version MODEL_VERSION
-                        Name of HCNN model you want to use.
+                        Name of HERMES model you want to use.
   -hf HDF5_FILE, --hdf5_file HDF5_FILE
                         Path to an .hdf5 file containing zernikegrams and res_ids to run inference on. Cannot be specified together with --folder_with_pdbs.
   -pd FOLDER_WITH_PDBS, --folder_with_pdbs FOLDER_WITH_PDBS
                         Directory containing PDB files to run inference on. Inference is run on all sites in the structure. Cannot be specified together with --hdf5_file.
   -pn FILE_WITH_PDBIDS_AND_CHAINS, --file_with_pdbids_and_chains FILE_WITH_PDBIDS_AND_CHAINS
-                        [Optional] Path to a .txt file containing pdbids and chains to run inference on. If not specified, and --folder_with_pdbs is specified, inference will be run on all sites in the structure. If specified, each line should be in the format "pdbid chain"; if chain is not specified for a given line, inference will be run on all chains in that
-                        structure.
+                        [Optional] Path to a .txt file containing pdbids and chains to run inference on. If not specified, and --folder_with_pdbs is specified, inference will be run on all sites in the structure. If specified, each
+                        line should be in the format "pdbid chain"; if chain is not specified for a given line, inference will be run on all chains in that structure.
   -pp PARALLELISM, --parallelism PARALLELISM
-                        If zero (default), pdb files are processed one by one. If one, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a temporary hdf5 file.
+                        If zero (default), pdb files are processed one by one. If one, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a temporary
+                        hdf5 file.
   -o OUTPUT_FILEPATH, --output_filepath OUTPUT_FILEPATH
                         Must be a ".csv file". Embeddings will be saved separately, in a parallel array, with the same filename but with the extension "-embeddings.npy".
   -r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...], --request {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]
@@ -107,7 +102,8 @@ optional arguments:
   -an {0,1}, --add_same_noise_level_as_training {0,1}
                         1 for True, 0 for False. If True, will add the same noise level as was used during training. This is useful for debugging purposes. Default is False.
   -el {0,1}, --ensemble_at_logits_level {0,1}
-                        1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. There should not be a big difference, unless the ensembled models are trained very differently.
+                        1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. There should not
+                        be a big difference, unless the ensembled models are trained very differently.
   -bs BATCH_SIZE, --batch_size BATCH_SIZE
                         Batch size for the model (number of sites). Higher batch sizes are faster, but may not fit in memory. Default is 512.
   -v {0,1}, --verbose {0,1}
@@ -121,7 +117,7 @@ Some common use cases:
 
 **Get all probabilities and embeddings for all sites in the PDB files found in `pdbs`.**
 ```bash
-python run_hcnn_on_pdbfiles.py -pd pdbs --m HCNN_biopython_proteinnet_0p00 -o all_sites.csv -r probas embeddings
+python run_hermes_on_pdbfiles.py -pd pdbs -m hermes_bp_000 -o all_sites.csv -r probas embeddings
 ```
 The above command will output two csv files: one called `all_sites.csv` with mutation probabilities, the other called `all_sites-embeddings.npy` with embeddings, for all sites in the PDB files found in the `pdbs` directory.
 
@@ -135,14 +131,14 @@ For example, assume the file `my_pdbs_and_chains.txt` contains the following:
 ```
 Then, to process only these pdbs and chains, run:
 ```bash
-python run_hcnn_on_pdbfiles.py -pd pdbs -pn my_pdbs_and_chains.txt --m HCNN_biopython_proteinnet_0p00 -o specific_chains.csv -r probas embeddings
+python run_hermes_on_pdbfiles.py -pd pdbs -pn my_pdbs_and_chains.txt -m hermes_bp_000 -o specific_chains.csv -r probas embeddings
 ```
 
 If a requested pdb file is not found in the directory, the script will automatically attempt to download it from the RCSB website.
 
 **New from 08/05/24 - Parallel processing with multiprocessing.**
 We now support processing proteins in parallel over multiple cores, leveraging the `multiprocessing` library. To use this feature, first make sure your program has access to the desired number of cores, then provide the `-pp` argument with the number of cores you want to use. Crucially, this will parallelize only the processing and parsiong of proteins, not the forward pass to the model. Furthermore, note that `multiprocessing` has some significant overhead, so the time improvement is less than linear with the number of cores and, in some cases, using multiprocessing might even be slower than not parallelizing at all. If you do not want to use multiprocessing, use the default value `-pp 0`, as specifying `-pp 1` will still call multiprocessing and be slower. \\
-Below are the times to run `HERMES_Bp_000` on 15 PDBs using a single A40 GPU, and access to 5 cores with 64GB total of memory, and with varying degrees of parallelization:
+Below are the times to run `hermes_bp_000` on 15 PDBs using a single A40 GPU, and access to 5 cores with 64GB total of memory, and with varying degrees of parallelization:
 
 | `-pp` | Time (s) |
 | ----- | -------- |
@@ -151,17 +147,17 @@ Below are the times to run `HERMES_Bp_000` on 15 PDBs using a single A40 GPU, an
 | 2     |  367     |
 | 3     |  332     |
 
-You can run this test yourself by running the function `test_run_hcnn_on_pdbfiles__with_parallelism_and_without()` from 'tests/test_run_hcnn_on_pdbfiles.py'.
-
 
 
 **New from 08/05/24 - Parallel processing with SLURM.**
-A more efficient option for parallel processing, which however requires more code to set up, is to call the script `run_hcnn_on_pdbfiles.py` in parallel on subsets of the PDB files and then merge the results. This is most convenient when using a job scheduler like SLURM. We provide a script that automatically runs all HERMES models on all PDB files in a directory, by submitting a single-core job per PDB-model combination. It is the responsibility of the user to then merge the results if they so desire. The script it easily modifiable and we invite the experienced users to modify it to their needs. The script is called `run_hcnn_on_pdbfiles_parallel_with_slurm.py`:
+A more efficient option for parallel processing, which however requires more code to set up, is to call the script `run_hermes_on_pdbfiles.py` in parallel on subsets of the PDB files and then merge the results. This is most convenient when using a job scheduler like SLURM. We provide a script that automatically runs all HERMES models on all PDB files in a directory, by submitting a single-core job per PDB-model combination. It is the responsibility of the user to then merge the results if they so desire. The script it easily modifiable and we invite the experienced users to modify it to their needs. The script is called `run_hermes_on_pdbfiles_in_parallel_with_slurm.py`:
 ```bash
-usage: run_hcnn_on_pdbfiles_in_parallel_with_slurm.py [-h] [-pd FOLDER_WITH_PDBS] [-df DUMPFILES_FOLDER] [-of OUTPUT_FOLDER] [-hf HERMES_FOLDER] [-A ACCOUNT] [-P PARTITION] [-G {0,1}] [-C NUM_CORES] [-W WALLTIME] [-M MEMORY] [-E {0,1}] [-EA EMAIL_ADDRESS]
+usage: run_hermes_on_pdbfiles_in_parallel_with_slurm.py [-h] -m MODEL_NAME [-pd FOLDER_WITH_PDBS] [-df DUMPFILES_FOLDER] [-of OUTPUT_FOLDER] [-hf HERMES_FOLDER] [-bs BATCH_SIZE] [-A ACCOUNT] [-P PARTITION] [-G {0,1}] [-C NUM_CORES]
+                                                        [-W WALLTIME] [-M MEMORY] [-E {0,1}] [-EA EMAIL_ADDRESS]
 
 optional arguments:
   -h, --help            show this help message and exit
+  -m MODEL_NAME, --model_name MODEL_NAME
   -pd FOLDER_WITH_PDBS, --folder_with_pdbs FOLDER_WITH_PDBS
                         Directory containing PDB files to run inference on. Inference is run on all sites in the structure.
   -df DUMPFILES_FOLDER, --dumpfiles_folder DUMPFILES_FOLDER
@@ -169,7 +165,8 @@ optional arguments:
   -of OUTPUT_FOLDER, --output_folder OUTPUT_FOLDER
                         Root to store outputs.
   -hf HERMES_FOLDER, --hermes_folder HERMES_FOLDER
-                        Path to the Hermes folder, containing the run_hcnn_on_pdbfiles.py script.
+                        Path to the HERMES folder, containing the run_hermes_on_pdbfiles.py script.
+  -bs BATCH_SIZE, --batch_size BATCH_SIZE
   -A ACCOUNT, --account ACCOUNT
   -P PARTITION, --partition PARTITION
   -G {0,1}, --use_gpu {0,1}
@@ -185,13 +182,13 @@ optional arguments:
 
 ## Scoring specific mutations
 
-Sometimes, it is useful to score specific mutations. The script `zero_shot_mutation_effect_prediction_with_hcnn.py` can be used for this purpose. It takes as input a csv file with columns corresponding to: the mutation, the chain, and the pdb file of the wildtype. The script will output a csv file with the mutation probabilities and embeddings for the requested mutations.
+Sometimes, it is useful to score specific mutations. The script `mutation_effect_prediction_with_hermes.py` can be used for this purpose. It takes as input a csv file with columns corresponding to: the mutation, the chain, and the pdb file of the wildtype. The script will output a csv file with the mutation probabilities and embeddings for the requested mutations.
 
 If desired, the script supports the use of the mutant structure to predict the mutation effect. This can be done by providing the mutant pdb file in the csv file in the appropriate column.
 
 The columns are not expected to have specific names, but the names must ben provided as input to the script.
 
-Run `python zero_shot_mutation_effect_prediction_with_hcnn.py -h` for more information on the script, and see `experiments/Protein_G/` for a simple example.
+Run `python mutation_effect_prediction_with_hermes.py -h` for more information on the script, and see `experiments/Protein_G/` for a simple example.
 
 
 ## Want to fine-tune on your mutation effect dataset?
@@ -202,11 +199,13 @@ Fine-tuning can be easily done in three steps.
 
 2. **Generate inputs (aka zernikegrams or holograms).** For faster training, we pre-generate the inputs and store them in a .npz file. Run `make_zernikegrams_for_finetuning.py` to generate the inputs, providing as arguments, the model you want to make inputs for, the directory of pdbfiles, whether to add noise to structures, and the output directory.
 
-3. **Fine-tune the model.** Run `finetune_hcnn.py` to fine-tune the model. You need to provide a config file with the necessary information, see `/training_data/finetuning/rosetta_ddg/configs/HCNN_biopython_proteinnet_extra_mols_0p00__all.yaml` for a thorough example.
+3. **Fine-tune the model.** Run `finetune_hermes.py` to fine-tune the model. You need to provide a config file with the necessary information, see `/gscratch/spe/gvisan01/hermes/training_data/finetuning/cdna117k/configs/hermes_bp_000.yaml` for a thorough example.
 
 
 
 ## References
+
+**TODO: update reference with MLSB paper**
 
 If you use this code, please cite the following paper:
 
