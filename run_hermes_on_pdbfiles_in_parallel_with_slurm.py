@@ -4,17 +4,6 @@ import argparse
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
-HERMES_NAME_TO_OLD_HCNN_NAME = {
-    "HERMES_Bp_000": "HCNN_biopython_proteinnet_extra_mols_0p00",
-    "HERMES_Bp_050": "HCNN_biopython_proteinnet_extra_mols_0p50",
-    "HERMES_Py_000": "HCNN_pyrosetta_proteinnet_extra_mols_0p00",
-    "HERMES_Py_050": "HCNN_pyrosetta_proteinnet_extra_mols_0p50",
-    "HERMES_Bp_000_FT_Ros_ddG": "HCNN_biopython_proteinnet_extra_mols_0p00_finetuned_with_rosetta_ddg_all",
-    "HERMES_Bp_050_FT_Ros_ddG": "HCNN_biopython_proteinnet_extra_mols_0p50_finetuned_with_rosetta_ddg_with_0p50_all",
-    "HERMES_Py_000_FT_Ros_ddG": "HCNN_pyrosetta_proteinnet_extra_mols_0p00_finetuned_with_rosetta_ddg_all",
-    "HERMES_Py_050_FT_Ros_ddG": "HCNN_pyrosetta_proteinnet_extra_mols_0p50_finetuned_with_rosetta_ddg_with_0p50_all"
-}
-
 SLURM_SETUP = "#!/bin/bash\n\
 #SBATCH --job-name={jobname}\n\
 #SBATCH --account={account}\n\
@@ -30,6 +19,8 @@ SLURM_SETUP = "#!/bin/bash\n\
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('-m', '--model_name', type=str, required=True)
+
     parser.add_argument('-pd', '--folder_with_pdbs', type=str, default=None,
                         help='Directory containing PDB files to run inference on. Inference is run on all sites in the structure.')
     
@@ -40,7 +31,7 @@ if __name__ == '__main__':
                         help='Root to store outputs.')
     
     parser.add_argument('-hf', '--hermes_folder', type=str, default=THIS_FOLDER,
-                        help='Path to the Hermes folder, containing the run_hermes_on_pdbfiles.py script.')
+                        help='Path to the HERMES folder, containing the run_hermes_on_pdbfiles.py script.')
     
     parser.add_argument('-bs', '--batch_size', type=int, default=512)
     
@@ -71,46 +62,43 @@ if __name__ == '__main__':
     
     pdb_ids = [pdb_file.split('.')[0] for pdb_file in os.listdir(args.folder_with_pdbs)]
     
-    for hermes_name, old_hcnn_name in HERMES_NAME_TO_OLD_HCNN_NAME.items():
+    output_folder = os.path.join(args.output_folder, args.model_name)
+    os.makedirs(output_folder, exist_ok=True)
 
-        output_folder = os.path.join(args.output_folder, hermes_name)
-        os.makedirs(output_folder, exist_ok=True)
+    for pdb_id in pdb_ids:
+        jobname = f'{args.model_name}__{pdb_id}'
 
+        file_with_pdbids_and_chains = f'{args.dumpfiles_folder}/{jobname}__pdbs_and_chains.txt'
+        with open(file_with_pdbids_and_chains, 'w') as f:
+            f.write(f'{pdb_id}\n')
+        
+        output_filepath = f'{output_folder}/{args.model_name}__{pdb_id}.csv'
 
-        for pdb_id in pdb_ids:
-            jobname = f'{hermes_name}__{pdb_id}'
+        slurm_script = SLURM_SETUP.format(
+            jobname=jobname,
+            account=args.account,
+            partition=args.partition,
+            gpu_text=gpu_text,
+            num_cores=args.num_cores,
+            walltime=args.walltime,
+            memory=args.memory,
+            email_text=email_text,
+            dumpfiles_folder=args.dumpfiles_folder
+        )
 
-            file_with_pdbids_and_chains = f'{args.dumpfiles_folder}/{jobname}__pdbs_and_chains.txt'
-            with open(file_with_pdbids_and_chains, 'w') as f:
-                f.write(f'{pdb_id}\n')
-            
-            output_filepath = f'{output_folder}/{hermes_name}__{pdb_id}.csv'
-
-            slurm_script = SLURM_SETUP.format(
-                jobname=jobname,
-                account=args.account,
-                partition=args.partition,
-                gpu_text=gpu_text,
-                num_cores=args.num_cores,
-                walltime=args.walltime,
-                memory=args.memory,
-                email_text=email_text,
-                dumpfiles_folder=args.dumpfiles_folder
-            )
-
-            slurm_script += f'\npython {args.hermes_folder}/run_hermes_on_pdbfiles.py \
-                                    -m {old_hcnn_name} \
-                                    -pd {args.folder_with_pdbs}\
-                                    -pn {file_with_pdbids_and_chains} \
-                                    -o {output_filepath} \
-                                    -r probas logprobas logits \
-                                    -v 1 \
-                                    -bs {args.batch_size}'
-            
-            slurm_script_filepath = 'job.slurm'
-            with open(slurm_script_filepath, 'w') as f:
-                f.write(slurm_script)
-            os.system(f'sbatch {slurm_script_filepath}')
+        slurm_script += f'\npython {args.hermes_folder}/run_hermes_on_pdbfiles.py \
+                                -m {args.model_name} \
+                                -pd {args.folder_with_pdbs}\
+                                -pn {file_with_pdbids_and_chains} \
+                                -o {output_filepath} \
+                                -r probas logprobas logits \
+                                -v 1 \
+                                -bs {args.batch_size}'
+        
+        slurm_script_filepath = 'job.slurm'
+        with open(slurm_script_filepath, 'w') as f:
+            f.write(slurm_script)
+        os.system(f'sbatch {slurm_script_filepath}')
 
     
 
