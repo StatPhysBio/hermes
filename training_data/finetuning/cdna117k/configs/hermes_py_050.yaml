@@ -1,0 +1,11 @@
+zernikegrams_npz_gz_template: 'training_data/finetuning/cdna117k/premade_zernikegrams/{model_version}.npz.gz' # output directory when generating zernikegrams
+targets_csv_template: training_data/finetuning/cdna117k/{split}_targets.csv # targets, where {split} is either train, valid, or test
+model_version: hermes_py_050
+finetuning_version: ft_cdna117k_ddg_st # only added as suffix to the model version
+finetuning_depth: all # 'all' or 'invariant_mlp'. Use 'all'
+finetune_with_noise: true # whether you toggled `--add_noise` when generating zernikegrams
+batch_size: 128
+lr: 0.001
+n_epochs: 15
+alpha_cls: 0.0
+lr_scheduler: reduce_lr_on_plateau
