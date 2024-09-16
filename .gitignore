@@ -7,11 +7,15 @@
 *.err
 *.jsonl
 TODO.md
+slurm_logs/
 __pycache__/
 .pytest_cache/
 zernikegrams/
 training_data/pretraining/
 training_data/finetuning/rosetta_ddg/premade_zernikegrams/
+training_data/finetuning/skempi/premade_zernikegrams/
+training_data/finetuning/stability_oracle_cdna117K/premade_zernikegrams/
+experiments/aa_cls_eval/output/
 experiments/hsiue_et_al/
 experiments/luksza_et_al/
 *.DS_store
