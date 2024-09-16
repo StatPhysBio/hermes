@@ -4,11 +4,12 @@
 
 Only will run HERMES on sites specified in the CSV file, as opposed to ALL sites in the protein.
 
-Currently, HCNN gets called once per (PDB, chain) tuple. This is potentially still slow.
-TODO to make it faster: make it so that HCNN can be called once per PDB, and then the results can be filtered by chain and resnum. Would have to be careful with sorting chaini and resnum but it shouldn't be a big problem.
-TODO to make it even faster: collect zernikegrams from multiple PDBs in a single batch, feed them into HCNN in fewer calls.
-    - This would require a bunch of restructuring and and writing of new code, but it's doable
-    - Unclear that 
+Will populate the input csv file with the following columns:
+- pe_wt: the predicted logit of the wildtype
+- pe_mt: the predicted logit of the mutant
+- log_proba_wt: the log-probability of the wildtype
+- log_proba_mt: the log-probability of the mutant
+- log_proba_mt__minus__log_proba_wt: the difference between the log-probabilities of the mutant and the wildtype; note that this is mathematically equivalent to pe_mt - pe_wt for a single model, and for the ensemble too if the ensemble_at_logits_level flag is set to 1
 
 '''
 
@@ -35,19 +36,18 @@ from hermes.utils.argparse import *
 def check_arguments(args):
     if args.use_mt_structure: assert args.mt_pdb_column is not None, 'Must specify --mt_pdb_column if use_mt_structure=1.'
 
-
-def make_filename(model_version, pdb, chain, resnums):
-    return f"{model_version}__{pdb}__{chain}__{','.join([str(x) for x in resnums])}"
+def make_filename(pdb, chain, resnums):
+    return f"{pdb}__{chain}__{','.join([str(x) for x in resnums])}"
 
 def parse_filename(name):
-    model_version, pdb, chain, resnums = name.strip('.npz').split('__')
+    pdb, chain, resnums = name.strip('.npz').split('__')
     resnums = [int(x) for x in resnums.split(',')]
-    return model_version, pdb, chain, resnums
+    return pdb, chain, resnums
 
-def get_file_that_matches_specs(inference_dir, model_version, pdb, chain, resnum):
-    candidate_files = glob.glob(os.path.join(inference_dir, f"{model_version}__{pdb}__{chain}__*.npz"))
+def get_file_that_matches_specs(inference_dir, pdb, chain, resnum):
+    candidate_files = glob.glob(os.path.join(inference_dir, f"{pdb}__{chain}__*.npz"))
     for file in candidate_files:
-        curr_resnums = parse_filename(os.path.basename(file))[3]
+        curr_resnums = parse_filename(os.path.basename(file))[2]
         if resnum in curr_resnums:
             return file
 
@@ -68,7 +68,7 @@ def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, mode
 
     ## assuming icode is ' ' for now!!
     region_ids = [(chain, resnum, ' ') for resnum in resnums]
-    print('Region IDs:', region_ids)
+    # print('Region IDs:', region_ids)
 
     requested_regions = {'region': region_ids}
     try:
@@ -94,7 +94,7 @@ def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, mode
     wt_aas_in_res_ids = ensemble_predictions_dict['res_ids'][:, 0]
 
     os.makedirs(output_dir, exist_ok=True)
-    np.savez(os.path.join(output_dir, f"{make_filename(model_version, pdb, chain, resnums)}.npz"),
+    np.savez(os.path.join(output_dir, f"{make_filename(pdb, chain, resnums)}.npz"),
                 pes=pes,
                 logps=logps,
                 resnums=resnums_in_res_ids, # using the correct resnums, which match the predictions for sure
@@ -116,11 +116,10 @@ if __name__ == '__main__':
                         help='Folder with the PDB files. Must contain the PDB files specified in the CSV file.')
     
     parser.add_argument('--output_dir', type=str, required=True,
-                        help='Output directory for the results. The directory will contain subdirectory "inference" with .npz files containing batch prediction information (can be discarded), \
-                              and subdirectory "zero_shot_predictions" with the CSV file containing the results.')
+                        help='Output directory for the results.')
 
     parser.add_argument('--add_same_noise_level_as_training', type=int, default=0, choices=[0, 1],
-                        help='1 for True, 0 for False. If True, will add the same noise level as was used during training. This is useful for debugging purposes. Default is False.')
+                        help='1 for True, 0 for False. If True, will add the same noise level as was used during training.  Default is False.')
 
     parser.add_argument('--wt_pdb_column', type=str, required=True,
                         help='Column name with the wildtype PDB file')
@@ -144,6 +143,10 @@ if __name__ == '__main__':
                         help="1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. \
                               Should use 1 for fine-tuned models, since the logits are directly interpreted as deltaG values, but empirically there is little difference.")
     
+    parser.add_argument('--chunk_size', type=int, default=30,
+                        help='Maximum number of residues to compute in a single batch, within a single chain. Higher is faster, but too high a number will result in "File name too long" error. \
+                              This is only a property of how the script is structured so as to save repeated computation. We are planning on removing this limitation.')
+
     parser.add_argument('--dont_run_inference', type=int, default=0, choices=[0, 1],
                         help='1 for True, 0 for False. If True, will not run inference, only parse the .npz files. Mainly intended for debugging purposes.')
     
@@ -203,9 +206,6 @@ if __name__ == '__main__':
     csv_filename_out = os.path.basename(args.csv_file).split('/')[-1].replace('.csv', output_file_identifier)
     if not csv_filename_out.endswith('.csv'):
         csv_filename_out += '.csv'
-    
-    # if os.path.exists(os.path.join(predictions_dir, csv_filename_out.replace('.csv', '_correlations.json'))):
-    #     exit(0)
 
 
     # get pdbs
@@ -220,7 +220,7 @@ if __name__ == '__main__':
     # download necessary if they are not found in folder
     os.makedirs(args.folder_with_pdbs, exist_ok=True) # make folder if does not exist, so it doesn't have to be made beforehand if it's empty
     pdbs_in_folder = [file[:-4] for file in os.listdir(args.folder_with_pdbs)]
-    print(pdbs_in_folder)
+    # print(pdbs_in_folder)
     # pdbs_to_download = set(pdbs) - set(pdbs_in_folder)
     # if len(pdbs_to_download) > 0:
     #     print(f'Downloading the following PDBs: {pdbs_to_download}')
@@ -257,7 +257,7 @@ if __name__ == '__main__':
                 
                 pdb_to_chain_to_resnums[pdb][chain].add(resnum)
     
-    print(pdb_to_chain_to_resnums)
+    # print(pdb_to_chain_to_resnums)
         
     ## run inference!!
     from time import time
@@ -265,10 +265,9 @@ if __name__ == '__main__':
     if not args.dont_run_inference:
         for pdb in tqdm(pdb_to_chain_to_resnums):
             for chain, resnums in pdb_to_chain_to_resnums[pdb].items():
-                ## split resnums into chunks of at most 20 otherwise I might get "File name too long" error
+                ## split resnums into chunks0 otherwise I might get "File name too long" error
                 resnums = list(sorted(list(resnums)))
-                CHUNK_SIZE = 20
-                resnums_chunks = [resnums[i:i+CHUNK_SIZE] for i in range(0, len(resnums), CHUNK_SIZE)]
+                resnums_chunks = [resnums[i:i+args.chunk_size] for i in range(0, len(resnums), args.chunk_size)]
                 for res_chunk in resnums_chunks:
                     # print(f'Running inference for {pdb} {chain} {res_chunk}')
                     make_prediction(inference_dir, args.folder_with_pdbs, chain, pdb, res_chunk, args.model_version, models, hparams, finetuning_hparams, args.sequence_pdb_alignment_json, args.embeddings_cache, args.batch_size, args.ensemble_at_logits_level, args.add_same_noise_level_as_training)
@@ -316,7 +315,7 @@ if __name__ == '__main__':
                 temp_log_proba_mt.append(np.nan)
                 continue
 
-            wt_file = get_file_that_matches_specs(inference_dir, args.model_version, wt_pdb, chain, resnum)
+            wt_file = get_file_that_matches_specs(inference_dir, wt_pdb, chain, resnum)
             if wt_file is None:
                 print(f'WARNING: No file found for {wt_pdb} {chain} {resnum}.')
                 temp_pe_wt.append(np.nan)
@@ -329,7 +328,7 @@ if __name__ == '__main__':
 
             if args.use_mt_structure:
                 mt_pdb = row[args.mt_pdb_column]
-                mt_file = get_file_that_matches_specs(inference_dir, args.model_version, mt_pdb, chain, resnum)
+                mt_file = get_file_that_matches_specs(inference_dir, mt_pdb, chain, resnum)
                 if mt_file is None:
                     print(f'WARNING: No file found for {mt_pdb} {chain} {resnum}.')
                     temp_pe_wt.append(np.nan)

@@ -18,17 +18,17 @@ from torch.utils.data import DataLoader
 
 import argparse
 
-from protein_holography_web.models import CGNet, SO3_ConvNet
-from protein_holography_web.cg_coefficients import get_w3j_coefficients
+from hermes.models import CGNet, SO3_ConvNet
+from hermes.cg_coefficients import get_w3j_coefficients
 
-from protein_holography_web.inference.hermes_inference import get_channels, get_data_irreps
+from hermes.inference.inference_hermes import get_channels, get_data_irreps
 
 from sklearn.metrics import classification_report, roc_auc_score
 from scipy.special import softmax
 from scipy.stats import pearsonr, spearmanr
 
-from protein_holography_web.utils.data import put_dict_on_device
-from protein_holography_web.utils.protein_naming import ol_to_ind_size
+from hermes.utils.data import put_dict_on_device
+from hermes.utils.protein_naming import ol_to_ind_size
 
 from e3nn import o3
 from torch.utils.data import Dataset
