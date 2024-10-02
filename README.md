@@ -7,9 +7,7 @@ Code for the paper [HERMES: Holographic Equivariant neuRal network model for Mut
 
 ## Running on Colab
 
-**TODO: re-make colab with new models and new repository**
-
-You can run predictions easily on the [Google Colab Notebook](https://colab.research.google.com/drive/1JQxkXeGZJYYcPNglN3rYUYiOuUOkwJPL?usp=sharing).
+**We are in the process of updating the colab notebook, see the old version, which includes only pre-trained models and models fine-tuned on Rosetta ddG data [here](https://colab.research.google.com/drive/1JQxkXeGZJYYcPNglN3rYUYiOuUOkwJPL?usp=sharing)**
 
 
 ## Installing and running locally
