@@ -4,9 +4,9 @@ import sys, os
 import numpy as np
 import torch
 from e3nn import o3
-from protein_holography_web import nn
+from hermes import nn
 
-from protein_holography_web.utils.data import put_dict_on_device
+from hermes.utils.data import put_dict_on_device
 from tqdm import tqdm
 from copy import deepcopy
 from scipy.special import softmax

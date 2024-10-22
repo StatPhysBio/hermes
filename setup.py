@@ -37,6 +37,7 @@ setuptools.setup(
         "matplotlib",
         "e3nn==0.5.0",
         "pandas==1.5.0",
-        "tqdm"
+        "tqdm",
+        "scikit-learn"
     ]
 )
