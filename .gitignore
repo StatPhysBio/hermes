@@ -21,3 +21,4 @@ experiments/luksza_et_al/
 *.DS_store
 *raw_df_from_esm.csv
 *copy_over_esm_results.py
+install.slurm
