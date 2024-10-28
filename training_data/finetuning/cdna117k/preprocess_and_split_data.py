@@ -9,7 +9,7 @@ NUM_VALID_PDBIDS = 8
 SEED = 42
 np.random.seed(SEED)
 
-from protein_holography_web.utils.protein_naming import aa_to_one_letter
+from hermes.utils.protein_naming import aa_to_one_letter
 
 
 if __name__ == '__main__':
