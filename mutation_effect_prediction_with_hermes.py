@@ -71,11 +71,11 @@ def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, mode
     # print('Region IDs:', region_ids)
 
     requested_regions = {'region': region_ids}
-    try:
-        ensemble_predictions_dict = predict_from_pdbfile(os.path.join(pdbdir, f'{pdb}.pdb'), models, hparams, batch_size, finetuning_hparams=finetuning_hparams, sequence_pdb_alignment_json=sequence_pdb_alignment_json, embeddings_cache_file=embeddings_cache, regions=requested_regions, add_same_noise_level_as_training=add_same_noise_level_as_training)
-    except Exception as e:
-        print(f'Error making predictions for {pdb} {chain} {resnums}: {e}')
-        return
+    # try:
+    ensemble_predictions_dict = predict_from_pdbfile(os.path.join(pdbdir, f'{pdb}.pdb'), models, hparams, batch_size, finetuning_hparams=finetuning_hparams, sequence_pdb_alignment_json=sequence_pdb_alignment_json, embeddings_cache_file=embeddings_cache, regions=requested_regions, add_same_noise_level_as_training=add_same_noise_level_as_training)
+    # except Exception as e:
+    #     print(f'Error making predictions for {pdb} {chain} {resnums}: {e}')
+    #     return
     
     ensemble_predictions_dict = ensemble_predictions_dict['region']
     pes = np.mean(ensemble_predictions_dict['logits'], axis=0)

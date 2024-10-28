@@ -6,7 +6,7 @@ import pandas as pd
 from Bio import pairwise2
 from Bio.Seq import Seq
 
-from protein_holography_web.utils.protein_naming import aa_to_one_letter
+from hermes.utils.protein_naming import aa_to_one_letter
 
 def evaluate_alignment(df, verbose, pos_col='one_idxed_seq_pos'):
 

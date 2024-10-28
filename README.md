@@ -26,7 +26,7 @@ conda install pytorch torchvision torchaudio pytorch-cuda -c pytorch -c nvidia #
 conda install pytorch torchvision torchaudio cpuonly -c pytorch # cpu only
 ```
 
-**Step 2:** Install `zernikegrams` package, which we use for protein preprocessing. `hermes` requires `zernikegrams>=1.0.6`. Note that this will automatically install CPU-only `pytorch`, if another version of pytorch was not previously installed.
+**Step 2:** Install `zernikegrams` package, which we use for protein preprocessing. Note that this will automatically install CPU-only `pytorch`, if another version of pytorch was not previously installed.
 ```bash
 conda install zernikegrams -c statphysbio -c conda-forge
 ```

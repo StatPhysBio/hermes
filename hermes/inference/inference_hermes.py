@@ -145,7 +145,7 @@ def load_hermes_models(model_dirs: List[str]):
             else:
                 raise NotImplementedError()
         
-        model.load_state_dict(torch.load(os.path.join(model_dir, 'lowest_valid_loss_model.pt'), map_location=torch.device(device)))
+        model.load_state_dict(torch.load(os.path.join(model_dir, 'lowest_valid_loss_model.pt'), map_location=torch.device(device), weights_only=False))
         model.eval()
         models.append(model)
     

@@ -1,7 +1,7 @@
 
 
 
-model_version_list='hermes_bp_000_ft_ros_ddg_st hermes_py_000_ft_ros_ddg_st' # 'hermes_bp_000 hermes_bp_000_ft_ros_ddg_st hermes_bp_050 hermes_bp_050_ft_ros_ddg_st hermes_py_000 hermes_py_000_ft_ros_ddg_st hermes_py_050 hermes_py_050_ft_ros_ddg_st'
+model_version_list='hermes_bp_000_ft_ros_ddg_st' # hermes_py_000_ft_ros_ddg_st' # 'hermes_bp_000 hermes_bp_000_ft_ros_ddg_st hermes_bp_050 hermes_bp_050_ft_ros_ddg_st hermes_py_000 hermes_py_000_ft_ros_ddg_st hermes_py_050 hermes_py_050_ft_ros_ddg_st'
 
 use_mt_structure='0'
 
