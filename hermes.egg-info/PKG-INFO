@@ -7,6 +7,7 @@ Author: Gian Marco Visani
 Author-email: gvisan01@.cs.washington.edu
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: argparse
 Requires-Dist: cmake
 Requires-Dist: foldcomp
@@ -34,26 +35,25 @@ Code for the paper [HERMES: Holographic Equivariant neuRal network model for Mut
 
 ## Installing and running locally
 
-NOTE: Currently, there is a conflict between `openmm` and `pytorch`, whereby it's challenging to install both with CUDA support. We are currently struggling to replicate the installation on our local HPC cluster - which we once managed to do (sigh...). Install `pytorch` with CPU support only, however, gives no issues. Try installing `pytorch` with CUDA first, and if that doesn't work, install it with CPU only. We are working on a foolproof solution - if you have any leads please let us know by posting an Issue.
+NOTE: Currently, the installation of the `zernikegrams` package appears to take a very long time (~hours) on our HPC cluster, after installing `pytorch` with CUDA support. Please bear with us as we figure out a better installation procedure. The installation seems to work fine on Google Colab, which makes us think it might be a platform-dependent issue. In any case, if you're only interested in running inference using our already-trained models, running on CPU only is sufficient.
 
 **Step 1:** Create environment and install pytorch.
 ```bash
-conda create -n hermes python=3.9
+conda create -n hermes python=3.10
 conda activate hermes
 ```
 
-Install `pytorch==1.13.1` with or without CUDA depending on whether you have a GPU available, following https://pytorch.org/get-started/previous-versions/. For example:
+Install `pytorch` with or without CUDA depending on whether you have a GPU available, following https://pytorch.org/get-started/previous-versions/. For example:
 ```bash
-conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia # with cuda for gpu support
-conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 cpuonly -c pytorch # cpu only, use this if having issues with step 2
+conda install pytorch torchvision torchaudio pytorch-cuda -c pytorch -c nvidia # with cuda for gpu support
+conda install pytorch torchvision torchaudio cpuonly -c pytorch # cpu only
 ```
 
-**Step 2:** Install `zernikegrams` package, which we use for protein preprocessing.
+**Step 2:** Install `zernikegrams` package, which we use for protein preprocessing. Note that this will automatically install CPU-only `pytorch`, if another version of pytorch was not previously installed.
 ```bash
-conda install zernikegrams -c statphysbio -c conda-forge
+conda install zernikegrams -c statphysbio -c conda-forge # conda install zernikegrams=1.0.11 pytorch-cuda=12.4 -c statphysbio -c conda-forge -c bioconda -c pytorch -c nvidia
 ```
-TD;DR: if you are experiencing issues with the installation and you have `pytorch` with CUDA installed, install `pytorch` with CPU only.
-Installing `zernikegrams` will also install other necessary packages such as `openmm`. As outlined above, in our environment we are experiencing a conflict between `openmm` and `pytorch` that we are currently working on resolving, and cannot guarantee GPU support at this time (though it works without issues on colab). \\
+TD;DR: if you are experiencing issues with the installation and you have `pytorch` with CUDA installed, re-start with a fresh environment and skip the installation of `pytorch`, as installing `zenrikegrams` will automatically install CPU-only `pytorch`. \\
 
 
 
@@ -209,6 +209,8 @@ If desired, the script supports the use of the mutant structure to predict the m
 The columns are not expected to have specific names, but the names must ben provided as input to the script.
 
 Run `python mutation_effect_prediction_with_hermes.py -h` for more information on the script, and see `experiments/Protein_G/` for a simple example.
+
+Note that, for simplicity, the script assumes empty insertion codes. In `hermes/utils/rename_resnums.py` we provide a function `rename_resnums()` that uses BioPython to sequentially rename the resnums in a pdb file, removing insertion codes, and also saves a mapping between the new resnums, and the old resnums+icodes.
 
 
 ## Want to fine-tune on your mutation effect dataset?

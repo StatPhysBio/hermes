@@ -12,18 +12,10 @@ Code for the paper [HERMES: Holographic Equivariant neuRal network model for Mut
 
 ## Installing and running locally
 
-NOTE: Currently, the installation of the `zernikegrams` package appears to take a very long time (~hours) on our HPC cluster, after installing `pytorch` with CUDA support. Please bear with us as we figure out a better installation procedure. The installation seems to work fine on Google Colab, which makes us think it might be a platform-dependent issue. In any case, if you're only interested in running inference using our already-trained models, running on CPU only is sufficient.
-
 **Step 1:** Create environment.
 ```bash
 conda create -n hermes python=3.10
 conda activate hermes
-```
-
-Install `pytorch` with or without CUDA depending on whether you have a GPU available, following https://pytorch.org/get-started/previous-versions/. For example:
-```bash
-conda install pytorch torchvision torchaudio pytorch-cuda -c pytorch -c nvidia # with cuda for gpu support
-conda install pytorch torchvision torchaudio cpuonly -c pytorch # cpu only
 ```
 
 **Step 2:** Install `pytorch` and the `zernikegrams` package, which we use for protein preprocessing. We recommend installing the two together to give conda an easier time working through version conflicts. See [here](https://pytorch.org/get-started/previous-versions/) for more details on installing `pytorch` and [here](https://github.com/StatPhysBio/zernikegrams) for more details on the `zernikegrams` package.
@@ -219,10 +211,6 @@ If you use this code, please cite the following paper:
 	journal = {bioRxiv}
 }
 ```
-
-
-
-
 
 
 
