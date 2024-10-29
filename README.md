@@ -14,7 +14,7 @@ Code for the paper [HERMES: Holographic Equivariant neuRal network model for Mut
 
 NOTE: Currently, the installation of the `zernikegrams` package appears to take a very long time (~hours) on our HPC cluster, after installing `pytorch` with CUDA support. Please bear with us as we figure out a better installation procedure. The installation seems to work fine on Google Colab, which makes us think it might be a platform-dependent issue. In any case, if you're only interested in running inference using our already-trained models, running on CPU only is sufficient.
 
-**Step 1:** Create environment and install pytorch.
+**Step 1:** Create environment.
 ```bash
 conda create -n hermes python=3.10
 conda activate hermes
@@ -26,12 +26,10 @@ conda install pytorch torchvision torchaudio pytorch-cuda -c pytorch -c nvidia #
 conda install pytorch torchvision torchaudio cpuonly -c pytorch # cpu only
 ```
 
-**Step 2:** Install `zernikegrams` package, which we use for protein preprocessing. Note that this will automatically install CPU-only `pytorch`, if another version of pytorch was not previously installed.
+**Step 2:** Install `pytorch` and the `zernikegrams` package, which we use for protein preprocessing. We recommend installing the two together to give conda an easier time working through version conflicts. See [here](https://pytorch.org/get-started/previous-versions/) for more details on installing `pytorch` and [here](https://github.com/StatPhysBio/zernikegrams) for more details on the `zernikegrams` package.
 ```bash
-conda install zernikegrams -c statphysbio -c conda-forge
+conda install zernikegrams pytorch-cuda -c statphysbio -c conda-forge -c bioconda -c pytorch -c nvidia # this will install pytorch with GPU support
 ```
-TD;DR: if you are experiencing issues with the installation and you have `pytorch` with CUDA installed, re-start with a fresh environment and skip the installation of `pytorch`, as installing `zenrikegrams` will automatically install CPU-only `pytorch`. \\
-
 
 
 **(Optional) Step 3:** Install pyrosetta. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta). We are aware of the limitations posed by pyrosetta's license and are working on releasing a version that uss biopython instead and other open source code soon.
