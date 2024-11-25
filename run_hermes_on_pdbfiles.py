@@ -123,12 +123,12 @@ if __name__ == '__main__':
         for request in args.request:
             if request == 'probas':
                 if args.ensemble_at_logits_level:
-                    additional_data.append(softmax(inference['logits'].astype(np.int64), axis=1))
+                    additional_data.append(softmax(inference['logits'].astype(np.float64), axis=1))
                 else:
                     additional_data.append(inference['probabilities'])
             elif request == 'logprobas':
                 if args.ensemble_at_logits_level:
-                    additional_data.append(log_softmax(inference['logits'].astype(np.int64), axis=1))
+                    additional_data.append(log_softmax(inference['logits'].astype(np.float64), axis=1))
                 else:
                     additional_data.append(np.log(inference['probabilities']))
             elif request == 'logits':
