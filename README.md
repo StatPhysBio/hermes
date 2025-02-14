@@ -12,24 +12,30 @@ Code for the paper [HERMES: Holographic Equivariant neuRal network model for Mut
 
 ## Installing and running locally
 
-**Step 1:** Create environment.
+**Step 1:** Clone the repository and navigate to it
+```bash
+git clone git@github.com:StatPhysBio/hermes.git
+cd hermes
+```
+
+**Step 2:** Create environment.
 ```bash
 conda create -n hermes python=3.10
 conda activate hermes
 ```
 
-**Step 2:** Install `pytorch` and the `zernikegrams` package, which we use for protein preprocessing. We recommend installing the two together to give conda an easier time working through version conflicts. See [here](https://pytorch.org/get-started/previous-versions/) for more details on installing `pytorch` and [here](https://github.com/StatPhysBio/zernikegrams) for more details on the `zernikegrams` package.
+**Step 3:** Install `pytorch` and the `zernikegrams` package, which we use for protein preprocessing. We recommend installing the two together to give conda an easier time working through version conflicts. See [here](https://pytorch.org/get-started/previous-versions/) for more details on installing `pytorch` and [here](https://github.com/StatPhysBio/zernikegrams) for more details on the `zernikegrams` package.
 ```bash
 conda install zernikegrams pytorch-cuda -c statphysbio -c conda-forge -c bioconda -c pytorch -c nvidia # this will install pytorch with GPU support
 ```
 
 
-**(Optional) Step 3:** Install pyrosetta. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta). We are aware of the limitations posed by pyrosetta's license and are working on releasing a version that uss biopython instead and other open source code soon.
+**(Optional) Step 4:** Install pyrosetta. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta). We are aware of the limitations posed by pyrosetta's license and are working on releasing a version that uss biopython instead and other open source code soon.
 
 To download pyrosetta, after obtaining a license from the link above, follow instructions [here](https://www.pyrosetta.org/downloads#h.6vttn15ac69d). We recommend downloading the .whl file and installing with pip. Our models were trained and evaluated using version `PyRosetta4.Release.python39.linux.release-335`. We do not foresee issues with using alternative versions, but cannot guarantee compatibility at this time.
 
 
-**Step 4:** Install `hermes` as a package. This will install some of the other necessary packages as well.
+**Step 5:** Install `hermes` as a package. This will install some of the other necessary packages as well.
 ```bash
 pip install .
 ```
