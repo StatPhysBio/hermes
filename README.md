@@ -24,9 +24,10 @@ conda create -n hermes python=3.10
 conda activate hermes
 ```
 
-**Step 3:** Install `pytorch` and the `zernikegrams` package, which we use for protein preprocessing. We recommend installing the two together to give conda an easier time working through version conflicts. See [here](https://pytorch.org/get-started/previous-versions/) for more details on installing `pytorch` and [here](https://github.com/StatPhysBio/zernikegrams) for more details on the `zernikegrams` package.
+**Step 3:** Install `pytorch` and the `zernikegrams` package, which we use for protein preprocessing. See [here](https://pytorch.org/get-started/previous-versions/) for more details on installing `pytorch` and [here](https://github.com/StatPhysBio/zernikegrams) for more details on the `zernikegrams` package.
 ```bash
-conda install zernikegrams pytorch-cuda -c statphysbio -c conda-forge -c bioconda -c pytorch -c nvidia # this will install pytorch with GPU support
+conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia -y # this will install pytorch with GPU support
+conda install zernikegrams=1.0.12 -c statphysbio -c conda-forge -c bioconda -y
 ```
 
 
