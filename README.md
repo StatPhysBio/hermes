@@ -171,7 +171,27 @@ optional arguments:
   -EA EMAIL_ADDRESS, --email_address EMAIL_ADDRESS
 ```
 
+### Visualize predictions easily in an Nx20 heatmap
 
+We provide an easy-to-use script to generate heatmaps of the HERMES predictions:
+
+```bash
+usage: generate_heatmap.py [-h] [--csv_file CSV_FILE] [--metrics {logprobas,probas,logits} [{logprobas,probas,logits} ...]]
+                           [--pdbid PDBID [PDBID ...]] [--chain_sep] [--center_wt] [--output OUTPUT]
+
+Generate heatmap plots of HERMES inference results
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --csv_file CSV_FILE   Path to CSV file containing HERMES inference results
+  --metrics {logprobas,probas,logits} [{logprobas,probas,logits} ...]
+                        HERMES-predicted metrics to be plotted
+  --pdbid PDBID [PDBID ...]
+                        PDB IDs to filter (use 'pdbid' or 'pdbid_CHAIN')
+  --chain_sep           Generate separate plots for each chain
+  --center_wt           Subtract the wild-type value within each site
+  --output OUTPUT       Output directory, otherwise plots are saved in the current directory
+```
 
 
 ## Scoring specific mutations
