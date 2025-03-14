@@ -62,6 +62,7 @@ def shifted_color_map(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap')
 def plot_hermes_predictions(metric, df, name, output, center_wt):
     """
     Generates a heatmap of HERMES predictions for a given metric.
+    Cells with an "x" indicate the wild-type amino-acid at that position.
     
     Parameters:
         metric (str): The metric to plot.
@@ -96,6 +97,10 @@ def plot_hermes_predictions(metric, df, name, output, center_wt):
     else:
         im = plt.imshow(heatmap_array, cmap="RdBu_r", vmin=np.min(heatmap_array), vmax=np.max(heatmap_array), aspect="auto")
     
+    # put an "x" by the heatmap cells corresponding to the wild-type amino-acid
+    for i, j in zip(*wildtype_mask.nonzero()):
+        plt.text(j, i, 'x', ha='center', va='center', color='black', fontsize=36)
+    
     cbar = plt.colorbar(im, fraction=0.02, pad=0.01)
     cbar.ax.tick_params(labelsize=42)
     plt.xticks(np.arange(len(positions)), labels=[label if i % 10 == 0 else '' for i, label in enumerate(xtick_labels)], fontsize=42)
@@ -121,7 +126,7 @@ def filter_df_by_pdb_and_chain(df, pdbid):
         return df[(df['pdb'] == pdb) & (df['chain'] == chain)], f"{pdb}_{chain}"
     return df[df['pdb'] == pdbid], pdbid
 
-def process_df(df, metrics, output, center_wt, chain_sep, pdbid=None):
+def process_df(df, request, output, center_wt, chain_sep, pdbid=None):
     """Process dataframe by pdbid or all pdbs."""
     if pdbid:  # If pdbid is provided, filter dataframe accordingly
         for id in pdbid:
@@ -133,9 +138,9 @@ def process_df(df, metrics, output, center_wt, chain_sep, pdbid=None):
                 for chain in unique_chains:
                     full_name = f"{name}_{chain}"
                     chain_df = pdb_df[pdb_df['chain'] == chain]
-                    plot_metrics(metrics, chain_df, full_name, output, center_wt)
+                    plot_request(request, chain_df, full_name, output, center_wt)
             else:
-                plot_metrics(metrics, pdb_df, name, output, center_wt)
+                plot_request(request, pdb_df, name, output, center_wt)
     else:  # Process all pdbs in dataframe
         unique_pdbs = df['pdb'].unique()
         print("Processing unique pdbs: ", unique_pdbs)
@@ -146,36 +151,36 @@ def process_df(df, metrics, output, center_wt, chain_sep, pdbid=None):
                 for chain in unique_chains:
                     chain_df = pdb_df[pdb_df['chain'] == chain]
                     name = f"{pdb}_{chain}"
-                    plot_metrics(metrics, chain_df, name, output, center_wt)
+                    plot_request(request, chain_df, name, output, center_wt)
             else:
                 name = pdb
-                plot_metrics(metrics, pdb_df, name, output, center_wt)
+                plot_request(request, pdb_df, name, output, center_wt)
 
 
-def plot_metrics(metrics, df, name, output, center_wt):
+def plot_request(request, df, name, output, center_wt):
     """Plot for a single metric."""
-    for metric in metrics:
-        plot_hermes_predictions(metric, df, name, output, center_wt)
+    for req in request:
+        plot_hermes_predictions(req, df, name, output, center_wt)
 
 
-def main(csv_file, metrics, pdbid=None, output='', chain_sep=False, center_wt=False):
+def main(csv_file, request, pdbid=None, output='', chain_sep=False, center_wt=False):
     df = pd.read_csv(csv_file)
-    print("metrics: ", metrics)
+    print("request: ", request)
     print("pdbid: ", pdbid)
     print("df.shape: ", df.shape)
 
-    process_df(df, metrics, output, center_wt, chain_sep, pdbid)
+    process_df(df, request, output, center_wt, chain_sep, pdbid)
     return 0
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate heatmap plots of HERMES inference results")
     parser.add_argument("--csv_file", type=str, help="Path to CSV file containing HERMES inference results")
-    parser.add_argument("--metrics", choices=['logprobas', 'probas', 'logits'], nargs='+', help="HERMES-predicted metrics to be plotted")
+    parser.add_argument("--request", choices=['logprobas', 'probas', 'logits'], nargs='+', help="HERMES-predicted metrics to be plotted")
     parser.add_argument("--pdbid", type=str, nargs='+', help="PDB IDs to filter (use 'pdbid' or 'pdbid_CHAIN')")
     parser.add_argument("--chain_sep", action='store_true', help="Generate separate plots for each chain")
     parser.add_argument("--center_wt", action='store_true', help="Subtract the wild-type value within each site")
     parser.add_argument("--output", type=str, help="Output directory, otherwise plots are saved in the current directory")
     args = parser.parse_args()
-    main(args.csv_file, args.metrics, args.pdbid, args.output, args.chain_sep, args.center_wt)
+    main(args.csv_file, args.request, args.pdbid, args.output, args.chain_sep, args.center_wt)
 
