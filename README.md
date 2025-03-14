@@ -193,7 +193,12 @@ optional arguments:
   --output OUTPUT       Output directory, otherwise plots are saved in the current directory
 ```
 
-As an example, this is the heatmap of `hermes_py_050` log-probabilities, centered at the wild-type values, for Protein G. "x" indicates the wild-type amino acid.
+As an example, this is the heatmap of `hermes_py_050` log-probabilities, centered at the wild-type values, for Protein G. "x" indicates the wild-type amino acid. To re-create it, run the following commands:
+```bash
+python run_hermes_on_pdbfiles.py -m hermes_py_050 -pd experiments/Protein_G/pdbs -o experiments/Protein_G/full_protein_hermes_py_050.csv -r logprobas
+
+python generate_heatmap.py --csv_file experiments/Protein_G/full_protein_hermes_py_050.csv --request logprobas --pdbid 1PGA --center_wt --output experiments/Protein_G/
+```
 
 
 ![Protein G heatmap](experiments/Protein_G/aa_logprobas_per_pos_1PGA_centeredWT.png)
