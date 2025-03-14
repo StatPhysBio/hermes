@@ -184,7 +184,7 @@ Generate heatmap plots of HERMES inference results
 optional arguments:
   -h, --help            show this help message and exit
   --csv_file CSV_FILE   Path to CSV file containing HERMES inference results
-  --metrics {logprobas,probas,logits} [{logprobas,probas,logits} ...]
+  --request {logprobas,probas,logits} [{logprobas,probas,logits} ...]
                         HERMES-predicted metrics to be plotted
   --pdbid PDBID [PDBID ...]
                         PDB IDs to filter (use 'pdbid' or 'pdbid_CHAIN')
@@ -192,6 +192,11 @@ optional arguments:
   --center_wt           Subtract the wild-type value within each site
   --output OUTPUT       Output directory, otherwise plots are saved in the current directory
 ```
+
+As an example, this is the heatmap of `hermes_py_050` log-probabilities, centered at the wild-type values, for Protein G. "x" indicates the wild-type amino acid.
+
+
+![Protein G heatmap](experiments/Protein_G/aa_logprobas_per_pos_1PGA_centeredWT.png)
 
 Credit: Ella Carlander
 
