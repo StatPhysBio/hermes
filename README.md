@@ -193,6 +193,8 @@ optional arguments:
   --output OUTPUT       Output directory, otherwise plots are saved in the current directory
 ```
 
+Credit: Ella Carlander
+
 
 ## Scoring specific mutations
 
