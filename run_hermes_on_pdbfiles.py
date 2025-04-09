@@ -58,18 +58,18 @@ if __name__ == '__main__':
                               If specified, each line should be in the format "pdbid chain"; if chain is not specified for a given line, inference will be run on all chains in that structure.')
     
     parser.add_argument('-pp', '--parallelism', type=int, default=0,
-                        help='If zero (default), pdb files are processed one by one. If one, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a temporary hdf5 file.')
+                        help='If zero (default), pdb files are processed one by one. If greater than zero, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a temporary hdf5 file.')
 
     parser.add_argument('-o', '--output_filepath', type=str, required=True,
                         help='Must be a ".csv file". Embeddings will be saved separately, in a parallel array, with the same filename but with the extension "-embeddings.npy".')
     
-    parser.add_argument('-r', '--request', nargs='+', type=str, default='probas', choices=['logprobas', 'probas', 'embeddings', 'logits'],
+    parser.add_argument('-r', '--request', nargs='+', type=str, default=['logits'], choices=['logprobas', 'probas', 'embeddings', 'logits'],
                         help='Which data to return. Can be a combination of "logprobas", "probas", "embeddings", and "logits".')
     
     parser.add_argument('-an', '--add_same_noise_level_as_training', type=int, default=0, choices=[0, 1],
                         help='1 for True, 0 for False. If True, will add the same noise level as was used during training. This is useful for debugging purposes. Default is False.')
     
-    parser.add_argument('-el', '--ensemble_at_logits_level', default=0, type=int, choices=[0, 1],
+    parser.add_argument('-el', '--ensemble_at_logits_level', default=1, type=int, choices=[0, 1],
                         help="1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities.\n \
                               There should not be a big difference, unless the ensembled models are trained very differently.")
     
@@ -133,9 +133,12 @@ if __name__ == '__main__':
                     additional_data.append(np.log(inference['probabilities']))
             elif request == 'logits':
                 additional_data.append(inference['logits'])
-        additional_data = np.concatenate(additional_data, axis=1)
-
-        data = np.concatenate([all_res_ids, additional_data], axis=1)
+        
+        if additional_data:
+            additional_data = np.concatenate(additional_data, axis=1)
+            data = np.concatenate([all_res_ids, additional_data], axis=1)
+        else:
+            data = all_res_ids
 
         df = pd.concat([df, pd.DataFrame(data, columns=columns)], axis=0)
 
@@ -195,7 +198,7 @@ if __name__ == '__main__':
 
             if args.verbose: print(f'Running inference in parallel with parallelism: {args.parallelism}')
 
-            zernikegrams_hdf5_file = get_zernikegrams_in_parallel(args.folder_with_pdbs, pdb_files_and_chains, hparams, args.parallelism, add_same_noise_level_as_training=args.add_same_noise_level_as_training)
+            zernikegrams_hdf5_file = get_zernikegrams_in_parallel(args.folder_with_pdbs, hparams, args.parallelism, pdb_files_and_chains=pdb_files_and_chains, add_same_noise_level_as_training=args.add_same_noise_level_as_training)
 
             inference = predict_from_hdf5file(zernikegrams_hdf5_file, models, hparams, args.batch_size)
 
