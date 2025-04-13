@@ -252,22 +252,23 @@ Fine-tuning can be easily done in three steps.
 
 ## References
 
-**TODO: update reference with MLSB paper**
-
-If you use this code, please cite the following paper:
+If you found this code useful, please consider citing us:
 
 ```
-@article {visani_hermes_2024,
+@article{Visani2024.07.09.602403,
+	abstract = {Predicting the stability and fitness effects of amino-acid mutations in proteins is a cornerstone of biological discovery and engineering. Various experimental techniques have been developed to measure mutational effects, providing us with extensive datasets across a diverse range of proteins. By training on these data, machine learning approaches have advanced significantly in predicting mutational effects. Here, we introduce HERMES, a 3D rotationally equivariant structure-based neural network model for mutation effect prediction. Pre-trained to predict amino-acid propensities from their surrounding 3D structure atomic environments, HERMES can be efficiently fine-tuned to predict mutational effects, thanks to its symmetry-aware parameterization of the output space. Benchmarking against other models demonstrates that HERMES often outperforms or matches their performance in predicting mutation effects on stability, binding, and fitness, using either computationally or experimentally resolved protein structures. HERMES offers a versatile suit of tools for evaluating mutation effects and can be easily fine-tuned for specific predictive objectives using our open-source code.Competing Interest StatementThe authors have declared no competing interest.},
 	author = {Visani, Gian Marco and Pun, Michael N. and Galvin, William and Daniel, Eric and Borisiak, Kevin and Wagura, Utheri and Nourmohammad, Armita},
-	title = {HERMES: Holographic Equivariant neuRal network model for Mutational Effect and Stability prediction},
-	elocation-id = {2024.07.09.602403},
-	year = {2024},
 	doi = {10.1101/2024.07.09.602403},
+	elocation-id = {2024.07.09.602403},
+	eprint = {https://www.biorxiv.org/content/early/2024/10/02/2024.07.09.602403.full.pdf},
+	journal = {bioRxiv},
 	publisher = {Cold Spring Harbor Laboratory},
-	URL = {https://www.biorxiv.org/content/early/2024/07/13/2024.07.09.602403},
-	eprint = {https://www.biorxiv.org/content/early/2024/07/13/2024.07.09.602403.full.pdf},
-	journal = {bioRxiv}
-}
+	title = {HERMES: Holographic Equivariant neuRal network model for Mutational Effect and Stability prediction},
+	url = {https://www.biorxiv.org/content/early/2024/10/02/2024.07.09.602403},
+	year = {2024},
+	bdsk-url-1 = {https://www.biorxiv.org/content/early/2024/10/02/2024.07.09.602403},
+	bdsk-url-2 = {https://doi.org/10.1101/2024.07.09.602403}}
+
 ```
 
 
