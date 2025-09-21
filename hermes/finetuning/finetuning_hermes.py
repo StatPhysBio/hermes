@@ -344,7 +344,7 @@ def finetune_single_model(input_model_dir: str,
     if finetuning_params['lr_scheduler'] is None:
         lr_scheduler = None
     elif finetuning_params['lr_scheduler'] == 'reduce_lr_on_plateau':
-        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=3, threshold=0.001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08, verbose=True)
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=3, threshold=0.001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08)
     else:
         raise NotImplementedError()
 

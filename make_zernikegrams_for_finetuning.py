@@ -32,6 +32,7 @@ if __name__ == '__main__':
     
     parser.add_argument('-pr', '--pdb_to_residues_file', type=str, default=None,
                         help='A file containing a dictionary mapping pdbids to a list of residues to process. \
+                              Called `pdb_to_residues.json` in the examples in this repository. \
                               The file should be a json file with the following format: {"pdbid1": [res1, res2, ...], "pdbid2": [res1, res2, ...], ...}. \
                               Each residue should be a tuple of strings (chainid, resnum, icode). \
                               If a pdbid is not in the file, all residues in the pdb will be processed. \

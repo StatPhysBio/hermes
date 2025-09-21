@@ -19,7 +19,7 @@ import tempfile
 from rich.progress import Progress
 
 from hermes.cg_coefficients import get_w3j_coefficients
-from hermes.models import SO3_ConvNet, CGNet, SO3_ConvNetPlusEmbeddings, SO3_ConvNet_WithExtraPredictor
+from hermes.models import SO3_ConvNet, CGNet, SO3_ConvNetPlusEmbeddings
 
 # from hermes.protein_processing.pipeline import get_zernikegrams_from_pdbfile
 from zernikegrams import get_zernikegrams_from_pdbfile
@@ -145,7 +145,8 @@ def load_hermes_models(model_dirs: List[str]):
                 if finetuning_params is None or 'model_confidence_handling' not in finetuning_params or finetuning_params['model_confidence_handling'] == 'frequentist':
                     model = SO3_ConvNet(data_irreps, w3j_matrices, hparams['model_hparams'], normalize_input_at_runtime=hparams['normalize_input']).to(device)
                 elif finetuning_params['model_confidence_handling'] == 'bayesian':
-                    model = SO3_ConvNet_WithExtraPredictor(data_irreps, w3j_matrices, hparams['model_hparams'], normalize_input_at_runtime=hparams['normalize_input']).to(device)
+                    # model = SO3_ConvNet_WithExtraPredictor(data_irreps, w3j_matrices, hparams['model_hparams'], normalize_input_at_runtime=hparams['normalize_input']).to(device)
+                    raise NotImplementedError('model_confidence_handling "bayesian" not yet implemented')
                 else:
                     raise NotImplementedError()
             else:

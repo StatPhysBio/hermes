@@ -1,0 +1,15 @@
+{
+    "zernikegrams_npz_gz_template": "training_data/finetuning/cdna117k/premade_zernikegrams/{model_version}.npz.gz",
+    "targets_csv_template": "training_data/finetuning/cdna117k_relaxed_pred/{split}_targets-{model_version}.csv",
+    "model_version": "hermes_py_050",
+    "finetuning_version": "ft_cdna117k_relaxed_pred",
+    "score_col": "score",
+    "finetuning_depth": "all",
+    "finetune_with_noise": true,
+    "batch_size": 128,
+    "lr": 0.001,
+    "n_epochs": 10,
+    "alpha_gly": 0.0,
+    "lr_scheduler": "reduce_lr_on_plateau",
+    "model_confidence_handling": "frequentist"
+}
