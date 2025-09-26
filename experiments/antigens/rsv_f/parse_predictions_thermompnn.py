@@ -11,7 +11,7 @@ idx_to_resnum = np.arange(26, 514)
 if __name__ == '__main__':
 
     df = pd.read_csv('mutations.csv')
-    df_preds = pd.read_csv('results_all_sites/ThermoMPNN_inference_4jhw.csv')
+    df_preds = pd.read_csv('results_all_sites/ThermoMPNN_inference_4jhw_trimer.csv')
 
     df_preds['resnum'] = df_preds['position'].map(lambda x: idx_to_resnum[x])
     df_preds.rename(columns={'mutation': 'mutant'}, inplace=True)
@@ -41,6 +41,7 @@ if __name__ == '__main__':
     for key in data_to_add:
         df[key] = data_to_add[key]
     
+    os.makedirs('./results', exist_ok=True)
     df.to_csv('results/thermompnn.csv', index=False)
 
     

@@ -41,6 +41,7 @@ for model in ['proteinmpnn_v_48_002', 'proteinmpnn_v_48_030']:
         final_df['rank_mt'].append(rank_mt)
     
     final_df = pd.DataFrame(final_df)
+    os.makedirs('./results', exist_ok=True)
     final_df.to_csv(f'./results/{model}.csv', index=False)
 
 

@@ -2,7 +2,7 @@
 
 proteinmpnn_dir=/gscratch/spe/gvisan01/ProteinMPNN-copy/mutation_effect_prediction/
 
-base_dir='/gscratch/spe/gvisan01/hermes/experiments/antigens/rsv_f/'
+base_dir='/gscratch/stf/gvisan01/hermes/experiments/antigens/rsv_f/'
 
 model_version_list='v_48_030 v_48_002'
 
