@@ -7,5 +7,5 @@ finetune_with_noise: false
 batch_size: 128
 lr: 0.0005
 n_epochs: 4
-alpha_cls: 0.0
+alpha_gly: 0.0
 lr_scheduler: null

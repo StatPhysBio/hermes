@@ -158,7 +158,7 @@ def parse_args():
     return args
 
 
-def get_structural_info_fn(pdb_file: str,
+def get_structural_info_fn(pdb_file_or_pose: str, # or Pose
                             parser: str = 'biopython',
                             padded_length: Optional[int] = None,
                             SASA: bool = True,
@@ -175,23 +175,24 @@ def get_structural_info_fn(pdb_file: str,
     If padded_length is None, does not pad the protein.
     """
 
-    if isinstance(pdb_file, str):
-        L = len(pdb_file.split('/')[-1].split('.')[0])
+    if isinstance(pdb_file_or_pose, str):
+        L = len(pdb_file_or_pose.split('/')[-1].split('.')[0])
+    elif isinstance(pdb_file_or_pose, list):
+        L = len(pdb_file_or_pose[0].split('/')[-1].split('.')[0])
+        for i in range(1, len(pdb_file_or_pose)):
+            L = max(L, len(pdb_file_or_pose[i].split('/')[-1].split('.')[0]))
     else:
-        L = len(pdb_file[0].split('/')[-1].split('.')[0])
-        for i in range(1, len(pdb_file)):
-            L = max(L, len(pdb_file[i].split('/')[-1].split('.')[0]))
+        L = 4
 
-    if isinstance(pdb_file, str):
-        pdb_file = [pdb_file]
-    
+    if not isinstance(pdb_file_or_pose, list):
+        pdb_file_or_pose = [pdb_file_or_pose]
 
     n = 0
-    for i, pdb_file in enumerate(pdb_file):
+    for i, pdb_file_or_pose in enumerate(pdb_file_or_pose):
 
         if padded_length is None:
             si = get_structural_info_from_protein(
-                    pdb_file,
+                    pdb_file_or_pose,
                     parser=parser,
                     calculate_SASA=SASA,
                     calculate_charge=charge,
@@ -203,7 +204,7 @@ def get_structural_info_fn(pdb_file: str,
                     multi_struct=multi_struct)
         else:
             si = get_padded_structural_info(
-                    pdb_file,
+                    pdb_file_or_pose,
                     parser=parser,
                     padded_length=padded_length,
                     SASA=SASA,
@@ -216,7 +217,7 @@ def get_structural_info_fn(pdb_file: str,
                     multi_struct=multi_struct)
 
         if si[0] is None:
-            print(f"Failed to process {pdb_file}", file=sys.stderr)
+            print(f"Failed to process {pdb_file_or_pose if isinstance(pdb_file_or_pose, str) else 'pose'}", file=sys.stderr)
             continue
 
         try:
@@ -247,7 +248,7 @@ def get_structural_info_fn(pdb_file: str,
                     ('charges', 'f4', (padded_length)),
                 ])
             
-            np_protein = np.zeros(shape=(len(pdb_file),), dtype=dt)
+            np_protein = np.zeros(shape=(len(pdb_file_or_pose),), dtype=dt)
 
         np_protein[n] = (pdb,atom_names,elements,res_ids,coords,sasas,charges,)
         
@@ -474,7 +475,7 @@ def get_structural_info_from_dataset(
 
 
 def get_padded_structural_info(
-    pdb_file: str,
+    pdb_file_or_pose: str, # or Pose
     parser: str = "biopython",
     padded_length: int = 200000,
     SASA: bool = True,
@@ -523,8 +524,9 @@ def get_padded_structural_info(
     """
 
     try:
+        # print(f"Processing {pdb_file}", flush=True)
         pdb, ragged_structural_info = get_structural_info_from_protein(
-            pdb_file,
+            pdb_file_or_pose=pdb_file_or_pose,
             parser=parser,
             calculate_SASA=SASA,
             calculate_charge=charge,
@@ -540,9 +542,12 @@ def get_padded_structural_info(
         mat_structural_info = pad_structural_info(
             ragged_structural_info, padded_length=padded_length
         )
+        # print(f"Finished {pdb_file}", flush=True)
     except Exception as e:
         logger.error(f"Failed to process {pdb_file}")
         logger.exception(e)
+        print(f"Failed to process {pdb_file}", file=sys.stderr)
+        print(e)
         return (None,)
 
     return (pdb, *mat_structural_info)

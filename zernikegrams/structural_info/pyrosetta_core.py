@@ -41,7 +41,7 @@ def calculate_sasa(
 
 
 def get_structural_info_from_protein__pyrosetta(
-    pdb_file: str,
+    pdb_file_or_pose: Union[str, Pose],
     calculate_SASA: bool = True,
     calculate_charge: bool = True,
     calculate_DSSP: bool = True,
@@ -61,7 +61,10 @@ def get_structural_info_from_protein__pyrosetta(
     from pyrosetta.rosetta.core.id import AtomID
     from pyrosetta.rosetta.protocols.moves import DsspMover
 
-    pose = pyrosetta.pose_from_pdb(pdb_file)
+    if isinstance(pdb_file_or_pose, str):
+        pose = pyrosetta.pose_from_pdb(pdb_file_or_pose)
+    else:
+        pose = pdb_file_or_pose
 
     # lists for each type of information to obtain
     atom_names = []
