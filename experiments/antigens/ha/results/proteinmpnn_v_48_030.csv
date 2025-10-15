@@ -1,4 +1,4 @@
-label,mutation,chain,pdb,delta_logit,rank_wt,rank_mt
-Universal-HA,H355W,A,7VDF,3.6682742499999996,5,1
-Universal-HA,K380I,A,7VDF,4.3546848,9,1
-Universal-HA,E432I,A,7VDF,2.6388744,12,2
+label,mutation,chain,pdb,delta_logit,perc_bucket,rank_wt,rank_mt
+Universal-HA,H355W,A,7VDF,3.6682742499999996,≥ 99th,5,1
+Universal-HA,K380I,A,7VDF,4.3546848,≥ 99th,9,1
+Universal-HA,E432I,A,7VDF,2.6388744,≥ 99th,12,2

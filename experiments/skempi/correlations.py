@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import json
 from scipy.stats import spearmanr, pearsonr, combine_pvalues
+from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score
 
 import argparse 
 
@@ -86,6 +87,7 @@ if __name__ == '__main__':
                 assert min_num_of_mutants_for_groups is not None
                 groups = df.groupby(pdb_column)
                 pr, pr_pval, sr, sr_pval, num = [], [], [], [], []
+                precision, recall, f1, auroc, accuracy = [], [], [], [], []
                 for group_name, group_df in groups:
                     group_df = group_df.reset_index(drop=True)
                     
@@ -93,25 +95,44 @@ if __name__ == '__main__':
                         targets, predictions = group_df[target_column].values, group_df[prediction_column].values
                         pr_, pr_pval_ = pearsonr(targets, predictions)
                         sr_, sr_pval_ = spearmanr(targets, predictions)
+                        targets_binary = [1 if t < 0 else 0 for t in targets]
+                        predictions_binary = np.array([1 if p > 0 else 0 for p in predictions])
+                        precision_ = precision_score(targets_binary, predictions_binary)
+                        recall_ = recall_score(targets_binary, predictions_binary)
+                        f1_ = f1_score(targets_binary, predictions_binary)
+                        auroc_ = roc_auc_score(targets_binary, predictions_binary)
+                        accuracy_ = accuracy_score(targets_binary, predictions_binary)
                         pr.append(pr_)
                         pr_pval.append(pr_pval_)
                         sr.append(sr_)
                         sr_pval.append(sr_pval_)
+                        precision.append(precision_)
+                        recall.append(recall_)
+                        f1.append(f1_)
+                        auroc.append(auroc_)
+                        accuracy.append(accuracy_)
                         num.append(len(targets))
-                return np.mean(pr), np.std(pr), combine_pvalues(pr_pval, method='fisher')[1], np.mean(sr), np.std(sr), combine_pvalues(sr_pval, method='fisher')[1], np.sum(num), len(num)
+                return np.mean(pr), np.std(pr), combine_pvalues(pr_pval, method='fisher')[1], np.mean(sr), np.std(sr), np.nanmean(precision), np.nanmean(recall), np.nanmean(f1), np.nanmean(auroc), np.nanmean(accuracy), combine_pvalues(sr_pval, method='fisher')[1], np.sum(num), len(num)
             else:
                 targets, predictions = df[target_column].values, df[prediction_column].values
                 pr, pr_pval = pearsonr(targets, predictions)
                 sr, sr_pval = spearmanr(targets, predictions)
+                targets_binary = np.array([1 if t < 0 else 0 for t in targets])
+                predictions_binary = np.array([1 if p > 0 else 0 for p in predictions])
+                precision = precision_score(targets_binary, predictions_binary)
+                recall = recall_score(targets_binary, predictions_binary)
+                f1 = f1_score(targets_binary, predictions_binary)
+                auroc = roc_auc_score(targets_binary, predictions_binary)
+                accuracy = accuracy_score(targets_binary, predictions_binary)
                 num = len(targets)
-                return pr, pr_pval, sr, sr_pval, num, len(df.groupby(pdb_column))
+                return pr, pr_pval, sr, sr_pval, precision, recall, f1, auroc, accuracy, num, len(df.groupby(pdb_column))
 
 
-        pr, pr_pval, sr, sr_pval, num, num_struc = get_correlations(df_full)
-        correlations_dict['Overall'][num_mut_mode] = {'Pr': float(pr), 'Pr_pval': float(pr_pval), 'Sr': float(sr), 'Sr_pval': float(sr_pval), 'num': float(num), 'num_struc': float(num_struc)}
+        pr, pr_pval, sr, sr_pval, precision, recall, f1, auroc, accuracy, num, num_struc = get_correlations(df_full)
+        correlations_dict['Overall'][num_mut_mode] = {'Pr': float(pr), 'Pr_pval': float(pr_pval), 'Sr': float(sr), 'Sr_pval': float(sr_pval), 'precision': float(precision), 'recall': float(recall), 'f1': float(f1), 'auroc': float(auroc), 'accuracy': float(accuracy), 'num': float(num), 'num_struc': float(num_struc)}
 
-        pr, pr_std, pr_pval, sr, sr_std, sr_pval, num, num_struc = get_correlations(df_full, do_group_structures=True)
-        correlations_dict['Per-Structure'][num_mut_mode] = {'Pr': float(pr), 'Pr_std': float(pr_std), 'Pr_pval': float(pr_pval), 'Sr': float(sr), 'Sr_std': float(sr_std), 'Sr_pval': float(sr_pval), 'num': float(num), 'num_struc': float(num_struc)}
+        pr, pr_std, pr_pval, sr, sr_std, sr_pval, precision, recall, f1, auroc, accuracy, num, num_struc = get_correlations(df_full, do_group_structures=True)
+        correlations_dict['Per-Structure'][num_mut_mode] = {'Pr': float(pr), 'Pr_std': float(pr_std), 'Pr_pval': float(pr_pval), 'Sr': float(sr), 'Sr_std': float(sr_std), 'Sr_pval': float(sr_pval), 'precision': float(precision), 'recall': float(recall), 'f1': float(f1), 'auroc': float(auroc), 'accuracy': float(accuracy), 'num': float(num), 'num_struc': float(num_struc)}
 
     with open(os.path.join(this_file_dir, 'results', model_version, f'{system_name_in_csv_file}-{model_version_in_filename}-use_mt_structure={use_mt_structure}-correlations.json'), 'w') as f:
         json.dump(correlations_dict, f, indent=4)

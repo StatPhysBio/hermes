@@ -7,5 +7,5 @@ finetune_with_noise: true # whether you toggled `--add_noise` when generating ze
 batch_size: 128
 lr: 0.001
 n_epochs: 15
-alpha_cls: 0.0
+alpha_gly: 0.0
 lr_scheduler: reduce_lr_on_plateau

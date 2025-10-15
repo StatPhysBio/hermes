@@ -11,12 +11,12 @@ for model_version in $model_version_list
 
     echo $model_version
 
-    python -u ../../../run_hermes_on_pdbfiles.py \
-                    -m $model_version \
-                    -r logits \
-                    -pd ./pdbs \
-                    -o $results_dir$model_version'.csv' \
-                    -pp $parallelism
+    # python -u ../../../run_hermes_on_pdbfiles.py \
+    #                 -m $model_version \
+    #                 -r logits \
+    #                 -pd ./pdbs \
+    #                 -o $results_dir$model_version'.csv' \
+    #                 -pp $parallelism
     
     python -u keep_only_desired_mutations.py \
                     -m $model_version

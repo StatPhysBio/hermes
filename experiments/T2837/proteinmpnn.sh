@@ -21,10 +21,15 @@ for model_version in $model_version_list
     #                 --mutant_column variant \
     #                 --mutant_chain_column chainid
 
-    python -u correlations.py \
+    # python -u correlations.py \
+    #                     --model_version proteinmpnn_$model_version \
+    #                     --use_mt_structure 0 \
+    #                     --system_name T2837
+
+    python -u correlations__with_percentiles.py \
                         --model_version proteinmpnn_$model_version \
                         --use_mt_structure 0 \
-                        --system_name T2837    
+                        --system_name T2837
 
 done
 

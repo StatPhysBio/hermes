@@ -34,6 +34,9 @@ if __name__ == '__main__':
                         help='Path to the HERMES folder, containing the run_hermes_on_pdbfiles.py script.')
     
     parser.add_argument('-bs', '--batch_size', type=int, default=512)
+
+    parser.add_argument('-r', '--request', nargs='+', type=str, default=['logits'], choices=['logprobas', 'probas', 'embeddings', 'logits'],
+                        help='Which data to return. Can be a combination of "logprobas", "probas", "embeddings", and "logits".')
     
     parser.add_argument('-A',  '--account', type=str, default='stf')
     parser.add_argument('-P',  '--partition', type=str, default='compute')
@@ -91,7 +94,7 @@ if __name__ == '__main__':
                                 -pd {args.folder_with_pdbs}\
                                 -pn {file_with_pdbids_and_chains} \
                                 -o {output_filepath} \
-                                -r probas logprobas logits \
+                                -r {" ".join(args.request)} \
                                 -v 1 \
                                 -bs {args.batch_size}'
         

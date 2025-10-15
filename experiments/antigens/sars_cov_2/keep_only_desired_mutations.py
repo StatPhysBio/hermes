@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 import argparse
-
+import json
 
 ind_to_aa_size = {0: 'GLY', 1: 'ALA', 2: 'CYS', 3: 'SER', 4: 'PRO',
        5: 'THR', 6: 'VAL', 7: 'ASP', 8: 'ILE', 9: 'LEU',
@@ -18,6 +18,21 @@ ind_to_ol_size = {x: aa_to_one_letter[ind_to_aa_size[x]] for x in range(20)}
 
 logit_columns = np.array([f'logit_{aa}' for _, aa in ind_to_ol_size.items()])
 
+def get_percentile_bucket_str(x, perc_list, value_list):
+    # If below min
+    if x <= value_list[0]:
+        return f"≤ {perc_list[0]}th"
+    # If above max
+    if x >= value_list[-1]:
+        return f"≥ {perc_list[-1]}th"
+    
+    # Find index where it belongs
+    idx = np.searchsorted(value_list, x) - 1
+    p0, p1 = perc_list[idx], perc_list[idx + 1]
+    
+    # Return bucket string
+    return f"{p0}th - {p1}th"
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-m', '--model_version', type=str, required=True)
@@ -26,6 +41,11 @@ if __name__ == '__main__':
     df_mut = pd.read_csv('mutations.csv')
 
     df_model = pd.read_csv(f'results_all_sites/{args.model_version}.csv')
+
+    perc_list = [50, 60, 70, 75, 80, 85, 90, 95, 97.5, 99]
+    percentile_file = f'/gscratch/stf/gvisan01/hermes/experiments/average_prediction_matrices/T2837_all_sites/all/distributions/{args.model_version}__percentiles.json'
+    with open(percentile_file, 'r') as f:
+        percentile_data = json.load(f)
 
     data_to_add = {}
     for index, row in df_mut.iterrows():
@@ -51,6 +71,13 @@ if __name__ == '__main__':
         if 'delta_logit' not in data_to_add:
             data_to_add['delta_logit'] = []
         data_to_add['delta_logit'].append(delta_logit)
+
+        # compute percentile bucket
+        perc_value_list = [percentile_data[aa_wt][aa_mt][str(perc)] for perc in perc_list]
+        perc_bucket = get_percentile_bucket_str(delta_logit, perc_list, perc_value_list)
+        if 'perc_bucket' not in data_to_add:
+            data_to_add['perc_bucket'] = []
+        data_to_add['perc_bucket'].append(perc_bucket)
 
         # compute rank of the wildtype among the logit columns
         logit_values = model_row[logit_columns].values[0]

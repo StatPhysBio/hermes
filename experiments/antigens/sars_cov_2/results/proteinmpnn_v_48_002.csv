@@ -1,5 +1,5 @@
-label,mutation,chain,pdb,delta_logit,rank_wt,rank_mt
-hexapro,F817P,A,6VSB,-0.17437530000000034,15,17
-hexapro,A892P,A,6VSB,-0.7120337000000001,5,9
-hexapro,A899P,A,6VSB,-0.6696555999999996,15,18
-hexapro,A942P,A,6VSB,-1.8268319999999996,6,14
+label,mutation,chain,pdb,delta_logit,perc_bucket,rank_wt,rank_mt
+hexapro,F817P,A,6VSB,-0.17437530000000034,97.5th - 99th,15,17
+hexapro,A892P,A,6VSB,-0.7120337000000001,90th - 95th,5,9
+hexapro,A899P,A,6VSB,-0.6696555999999996,90th - 95th,15,18
+hexapro,A942P,A,6VSB,-1.8268319999999996,85th - 90th,6,14

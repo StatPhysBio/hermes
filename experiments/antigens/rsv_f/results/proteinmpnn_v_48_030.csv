@@ -1,8 +1,8 @@
-label,mutation,chain,pdb,delta_logit,rank_wt,rank_mt
-Cav1,S190F,A,4jhw_trimer,-0.5330876999999998,4,7
-Cav1,V207L,A,4jhw_trimer,-2.8024003,2,7
-Prol,S215P,A,4jhw_trimer,-5.614004755,1,14
-TriC,D486H,A,4jhw_trimer,-5.606362959999999,1,10
-TriC,E487Q,A,4jhw_trimer,-5.544976875,1,13
-TriC,F488W,A,4jhw_trimer,-5.63211218,1,14
-TriC,D489H,A,4jhw_trimer,-1.7599805000000002,3,14
+label,mutation,chain,pdb,delta_logit,perc_bucket,rank_wt,rank_mt
+Cav1,S190F,A,4jhw_trimer,-0.5330876999999998,90th - 95th,4,7
+Cav1,V207L,A,4jhw_trimer,-2.8024003,50th - 60th,2,7
+Prol,S215P,A,4jhw_trimer,-5.614004755,≤ 50th,1,14
+TriC,D486H,A,4jhw_trimer,-5.606362959999999,≤ 50th,1,10
+TriC,E487Q,A,4jhw_trimer,-5.544976875,≤ 50th,1,13
+TriC,F488W,A,4jhw_trimer,-5.63211218,≤ 50th,1,14
+TriC,D489H,A,4jhw_trimer,-1.7599805000000002,75th - 80th,3,14

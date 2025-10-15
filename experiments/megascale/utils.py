@@ -19,7 +19,7 @@ def get_model_df_and_dir_and_pred_column(model):
             df_path = os.path.join(directory, f'test_targets-{model}-use_mt_structure=0.csv')
             df = pd.read_csv(df_path)
             if 'ddg_st' in model:
-                pred_column = 'pe_mt__minus__pe_wt'
+                pred_column = 'log_proba_mt__minus__log_proba_wt' # 'pe_mt__minus__pe_wt'
             else:
                 pred_column = 'log_proba_mt__minus__log_proba_wt'
     elif 'proteinmpnn' in model:

@@ -52,6 +52,12 @@ for curr_comp_in_json, curr_comp in zip(['Per-Structure', 'Overall'],
             sr = -correlations[curr_comp_in_json][mut_types]['Sr'] # flip correlation so higher is better
             sr_pval = correlations[curr_comp_in_json][mut_types]['Sr_pval']
 
+            precision = correlations[curr_comp_in_json][mut_types]['precision']
+            recall = correlations[curr_comp_in_json][mut_types]['recall']
+            f1 = correlations[curr_comp_in_json][mut_types]['f1']
+            auroc = correlations[curr_comp_in_json][mut_types]['auroc']
+            accuracy = correlations[curr_comp_in_json][mut_types]['accuracy']
+
             num_measurements = correlations[curr_comp_in_json][mut_types]['num']
             num_measurements_trace.append(num_measurements)
 
@@ -62,6 +68,12 @@ for curr_comp_in_json, curr_comp in zip(['Per-Structure', 'Overall'],
             correlations_values_in_table[model + ' - Pearsonr p-value'] = pr_pval
             correlations_values_in_table[model + ' - Spearmanr'] = sr
             correlations_values_in_table[model + ' - Spearmanr p-value'] = sr_pval
+
+            correlations_values_in_table[model + ' - precision'] = precision
+            correlations_values_in_table[model + ' - recall'] = recall
+            correlations_values_in_table[model + ' - f1'] = f1
+            correlations_values_in_table[model + ' - auroc'] = auroc
+            correlations_values_in_table[model + ' - accuracy'] = accuracy
 
             if curr_comp_in_json == 'Per-Structure':
                 correlations_values_in_table[model + ' - Pearsonr std error'] = correlations[curr_comp_in_json][mut_types]['Pr_std'] / np.sqrt(correlations[curr_comp_in_json][mut_types]['num_struc'])
