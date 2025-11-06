@@ -20,6 +20,9 @@ if __name__ == '__main__':
                         help='If model_version is a model with noise, and this is toggled, the same amount of noise as the model was trained with will be added to the structures. \
                               Note that this will create multiple zernikegram files with different noise seed. If model_version is a model without noise, this argument will be ignored.')
     
+    parser.add_argument('--noise_idx', type=int, default=0, choices=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        help='If add_noise is toggled, this index will determine which noise seed to use.')
+    
     parser.add_argument('-pd', '--pdb_dir', type=str, required=True,
                         help='The directory containing the pdb files to process. The script will process all pdbs in this directory.')
     
@@ -45,16 +48,15 @@ if __name__ == '__main__':
         with open(args.pdb_list, 'r') as f:
             pdbs = f.read().splitlines()
     else:
-        print('No pdb list provided, processing all pdbs in the pdb_dir...')
         pdbs = [pdb[:-4] for pdb in os.listdir(args.pdb_dir) if pdb.endswith('.pdb') and not pdb.startswith('.')] # hidden files are ignored
-
-        
         
     ## make get_residues function
     if args.pdb_to_residues_file is not None:
 
         with open(args.pdb_to_residues_file, 'r') as f:
             pdb_to_residues = json.load(f)
+        
+        pdbs = [pdb for pdb in pdbs if pdb in pdb_to_residues]
 
         def get_requested_residues(np_protein):
             pdb = np_protein['pdb'].decode()
@@ -73,7 +75,7 @@ if __name__ == '__main__':
     
     ## get hparams, assume they are the same for all models in the model version (the relevant haprams should be!!!)
     trained_models_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'trained_models', args.model_version)
-    model_dir_list = [os.path.join(trained_models_path, model_rel_path) for model_rel_path in os.listdir(trained_models_path)]
+    model_dir_list = sorted([os.path.join(trained_models_path, model_rel_path) for model_rel_path in os.listdir(trained_models_path)])
     with open(os.path.join(model_dir_list[0], 'hparams.json'), 'r') as f:
         hparams = json.load(f)
     
@@ -82,6 +84,7 @@ if __name__ == '__main__':
         for model_dir in model_dir_list:
             with open(os.path.join(model_dir, 'hparams.json'), 'r') as f:
                 hparams_list.append(json.load(f))
+        hparams_list = [hparams_list[args.noise_idx]] # only use the hparams corresponding to the requested noise index
     else:
         hparams_list = [hparams]
 

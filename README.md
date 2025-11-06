@@ -276,5 +276,13 @@ If you found this code useful, please cite us:
 ```
 
 
+TODO user-facing:
+1. Make it possible to specify design positions in `run_hermes_on_pdbfiles.py`
+2. Provide - and advertise - functions that predict with as input a pdbfile or a pyrosetta pose (as well as chainid - positions combinations)
+
+TODO analysis:
+1. For the stability benchmarks (Megascale test set because it's saturation mutagenesis so it's more balanced in the mutations composition, and because it's a much larger set than T2837), compute similarity of those proteins to the pre-training proteins. Then, stratify performance metrics by similarity groups.
+    --> Hypothesis: recall gets better for HERMES-fixed for the low-similarity groups, because there's less WT-preference
+
 
 
