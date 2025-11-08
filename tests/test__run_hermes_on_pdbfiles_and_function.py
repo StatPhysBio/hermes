@@ -121,6 +121,40 @@ def test_function__select_mix():
 
     assert np.allclose(df_logits, df_true_logits, atol=1e-1) # GPU computation making these diverge a little sometimes
 
+def test_function__from_pose():
+
+    import pyrosetta
+    init_flags = '-ignore_unrecognized_res 1 -include_current -ex1 -ex2 -mute all -include_sugars -ignore_zero_occupancy false -obey_ENDMDL 1'
+    pyrosetta.init(init_flags, silent=True)
+
+    pose = pyrosetta.pose_from_pdb('./pdbs/5jzy.pdb')
+    df1, _ = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', pose, chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
+    df2, _ = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', pose, chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
+
+    def get_logits(df_):
+        logits = []
+        for aa in sorted(list(ol_to_ind_size.keys())):
+            logits.append(df_[f'logit_{aa}'])
+        logits = np.vstack(logits)
+        return logits
+
+    df1_logits = get_logits(df1)
+    df2_logits = get_logits(df2)
+    
+    assert np.allclose(df1_logits, df2_logits, atol=1e-1)
+
+    df_from_pdb, _ = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
+
+    df_from_pdb_logits = get_logits(df_from_pdb)
+
+    one = df_from_pdb_logits[~np.isclose(df_from_pdb_logits, df1_logits, atol=1e-3)]
+    two = df1_logits[~np.isclose(df_from_pdb_logits, df1_logits, atol=1e-3)]
+    print(list(zip(one, two)))
+
+    assert np.allclose(df1_logits, df_from_pdb_logits, atol=1e-3)
+
+
+
 
 if __name__ == '__main__':
     os.system(f'rm -r {TEMPDIR}')
@@ -128,15 +162,17 @@ if __name__ == '__main__':
     os.makedirs(TEMPDIR, exist_ok=False)
     os.makedirs(OUTDIR, exist_ok=False)
 
-    test__all_pdbs_in_folder()
-    test__select_pdb()
-    test__select_pdb_chain()
-    test__select_pdb_chain_sites()
-    test__select_pdb_chain_parallelism()
-    test__select_pdb_chain_sites_parallelism()
+    # test__all_pdbs_in_folder()
+    # test__select_pdb()
+    # test__select_pdb_chain()
+    # test__select_pdb_chain_sites()
+    # test__select_pdb_chain_parallelism()
+    # test__select_pdb_chain_sites_parallelism()
 
-    test_function__select_pdb_chain_sites_icodes()
-    test_function__select_mix()
+    # test_function__select_pdb_chain_sites_icodes()
+    # test_function__select_mix()
+
+    test_function__from_pose()
 
 
 

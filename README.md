@@ -5,11 +5,6 @@ Code for the paper [HERMES: Holographic Equivariant neuRal network model for Mut
 ![Schematic of HERMES](hermes_with_inference.png)
 
 
-## Running on Colab
-
-**We are in the process of updating the colab notebook, see the old version, which includes only pre-trained models and models fine-tuned on Rosetta ddG data [here](https://colab.research.google.com/drive/1JQxkXeGZJYYcPNglN3rYUYiOuUOkwJPL?usp=sharing)**
-
-
 ## Installing and running locally
 
 **Step 1:** Clone the repository and navigate to it
@@ -59,28 +54,27 @@ Installation tips:
 
 ## Provided pre-trained and fine-tuned models
 
-You can find all the models in the `trained_models/` directory. Some notable models:
+Models live in the `trained_models/` directory. We only include some of the models in the repository, Some notable models:
 
-- `hermes_{bp/py}_{000/050}`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains.
-- `hermes_{bp/py}_{000/050}_ft_cdna117k_relaxed_pred`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress the predictions of `hermes_{bp/py}_{000/050}` made using the HERMES-relaxed protocol (see concept figure) on the proteins in the cdna117k dataset. These models can be run with the HERMES-fixed protocol (concept figure, D.1), but will effectively perform the same as when using the HERMES-relaxed protocol; we call this "hybrid" model HERMES-FT_relaxed (concept figure, D.2).
-- `hermes_py_{000/050}_ft_cdna117k_ddg_st`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress ddG values of stability from the cdna117k dataset (the same dataset used by StabilityOracle). *These are the best models for protein stability prediction*.
-- `hermes_{bp/py}_{000/050}_ft_cdna117k_relaxed_pred_ft_cdna117k_ddg_st`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress the predictions of `hermes_{bp/py}_{000/050}` made using the HERMES-relaxed protocol (see concept figure) on the proteins in the cdna117k dataset (the same dataset used by StabilityOracle). Finally, fine-tuned to regress ddG values of stability from the cdna117k dataset. *These are the best models for protein stability prediction*.
+- `hermes_{bp/py}_{000/050}`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Using these models equals running the HERMES-fixed protocol (concept figure, D.1).
+
+- `hermes_{bp/py}_{000/050}_ft_cdna117k_relaxed_pred` and `hermes_{bp/py}_{000/050}_ft_casp12_perc0p5_relaxed_pred`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress the predictions of `hermes_{bp/py}_{000/050}` made using the HERMES-relaxed protocol (see concept figure) on the proteins in the cdna117k dataset (first set of models) or on a random subsample - 0.5% - of the neighborhoods from the casp12 pre-training proteins. These models can be run with the HERMES-fixed protocol (concept figure, D.1), but will effectively perform the same as when using the HERMES-relaxed protocol; we call this "hybrid" model HERMES-amortized (concept figure, D.2).
+
+- `hermes_py_{000/050}_ft_cdna117k_ddg_st`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress ddG values of stability from the cdna117k dataset (the same dataset used by StabilityOracle).
+
 - `hermes_{bp/py}_{000/050}_ft_skempi_ddg_bi`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress ddG values of binding for the SKEMPI dataset. *Use these for predicting mutation effects on binding.*.
 
-`bp` indicates Biopython preprocessing (open source but slower), whereas `py` indicates PyRosetta preprocessing (faster but requires a license). `000` indicates no noise added during training, whereas `050` indicates noise was added during training. `ft` indicates the model was fine-tuned on a specific dataset. For example, `cdna117k_ddg_st` indicates that the model was fine-tuned on the cdna117k ddG stability data, whereas `skempi_ddg_bi` indicates that the model was fine-tuned on the SKEMPI ddG binding data.
+`bp` indicates Biopython preprocessing (open source but slower), whereas `py` indicates PyRosetta preprocessing (faster but requires a PyRosetta license, free for academics). `000` indicates no noise added during training, whereas `050` indicates noise was added during training. `ft` indicates the model was fine-tuned on a specific dataset. For example, `cdna117k_ddg_st` indicates that the model was fine-tuned on the cdna117k ddG stability data, whereas `skempi_ddg_bi` indicates that the model was fine-tuned on the SKEMPI ddG binding data.
 
 Note that, to use the pyrosetta models, a local installation of pyrosetta is necessary, whereas the biopython models use a fully open-source pipeline.
 
-See below for a benchmarking of some of the models on the T2837 dataset of stability ddG effects. All models shown here use PyRosetta preprocessing:
-![Results on T2837 dataset of stability effects](t2837_radial_plots.png)
 
-
-## Getting site-level mutation probabilities and embeddings for all sites in PDB files
+## Getting site-level mutation probabilities and embeddings
 
 The script `run_hermes_on_pdbfiles.py` can be given as input a set of PDB files - with optionally pdb-specific chains - and it will output a csv file where every row is a uniquely-identified site, and columns are the site's mutation probabilities. If embeddings are requested, they will be outputted in a separate file called `{CSV_FILENAME}-embeddings.npy`.
 
 ```bash
-usage: run_hermes_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBIDS_AND_CHAINS] [-pp PARALLELISM] -o OUTPUT_FILEPATH
+usage: run_hermes_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBID_CHAIN_SITES] [-pp PARALLELISM] -o OUTPUT_FILEPATH
                                  [-r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]] [-an {0,1}] [-el {0,1}] [-bs BATCH_SIZE] [-v {0,1}] [-lb {0,1}]
 
 optional arguments:
@@ -90,13 +84,14 @@ optional arguments:
   -hf HDF5_FILE, --hdf5_file HDF5_FILE
                         Path to an .hdf5 file containing zernikegrams and res_ids to run inference on. Cannot be specified together with --folder_with_pdbs.
   -pd FOLDER_WITH_PDBS, --folder_with_pdbs FOLDER_WITH_PDBS
-                        Directory containing PDB files to run inference on. Inference is run on all sites in the structure. Cannot be specified together with --hdf5_file.
-  -pn FILE_WITH_PDBIDS_AND_CHAINS, --file_with_pdbids_and_chains FILE_WITH_PDBIDS_AND_CHAINS
-                        [Optional] Path to a .txt file containing pdbids and chains to run inference on. If not specified, and --folder_with_pdbs is specified, inference will be run on all sites in the structure. If specified, each
-                        line should be in the format "pdbid chain"; if chain is not specified for a given line, inference will be run on all chains in that structure.
+                        Directory containing PDB files to run inference on. By default, inference is run on all sites in the structure, unless --file_with_pdbid_chain_sites is specified. Cannot be specified together with --hdf5_file.
+  -pn FILE_WITH_PDBID_CHAIN_SITES, --file_with_pdbid_chain_sites FILE_WITH_PDBID_CHAIN_SITES
+                        [Optional] Path to a .txt file containing tuples of "pdbid chain sites" to run inference on. Meant to be used with --folder_with_pdbs. If not specified, inference will be run on all sites in all the structures
+                        found in --folder_with_pdbs. Each line should be in the format "pdbid chain sites", e.g. "1aon A 3 4 5 6", and furhermore: sites can have insertion codes specified, in the format [resnum]-[icode], e.g. 12-A; if
+                        sites are not specified, inference will be run on all sites in the chain; if chain is not specified for a given line, inference will be run on all chains in that structure, and positions cannot be specified.
   -pp PARALLELISM, --parallelism PARALLELISM
-                        If zero (default), pdb files are processed one by one. If one, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a temporary
-                        hdf5 file.
+                        If zero (default), pdb files are processed one by one. If greater than zero, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a
+                        temporary hdf5 file.
   -o OUTPUT_FILEPATH, --output_filepath OUTPUT_FILEPATH
                         Must be a ".csv file". Embeddings will be saved separately, in a parallel array, with the same filename but with the extension "-embeddings.npy".
   -r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...], --request {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]
@@ -104,8 +99,8 @@ optional arguments:
   -an {0,1}, --add_same_noise_level_as_training {0,1}
                         1 for True, 0 for False. If True, will add the same noise level as was used during training. This is useful for debugging purposes. Default is False.
   -el {0,1}, --ensemble_at_logits_level {0,1}
-                        1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. There should not
-                        be a big difference, unless the ensembled models are trained very differently.
+                        1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. There should not be a
+                        big difference, unless the ensembled models are trained very differently.
   -bs BATCH_SIZE, --batch_size BATCH_SIZE
                         Batch size for the model (number of sites). Higher batch sizes are faster, but may not fit in memory. Default is 512.
   -v {0,1}, --verbose {0,1}
@@ -134,6 +129,14 @@ For example, assume the file `my_pdbs_and_chains.txt` contains the following:
 Then, to process only these pdbs and chains, run:
 ```bash
 python run_hermes_on_pdbfiles.py -pd pdbs -pn my_pdbs_and_chains.txt -m hermes_bp_000 -o specific_chains.csv -r probas embeddings
+```
+
+**Request to process specific pdbs, chains and sites.**
+Similar to above, one can also request to process only specific sites on a chain, and can include insertion codes with the format [site_number]-[icode]:
+```
+1ao7
+1qrn A
+5jzy L 14 14-A 14-B 14-D
 ```
 
 If a requested pdb file is not found in the directory, the script will automatically attempt to download it from the RCSB website.
@@ -178,6 +181,25 @@ optional arguments:
   -E {0,1}, --send_emails {0,1}
   -EA EMAIL_ADDRESS, --email_address EMAIL_ADDRESS
 ```
+
+### Running HERMES with a function instead of a script
+
+As an alternative to the scripts, we provide a function that takes as input a specific protein structure - either as a pdbfile or a pyrosetta pose - as well as specifications of chaiins and/or sites to run HERMES on, and returns a pandas dataframe and embeddings numpy array with the same data as the files written by `run_hermes_on_pdbfiles.py`. For example:
+```python
+from hermes.inference import run_hermes_on_pdbfile_or_pyrosetta_pose
+
+## from pdbfile
+df, embeddings = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', '5jzy.pdb', chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])], request=['probas', 'embeddings'])
+
+## from pyrosetta pose - faster if you're planning on running HERMES on the same protein after making some changes (mutations / relaxations) with pyrosetta
+import pyrosetta
+init_flags = '-ignore_unrecognized_res 1 -include_current -ex1 -ex2 -mute all -include_sugars -ignore_zero_occupancy false -obey_ENDMDL 1' # flags HERMES was trained with, and used by default for inference
+pyrosetta.init(init_flags, silent=True)
+pose = pyrosetta.pose_from_pdb('5jzy.pdb')
+# do something to pose if you want
+df, embeddings = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', pose, chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])], request=['probas', 'embeddings'])
+```
+
 
 ### Visualize predictions easily in an Nx20 heatmap
 
@@ -227,12 +249,13 @@ Run `python mutation_effect_prediction_with_hermes.py -h` for more information o
 Note that, for simplicity, the script assumes empty insertion codes. In `hermes/utils/rename_resnums.py` we provide a function `rename_resnums()` that uses BioPython to sequentially rename the resnums in a pdb file, removing insertion codes, and also saves a mapping between the new resnums, and the old resnums+icodes.
 
 
-## NEW: HERMES-relaxed protocol
+## HERMES-relaxed protocol
 
 The HERMES-relaxed protocol pairs HEMRES models with PyRosetta relaxations, leading to predictions that account more reliably for the side-chain relaxations that would have to occur as a result of mutations.
 To run predictions for a HERMES model using the HERMES-relaxed protocol, use the script `mutation_effect_prediction_with_hermes_with_relaxation.py`.
 
-PyRosetta relaxations render the HERMES-relaxd protocol slow. To avoid this price, we created HERMES-FT_relaxed models, which are fine-tuned to regress over predictions made with the HERMES-relaxed protocol, leading to models that can be run very cheaply with the HERMES-fixed protocol. These models are the best for predicting mutation effects on stability, and are the ones we recommend using.
+PyRosetta relaxations render the HERMES-relaxed protocol slow. To avoid this price, we created HERMES-amortized models, which are fine-tuned to regress over predictions made with the HERMES-relaxed protocol, leading to models that can be run very cheaply with the HERMES-fixed protocol.
+
 
 ### Performance on stability prediction
 
@@ -242,7 +265,7 @@ The HERMES-relaxed protocol, used on pre-trained models like `hermes_py_050`, re
 
 ## Want to fine-tune on your mutation effect dataset?
 
-Fine-tuning can be easily done in a few steps.
+Fine-tuning can be easily done in a few steps. To see examples, [download our fine-tuning data](https://doi.org/10.5281/zenodo.17546961) and place it in the `training_data` folder.
 
 1. **Prepare the data.** Prepare the targets in three .csv files, which must have `{train}`, `{valid}`, and `{test}` in the name. Each .csv file must have the following columns: `[pdbid, chainid, variant, score]`. The scores under `score` should be such that lower means better (i.e. following the energy convention). Also, place all the pdbfiles for training, validation and testing in a single directory.
 
@@ -260,7 +283,6 @@ If you found this code useful, please cite us:
 
 ```
 @article{Visani2024.07.09.602403,
-	abstract = {Predicting the stability and fitness effects of amino-acid mutations in proteins is a cornerstone of biological discovery and engineering. Various experimental techniques have been developed to measure mutational effects, providing us with extensive datasets across a diverse range of proteins. By training on these data, machine learning approaches have advanced significantly in predicting mutational effects. Here, we introduce HERMES, a 3D rotationally equivariant structure-based neural network model for mutation effect prediction. Pre-trained to predict amino-acid propensities from their surrounding 3D structure atomic environments, HERMES can be efficiently fine-tuned to predict mutational effects, thanks to its symmetry-aware parameterization of the output space. Benchmarking against other models demonstrates that HERMES often outperforms or matches their performance in predicting mutation effects on stability, binding, and fitness, using either computationally or experimentally resolved protein structures. HERMES offers a versatile suit of tools for evaluating mutation effects and can be easily fine-tuned for specific predictive objectives using our open-source code.Competing Interest StatementThe authors have declared no competing interest.},
 	author = {Visani, Gian Marco and Pun, Michael N. and Galvin, William and Daniel, Eric and Borisiak, Kevin and Wagura, Utheri and Nourmohammad, Armita},
 	doi = {10.1101/2024.07.09.602403},
 	elocation-id = {2024.07.09.602403},
@@ -274,15 +296,5 @@ If you found this code useful, please cite us:
 	bdsk-url-2 = {https://doi.org/10.1101/2024.07.09.602403}}
 
 ```
-
-
-TODO user-facing:
-1. Make it possible to specify design positions in `run_hermes_on_pdbfiles.py`
-2. Provide - and advertise - functions that predict with as input a pdbfile or a pyrosetta pose (as well as chainid - positions combinations)
-
-TODO analysis:
-1. For the stability benchmarks (Megascale test set because it's saturation mutagenesis so it's more balanced in the mutations composition, and because it's a much larger set than T2837), compute similarity of those proteins to the pre-training proteins. Then, stratify performance metrics by similarity groups.
-    --> Hypothesis: recall gets better for HERMES-fixed for the low-similarity groups, because there's less WT-preference
-
 
 
