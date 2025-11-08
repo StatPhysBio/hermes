@@ -4,8 +4,9 @@ import json
 from tqdm import tqdm
 import torch
 import numpy as np
+import pandas as pd
 from e3nn import o3
-import scipy
+from scipy.special import softmax, log_softmax
 import torch
 import gzip, pickle
 import glob
@@ -25,6 +26,91 @@ from hermes.models import SO3_ConvNet, CGNet, SO3_ConvNetPlusEmbeddings
 from zernikegrams import get_zernikegrams_from_pdbfile
 from hermes.utils.data import ZernikegramsDataset, ZernikegramsAndEmbeddingsDataset
 from hermes.utils.protein_naming import ol_to_ind_size, ind_to_ol_size
+
+
+def initialize_df(request):
+    ## prepare header of csv file, initialize output dataframe and embeddings
+    res_id_fields = np.array(['resname', 'pdb', 'chain', 'resnum', 'insertion_code', 'secondary_structure'])
+    indices_of_res_ids = np.array([1, 2, 0, 3, 4]) # rearrange to put pdb in front, and remove secondary structure, here as single point of truth
+    res_id_fields = res_id_fields[indices_of_res_ids]
+    data_columns = []
+    for request in request:
+        if request == 'probas':
+            data_columns.extend([f'proba_{ind_to_ol_size[i]}' for i in range(len(ind_to_ol_size))]) # len(ind_to_ol_size) == num aminoacids
+        elif request == 'logprobas':
+            data_columns.extend([f'logproba_{ind_to_ol_size[i]}' for i in range(len(ind_to_ol_size))])
+        elif request == 'logits':
+            data_columns.extend([f'logit_{ind_to_ol_size[i]}' for i in range(len(ind_to_ol_size))])
+    columns = np.concatenate([res_id_fields, data_columns])
+    df = pd.DataFrame(columns=columns)
+    embeddings = [] if 'embeddings' in request else None
+    return df, embeddings, indices_of_res_ids, columns
+
+def update_output(inference, request, df, indices_of_res_ids, columns, ensemble_at_logits_level=True, embeddings=None):
+
+    all_res_ids = inference['res_ids'].astype(str)
+    all_res_ids = all_res_ids[:, indices_of_res_ids] # rearrange to put pdb in front, and remove secondary structure
+
+    ## average the data of the ensemble
+    inference['probabilities'] = np.mean(inference['probabilities'], axis=0)
+    inference['logits'] = np.mean(inference['logits'], axis=0)
+    inference['embeddings'] = np.mean(inference['embeddings'], axis=0)
+
+    additional_data = []
+    for request in request:
+        if request == 'probas':
+            if ensemble_at_logits_level:
+                additional_data.append(softmax(inference['logits'].astype(np.float64), axis=1))
+            else:
+                additional_data.append(inference['probabilities'])
+        elif request == 'logprobas':
+            if ensemble_at_logits_level:
+                additional_data.append(log_softmax(inference['logits'].astype(np.float64), axis=1))
+            else:
+                additional_data.append(np.log(inference['probabilities']))
+        elif request == 'logits':
+            additional_data.append(inference['logits'])
+    
+    if additional_data:
+        additional_data = np.concatenate(additional_data, axis=1)
+        data = np.concatenate([all_res_ids, additional_data], axis=1)
+    else:
+        data = all_res_ids
+
+    df = pd.concat([df, pd.DataFrame(data, columns=columns)], axis=0)
+
+    if embeddings is not None:
+        if len(embeddings) == 0:
+            embeddings = inference['embeddings']
+        else:
+            embeddings = np.concatenate([embeddings, inference['embeddings']], axis=0)
+    
+    return df, embeddings
+
+def fix_types_in_dataframe(df):
+    if 'logit_A' in df.columns:
+        for aa in ol_to_ind_size:
+            df[f'logit_{aa}'] = df[f'logit_{aa}'].astype(float)
+    if 'logproba_A' in df.columns:
+        for aa in ol_to_ind_size:
+            df[f'logproba_{aa}'] = df[f'logproba_{aa}'].astype(float)
+    if 'proba_A' in df.columns:
+        for aa in ol_to_ind_size:
+            df[f'proba_{aa}'] = df[f'proba_{aa}'].astype(float)
+    
+    df['resnum'] = df['resnum'].astype(int)
+
+    return df
+
+
+def convert_predictions_results_to_standard_dataframe(results: Dict[str, Any], request: Union[str, List[str]], ensemble_at_logits_level=True):
+    '''
+    results is intended to be *for a specific region*
+    '''
+    df, embeddings, indices_of_res_ids, columns = initialize_df(request)
+    df, embeddings = update_output(results, request, df, indices_of_res_ids, columns, ensemble_at_logits_level=ensemble_at_logits_level, embeddings=embeddings)
+    df = fix_types_in_dataframe(df)
+    return df, embeddings
 
 
 def get_num_components(Lmax, ks, keep_zeros, mode, channels):
@@ -329,7 +415,7 @@ def predict_from_hdf5file(hdf5_file: str,
     return ensemble_predictions_dict
 
 
-def get_zernikegrams_from_pdbfile_and_regions(pdb_file: str,
+def get_zernikegrams_from_pdbfile_and_regions(pdb_file_or_pose: str, # or Pose
                                               regions: Dict[str, List[Tuple[str, int, str]]],
                                               hparams: Dict,
                                               add_same_noise_level_as_training: bool = False,
@@ -391,13 +477,13 @@ def get_zernikegrams_from_pdbfile_and_regions(pdb_file: str,
     
     zgrams_dict_list_for_noise_levels = []
     for add_noise_kwargs in add_noise_kwargs_list:
-        zgrams_dict = get_zernikegrams_from_pdbfile(pdb_file, get_structural_info_kwargs, get_neighborhoods_kwargs, get_zernikegrams_kwargs, add_noise_kwargs=add_noise_kwargs)
+        zgrams_dict = get_zernikegrams_from_pdbfile(pdb_file_or_pose, get_structural_info_kwargs, get_neighborhoods_kwargs, get_zernikegrams_kwargs, add_noise_kwargs=add_noise_kwargs)
         zgrams_dict_list_for_noise_levels.append(zgrams_dict)
     
     return zgrams_dict_list_for_noise_levels
 
 # @profile
-def predict_from_pdbfile(pdb_file: str,
+def predict_from_pdbfile(pdb_file_or_pose: str, # or Pose
                           models: List,
                           hparams: Dict,
                           batch_size: int,
@@ -407,7 +493,7 @@ def predict_from_pdbfile(pdb_file: str,
                           add_same_noise_level_as_training: bool = False,
                           ensemble_with_noise: bool = False,
                           chain: Optional[str] = None,
-                          regions: Optional[Dict[str, List[Tuple[str, int, str]]]] = None):
+                          regions: Optional[Dict[str, Union[str, List[Tuple[str, int, str]]]]] = None):
 
     if chain is not None and regions is not None:
         raise ValueError("Cannot specify both chain and regions")
@@ -418,20 +504,36 @@ def predict_from_pdbfile(pdb_file: str,
 
     # this code template would be useful to limit the number of residues to compute zernikegrams - and do inference - for
     if regions is not None:
+
         def get_residues(np_protein):
             res_ids = np.unique(np_protein['res_ids'], axis=0)
             all_res_ids_info_we_care_about = res_ids[:, 2:5]
             region_ids = []
             for region_name in regions:
-                region_ids.extend(regions[region_name])
+                if region_name != 'whole_chains':
+                    region_ids.extend(regions[region_name])
             region_ids = np.unique(np.array(region_ids).astype(all_res_ids_info_we_care_about.dtype), axis=0)
-            indices = np.where(np.isin(all_res_ids_info_we_care_about, region_ids).all(axis=1))[0]
+            indices_single_sites = np.where(np.isin(all_res_ids_info_we_care_about, region_ids).all(axis=1))[0]
+
+            indices = [indices_single_sites]
+
+            # now consider the whole chains as well
+            if 'whole_chains' in regions:
+                for ch in regions['whole_chains']:
+                    if not isinstance(ch, str):
+                        raise ValueError(f"`whole_chains` as a region name must be reserved to chain identifiers, not lists of specific sites!")
+                    indices.append(np.where(res_ids[:, 2] == ch.encode())[0])
+            
+            indices = np.concatenate(indices)
+
             return res_ids[indices]
+        
     elif chain is not None:
         def get_residues(np_protein):
             res_ids = np.unique(np_protein['res_ids'], axis=0)
             indices = np.where(res_ids[:, 2] == chain.encode())[0]
             return res_ids[indices]
+        
     else:
         get_residues = None
 
@@ -476,7 +578,7 @@ def predict_from_pdbfile(pdb_file: str,
     ensemble_predictions_dict_list = []
     for add_noise_kwargs in add_noise_kwargs_list:
     
-        zgrams_dict = get_zernikegrams_from_pdbfile(pdb_file, get_structural_info_kwargs, get_neighborhoods_kwargs, get_zernikegrams_kwargs, add_noise_kwargs=add_noise_kwargs)
+        zgrams_dict = get_zernikegrams_from_pdbfile(pdb_file_or_pose, get_structural_info_kwargs, get_neighborhoods_kwargs, get_zernikegrams_kwargs, add_noise_kwargs=add_noise_kwargs)
 
         np_embeddings = None
         if finetuning_hparams is not None:
@@ -595,8 +697,24 @@ def get_res_locs_from_tups(
     loc_tups: List
 ) -> np.ndarray:
     """Get indices of specific residues based on their residue ids"""
+
+    # sometimes loc_tups contains a single string, indicating that all residues of that chain are to be considered
+    # to handle this, we collect all the nh_string_ids belonging to every chain
+
     nh_string_ids = np.array([b''.join(x) for x in nh_ids[:,2:5]])
-    loc_string_ids = np.array([make_string_from_tup(x) for x in loc_tups])
+
+    loc_string_ids = []
+    for x in loc_tups:
+        if isinstance(x, str): # chain!!
+            for y in nh_ids[:,2:5][np.where(nh_ids[:, 2] == x.encode())[0]]:
+                loc_string_ids.append(b''.join(y))
+        else:
+            loc_string_ids.append(make_string_from_tup(x))
+    
+    loc_string_ids = np.array(loc_string_ids)
+
+    # loc_string_ids = np.array([make_string_from_tup(x) for x in loc_tups])
+
     return np.squeeze(np.argwhere(
         np.logical_or.reduce(
             nh_string_ids[None,:] == loc_string_ids[:,None])))

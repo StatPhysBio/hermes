@@ -6,6 +6,7 @@ hermes.egg-info/SOURCES.txt
 hermes.egg-info/dependency_links.txt
 hermes.egg-info/requires.txt
 hermes.egg-info/top_level.txt
+tests/test__run_hermes_on_pdbfiles_and_function.py
 zernikegrams/__init__.py
 zernikegrams/pipeline.py
 zernikegrams/add_noise/__init__.py

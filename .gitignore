@@ -24,9 +24,9 @@ experiments/luksza_et_al/
 *copy_over_esm_results.py
 experiments/proteingym_dms_supervised/
 experiments/proteingym_dms_zero_shot/
-tests/
 extra_experiments/
 extra_experiments.tar.gz
 split_files/
 input_csv/
 casp12_relaxed_pred/
+*.egg-info/

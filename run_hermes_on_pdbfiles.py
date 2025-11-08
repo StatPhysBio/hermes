@@ -49,13 +49,17 @@ if __name__ == '__main__':
                               Cannot be specified together with --folder_with_pdbs.')
     
     parser.add_argument('-pd', '--folder_with_pdbs', type=str, default=None,
-                        help='Directory containing PDB files to run inference on. Inference is run on all sites in the structure.\n \
+                        help='Directory containing PDB files to run inference on.\n \
+                              By default, inference is run on all sites in the structure, unless --file_with_pdbid_chain_sites is specified.\n \
                               Cannot be specified together with --hdf5_file.')
     
-    parser.add_argument('-pn', '--file_with_pdbids_and_chains', type=str, default=None,
-                        help='[Optional] Path to a .txt file containing pdbids and chains to run inference on.\n \
-                              If not specified, and --folder_with_pdbs is specified, inference will be run on all sites in the structure.\n \
-                              If specified, each line should be in the format "pdbid chain"; if chain is not specified for a given line, inference will be run on all chains in that structure.')
+    parser.add_argument('-pn', '--file_with_pdbid_chain_sites', type=str, default=None,
+                        help='[Optional] Path to a .txt file containing tuples of "pdbid chain sites" to run inference on. Meant to be used with --folder_with_pdbs.\n \
+                              If not specified, inference will be run on all sites in all the structures found in --folder_with_pdbs.\n \
+                              Each line should be in the format "pdbid chain sites", e.g. "1aon A 3 4 5 6", and furhermore:\n \
+                                sites can have insertion codes specified, in the format [resnum]-[icode], e.g. 12-A; \
+                                if sites are not specified, inference will be run on all sites in the chain;\n \
+                                if chain is not specified for a given line, inference will be run on all chains in that structure, and positions cannot be specified.')
     
     parser.add_argument('-pp', '--parallelism', type=int, default=0,
                         help='If zero (default), pdb files are processed one by one. If greater than zero, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a temporary hdf5 file.')
@@ -165,19 +169,24 @@ if __name__ == '__main__':
 
         os.makedirs(args.folder_with_pdbs, exist_ok=True) # make it if it does not exist (i.e. if user wants to download all requested pdb files)
 
-        if args.file_with_pdbids_and_chains is not None:
-            pdb_files, chains = [], []
-            with open(args.file_with_pdbids_and_chains, 'r') as f:
+        if args.file_with_pdbid_chain_sites is not None:
+            pdb_files, chains, sites_list = [], [], []
+            with open(args.file_with_pdbid_chain_sites, 'r') as f:
                 lines = f.readlines()
                 for line in lines:
-                    pdbid_and_chain = line.strip().split()
-                    pdbid = pdbid_and_chain[0]
-                    if len(pdbid_and_chain) == 1:
+                    pdbid_and_chain_and_sites = line.strip().split()
+                    pdbid = pdbid_and_chain_and_sites[0]
+                    if len(pdbid_and_chain_and_sites) == 1:
                         chain = None
-                    elif len(pdbid_and_chain) == 2:
-                        chain = pdbid_and_chain[1]
-                    else:
-                        raise ValueError('Each line in --file_with_pdbids_and_chains must be in the format "pdbid" or "pdbid chain"')
+                        sites = None
+                    elif len(pdbid_and_chain_and_sites) == 2:
+                        chain = pdbid_and_chain_and_sites[1]
+                        sites = None
+                    else: # including sites
+                        chain = pdbid_and_chain_and_sites[1]
+                        sites = [site for site in pdbid_and_chain_and_sites[2:]]
+                    # else:
+                    #     raise ValueError('Each line in --file_with_pdbid_chain_sites must be in the format "pdbid" or "pdbid chain"')
                     
                     pdbfile = os.path.join(args.folder_with_pdbs, pdbid + '.pdb')
 
@@ -186,18 +195,21 @@ if __name__ == '__main__':
                     
                     pdb_files.append(pdbfile)
                     chains.append(chain)
+                    sites_list.append(sites)
         else:
             pdb_files = [os.path.join(args.folder_with_pdbs, pdb) for pdb in os.listdir(args.folder_with_pdbs) if pdb.endswith('.pdb')]
             chains = [None for _ in pdb_files]
+            sites_list = [None for _ in pdb_files]
 
         if args.verbose: print(f'Running inference on {len(pdb_files)} pdb files found in: {args.folder_with_pdbs}')
-
-        pdb_files_and_chains = zip(pdb_files, chains)
         
         if args.parallelism:
 
             if args.verbose: print(f'Running inference in parallel with parallelism: {args.parallelism}')
 
+            print(f"Warning: you're running with parallelism > 0, so all sites on the requested chains will be evaluated.")
+
+            pdb_files_and_chains = zip(pdb_files, chains)
             zernikegrams_hdf5_file = get_zernikegrams_in_parallel(args.folder_with_pdbs, hparams, args.parallelism, pdb_files_and_chains=pdb_files_and_chains, add_same_noise_level_as_training=args.add_same_noise_level_as_training)
 
             inference = predict_from_hdf5file(zernikegrams_hdf5_file, models, hparams, args.batch_size)
@@ -213,17 +225,40 @@ if __name__ == '__main__':
 
         else:
             if args.loading_bar:
-                pdb_files_and_chains = tqdm(zip(pdb_files, chains), total=len(pdb_files))
+                pdb_files_and_chains_and_sites_list = tqdm(zip(pdb_files, chains, sites_list), total=len(pdb_files))
+            else:
+                pdb_files_and_chains_and_sites_list = zip(pdb_files, chains, sites_list)
             
-            for pdbfile, chain in pdb_files_and_chains:
+            for pdbfile, chain, sites in pdb_files_and_chains_and_sites_list:
                 if args.verbose: print(f'Running inference on pdb file: {pdbfile}')
 
-                try:
-                    inference = predict_from_pdbfile(pdbfile, models, hparams, args.batch_size, chain=chain, add_same_noise_level_as_training=args.add_same_noise_level_as_training)
-                except Exception as e:
-                    print(f'Error running inference on pdb file: {pdbfile}')
-                    print(f'Error message: {e}')
-                    continue
+                # try:
+                if sites is None:
+                    chain_argument = chain
+                    regions_argument = None
+                else:
+                    chain_argument = None
+                    regions_argument = {'region': []}
+
+                    for site in sites:
+                        split_site = str(site).split('-')
+                        assert len(split_site) <= 2
+                        resnum = int(split_site[0])
+                        if len(split_site) == 2:
+                            icode = split_site[1]
+                        else:
+                            icode = ' '
+                        regions_argument['region'].append((chain, resnum, icode))
+                
+                inference = predict_from_pdbfile(pdbfile, models, hparams, args.batch_size, chain=chain_argument, regions=regions_argument, add_same_noise_level_as_training=args.add_same_noise_level_as_training)
+                
+                if regions_argument is not None: # just a little annoying thing I have to do for legacy code :(
+                    inference = inference['region']
+
+                # except Exception as e:
+                #     print(f'Error running inference on pdb file: {pdbfile}')
+                #     print(f'Error message: {e}')
+                #     continue
 
                 if len(inference['best_indices'].shape) == 2:
                     if args.verbose: print('Accuracy of first model in ensemble: %.3f' % accuracy_score(inference['targets'], inference['best_indices'][0, :]))

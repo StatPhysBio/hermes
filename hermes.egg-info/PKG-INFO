@@ -52,34 +52,40 @@ cd hermes
 
 **Step 2:** Create environment.
 ```bash
-conda create -n hermes python=3.10
+conda create -n hermes python=3.9 # tested with this python version, but newer versions should also work
 conda activate hermes
 ```
 
-**Step 3:** Install `pytorch` and the `zernikegrams` package, which we use for protein preprocessing. See [here](https://pytorch.org/get-started/previous-versions/) for more details on installing `pytorch` and [here](https://github.com/StatPhysBio/zernikegrams) for more details on the `zernikegrams` package.
+**Step 3:** Install base requirements.
 ```bash
-conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia -y # this will install pytorch with GPU support
-conda install zernikegrams=1.0.12 -c statphysbio -c conda-forge -c bioconda -y
+pip3 install torch torchvision
+pip install scikit-learn numpy pandas matplotlib tqdm pyyaml e3nn==0.5.0 h5py hdf5plugin rich sqlitedict stopit
 ```
 
-
-**(Optional) Step 4:** Install pyrosetta. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta). We are aware of the limitations posed by pyrosetta's license and are working on releasing a version that uss biopython instead and other open source code soon.
-
+**If you want to use the pyrosetta models - Step 4:** Install `pyrosetta`. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta). We are aware of the limitations posed by pyrosetta's license and are working on releasing a version that uss biopython instead and other open source code soon.
 To download pyrosetta, after obtaining a license from the link above, follow instructions [here](https://www.pyrosetta.org/downloads#h.6vttn15ac69d). We recommend downloading the `.whl` file for the python version you're using, and installing with pip.
 
+**If you want to use the biopython models - Step 5:** Install `biopython`, `pdbfixer`, and `reduce`. `biopython` is used as parser of pdb files, `pdbfixer` fixes fixes common issues found in pdbfiles, and `reduce` adds hydrogens to pdb files. Unfortunately, `pdbfixer` and `reduce` are not available to install via pip, and the most straightforward choice is to use conda:
+```bash
+pip install biopython
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+conda install -c conda-forge pdbfixer
+conda config --add channels bioconda
+conda install reduce -c bioconda
+```
+If you run into troubles with conda, both can be installed from source as well, though we did not try it ([pdbfixer](https://github.com/openmm/pdbfixer), [reduce](https://github.com/rlabduke/reduce)).
 
-**Step 5:** Install `hermes` as a package. This will install some of the other necessary packages as well.
+**Step 6:** Install `hermes` as a package. This will install some of the other necessary packages as well.
 ```bash
 pip install .
 ```
-
 
 Feel free to use `pip install -e .` instead if you plan on making changes to the code and want to test them without reinstalling the package.
 
 
 Installation tips:
 1. The error `{ENVIRONMENT_PATH}/bin/../lib/libstdc++.so.6: version 'GLIBCXX_3.4.30' not found`, as required by OpenMM, can be fixed via `conda install -c conda-forge libstdcxx-ng`. See https://stackoverflow.com/questions/48453497/anaconda-libstdc-so-6-version-glibcxx-3-4-20-not-found
-2. Somehow can't install pdbfixer AFTER conda
 
 
 
@@ -89,8 +95,8 @@ You can find all the models in the `trained_models/` directory. Some notable mod
 
 - `hermes_{bp/py}_{000/050}`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains.
 - `hermes_{bp/py}_{000/050}_ft_cdna117k_relaxed_pred`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress the predictions of `hermes_{bp/py}_{000/050}` made using the HERMES-relaxed protocol (see concept figure) on the proteins in the cdna117k dataset. These models can be run with the HERMES-fixed protocol (concept figure, D.1), but will effectively perform the same as when using the HERMES-relaxed protocol; we call this "hybrid" model HERMES-FT_relaxed (concept figure, D.2).
-- `hermes_{bp/py}_{000/050}_ft_cdna117k_ddg_st`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress the predictions of `hermes_{bp/py}_{000/050}` made using the HERMES-relaxed protocol (see concept figure) on the proteins in the cdna117k dataset. Then fine-tuned to regress ddG values of stability from the cdna117k dataset. *These are the best models for protein stability prediction*.
-- `hermes_py_{000/050}_ft_cdna117k_relaxed_pred_ft_cdna117k_ddg_st`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress ddG values of stability from the cdna117k dataset. *These are the best models for protein stability prediction*.
+- `hermes_py_{000/050}_ft_cdna117k_ddg_st`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress ddG values of stability from the cdna117k dataset (the same dataset used by StabilityOracle). *These are the best models for protein stability prediction*.
+- `hermes_{bp/py}_{000/050}_ft_cdna117k_relaxed_pred_ft_cdna117k_ddg_st`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress the predictions of `hermes_{bp/py}_{000/050}` made using the HERMES-relaxed protocol (see concept figure) on the proteins in the cdna117k dataset (the same dataset used by StabilityOracle). Finally, fine-tuned to regress ddG values of stability from the cdna117k dataset. *These are the best models for protein stability prediction*.
 - `hermes_{bp/py}_{000/050}_ft_skempi_ddg_bi`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Then fine-tuned to regress ddG values of binding for the SKEMPI dataset. *Use these for predicting mutation effects on binding.*.
 
 `bp` indicates Biopython preprocessing (open source but slower), whereas `py` indicates PyRosetta preprocessing (faster but requires a license). `000` indicates no noise added during training, whereas `050` indicates noise was added during training. `ft` indicates the model was fine-tuned on a specific dataset. For example, `cdna117k_ddg_st` indicates that the model was fine-tuned on the cdna117k ddG stability data, whereas `skempi_ddg_bi` indicates that the model was fine-tuned on the SKEMPI ddG binding data.
@@ -264,27 +270,25 @@ PyRosetta relaxations render the HERMES-relaxd protocol slow. To avoid this pric
 
 The HERMES-relaxed protocol, used on pre-trained models like `hermes_py_050`, results in predictions with much higher recall but slightly lower precision than the HERMES-fixed protocol: i.e. more of the truly stabilizing mutations are correctly identified as such (`Delta log P > 0` when `ddG < 0`), but at the price of a higher proportion of False Positives. Specifically, we observe that the predictions made with HERMES-relaxed do not correlate with amino-acid size as much as those made with HERMES-fixed, meaning for example that the mutation `GLY -> TRP` is much more often predicted to be stabilizing by HERMES-relaxed, than by HERMES-fixed. The F1-score of HERMES-relaxed is higher than that of HERMES-fixed, making HERMES-relaxed preferrable.
 
-### Performance on binding prediction
-
-TODO: test and add results
-
 
 
 ## Want to fine-tune on your mutation effect dataset?
 
-Fine-tuning can be easily done in three steps.
+Fine-tuning can be easily done in a few steps.
 
-1. **Prepare the data.** Prepare the targets in three .csv files, which must have `{train}`, `{valid}`, and `{test}` in the name. Each .csv file must have the following columns: `[pdbid, chainid, variant, score]`. Also, place all the pdbfiles for training, validation and testing in a single directory.
+1. **Prepare the data.** Prepare the targets in three .csv files, which must have `{train}`, `{valid}`, and `{test}` in the name. Each .csv file must have the following columns: `[pdbid, chainid, variant, score]`. The scores under `score` should be such that lower means better (i.e. following the energy convention). Also, place all the pdbfiles for training, validation and testing in a single directory.
 
 2. **Generate inputs (aka zernikegrams or holograms).** For faster training, we pre-generate the inputs and store them in a .npz file. Run `make_zernikegrams_for_finetuning.py` to generate the inputs, providing as arguments, the model you want to make inputs for, the directory of pdbfiles, whether to add noise to structures, and the output directory.
 
-3. **Fine-tune the model.** Run `finetune_hermes.py` to fine-tune the model. You need to provide a config file with the necessary information, see `/gscratch/spe/gvisan01/hermes/training_data/finetuning/cdna117k/configs/hermes_bp_000.yaml` for a thorough example.
+3. **Create a fine-tuning config.** See `./training_data/finetuning/cdna117k/configs/hermes_bp_000.yaml` for a thorough example of what information needs to be provided and how.
+
+4. **Fine-tune the model!** Simply run `finetune_hermes.py` with your config file.
 
 
 
 ## References
 
-If you found this code useful, please consider citing us:
+If you found this code useful, please cite us:
 
 ```
 @article{Visani2024.07.09.602403,
@@ -303,6 +307,14 @@ If you found this code useful, please consider citing us:
 
 ```
 
+
+TODO user-facing:
+1. Make it possible to specify design positions in `run_hermes_on_pdbfiles.py`
+2. Provide - and advertise - functions that predict with as input a pdbfile or a pyrosetta pose (as well as chainid - positions combinations)
+
+TODO analysis:
+1. For the stability benchmarks (Megascale test set because it's saturation mutagenesis so it's more balanced in the mutations composition, and because it's a much larger set than T2837), compute similarity of those proteins to the pre-training proteins. Then, stratify performance metrics by similarity groups.
+    --> Hypothesis: recall gets better for HERMES-fixed for the low-similarity groups, because there's less WT-preference
 
 
 
