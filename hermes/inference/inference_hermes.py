@@ -13,7 +13,6 @@ import glob
 
 from typing import *
 
-from zernikegrams.preprocessors.pdbs import PDBPreprocessor
 import h5py
 import hdf5plugin
 import tempfile
@@ -22,7 +21,6 @@ from rich.progress import Progress
 from hermes.cg_coefficients import get_w3j_coefficients
 from hermes.models import SO3_ConvNet, CGNet, SO3_ConvNetPlusEmbeddings
 
-# from hermes.protein_processing.pipeline import get_zernikegrams_from_pdbfile
 from zernikegrams import get_zernikegrams_from_pdbfile
 from hermes.utils.data import ZernikegramsDataset, ZernikegramsAndEmbeddingsDataset
 from hermes.utils.protein_naming import ol_to_ind_size, ind_to_ol_size
@@ -324,7 +322,7 @@ def get_zernikegrams_in_parallel(folder_with_pdbs: str,
                                 'get_physicochemical_info_for_hydrogens': hparams['get_physicochemical_info_for_hydrogens'],
                                 'rst_normalization': hparams['rst_normalization']}
     
-
+    from zernikegrams.preprocessors.pdbs import PDBPreprocessor
     processor = PDBPreprocessor(pdb_list, folder_with_pdbs)
 
     L = np.max([5, processor.pdb_name_length])
