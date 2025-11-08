@@ -162,15 +162,16 @@ if __name__ == '__main__':
     os.makedirs(TEMPDIR, exist_ok=False)
     os.makedirs(OUTDIR, exist_ok=False)
 
-    # test__all_pdbs_in_folder()
-    # test__select_pdb()
-    # test__select_pdb_chain()
-    # test__select_pdb_chain_sites()
-    # test__select_pdb_chain_parallelism()
-    # test__select_pdb_chain_sites_parallelism()
+    test__all_pdbs_in_folder()
+    test__select_pdb()
+    test__select_pdb_chain()
+    test__select_pdb_chain_sites()
+    test__select_pdb_chain_sites_icodes()
+    test__select_pdb_chain_parallelism()
+    test__select_pdb_chain_sites_parallelism()
 
-    # test_function__select_pdb_chain_sites_icodes()
-    # test_function__select_mix()
+    test_function__select_pdb_chain_sites_icodes()
+    test_function__select_mix()
 
     test_function__from_pose()
 

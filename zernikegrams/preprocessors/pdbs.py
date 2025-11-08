@@ -2,7 +2,7 @@ import functools
 import os
 import signal
 import tempfile
-import stopit
+# import stopit
 
 import numpy as np
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 TIMEOUT = 300  # Max seconds per protein
 
 
-@stopit.threading_timeoutable()
+# @stopit.threading_timeoutable()
 def process_data_dir(pdb: str, pdb_dir: str) -> Tuple[str, Tuple]:
     """
     Given a single instance of a pdb file and its parent directory,
@@ -40,7 +40,7 @@ def process_data_dir(pdb: str, pdb_dir: str) -> Tuple[str, Tuple]:
     return process_data_dir.callback(pdb_file, **process_data_dir.params)
 
 
-@stopit.threading_timeoutable()
+# @stopit.threading_timeoutable()
 def process_data_foldcomp(data: Tuple[str, str]) -> Tuple[str, Tuple]:
     """
     Given a single instance of a pdb id and pdb file contents as a string
