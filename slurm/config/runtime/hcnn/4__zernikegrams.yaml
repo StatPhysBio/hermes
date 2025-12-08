@@ -1,0 +1,55 @@
+
+account: stf
+partition: cpu-g2-mem2x
+nodes: 1
+cores: 1
+walltime: '23:00:00'
+mem: 96G
+jobname: 'zgrams_{pdb_list_filename}_{r_max}_{l_max}_{radial_func_mode}_{radial_func_max}_{rst_normalization}_{channels}_{noise}_{seed}_{which_charges}_{relaxation}_{relaxation_num}'
+logdir: logs
+
+input_parent_dir: /gscratch/stf/gvisan01/casp12
+output_parent_dir: /gscratch/stf/gvisan01/casp12
+
+
+parameters:
+
+  l_max: [5]
+
+  radial_func_mode: [ks]
+
+  radial_func_max: [12]
+
+  channels: ['C,N,O,S,H,SASA,charge']
+
+  rst_normalization: ['square']
+
+  r_max: [12.5]
+
+  noise: [0.5]
+  seed: [10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009]
+
+  noise: [0]
+  seed: [0]
+
+  which_charges: [pyrosetta]
+  relaxation: [None]
+  relaxation_num: [0]
+  pdb_list_filename: [casp12_training__0, casp12_training__1, casp12_training__2, casp12_training__3, casp12_training__4, casp12_training__5, casp12_training__6, casp12_training__7, casp12_training__8, casp12_training__9, casp12_validation, casp12_testing]
+
+
+  
+command: |
+  cd /gscratch/spe/gvisan01/protein_holography-pytorch/protein_holography_pytorch/preprocessing_faster
+  
+  python -u get_zernikegrams.py \
+                        --hdf5_in {input_parent_dir}/neighborhoods/neighborhoods-no_central_res-{pdb_list_filename}-r_max={r_max}-charges={which_charges}-noise={noise}_{seed}-relaxation={relaxation}_{relaxation_num}.hdf5 \
+                        --hdf5_out {output_parent_dir}/zernikegrams/zernikegrams-no_central_res-{pdb_list_filename}-r_max={r_max}-l_max={l_max}-radial_func_mode={radial_func_mode}-radial_func_max={radial_func_max}-channels={channels}-rst_normalization={rst_normalization}-charges={which_charges}-noise={noise}_{seed}-relaxation={relaxation}_{relaxation_num}.hdf5 \
+                        --r_max {r_max} \
+                        --l_max {l_max} \
+                        --radial_func_mode {radial_func_mode} \
+                        --radial_func_max {radial_func_max} \
+                        --channels {channels} \
+                        --rst_normalization {rst_normalization} \
+                        --parallelism {cores}
+  

@@ -4,7 +4,7 @@ import os
 import h5py
 import numpy as np
 import signal
-# import stopit
+import stopit
 
 
 from zernikegrams.utils import log_config as logging
@@ -12,7 +12,7 @@ from zernikegrams.utils import log_config as logging
 logger = logging.getLogger(__name__)
 
 
-# @stopit.threading_timeoutable()
+@stopit.threading_timeoutable()
 def process_data(ind, hdf5_file, protein_list):
     assert process_data.callback
 

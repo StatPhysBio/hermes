@@ -379,12 +379,14 @@ def get_hologram(
     r_max: np.float32,
     mode: str = "ks",
     keep_zeros: bool = False,
-    real_sph_harm: bool = False,
     channels: List[str] = ["C", "N", "O", "S", "H", "SASA", "charge"],
-    get_physicochemical_info_for_hydrogens: bool = True,
+    get_physicochemical_info_for_hydrogens: bool = True, # assumed true always in this code, I believe
     request_frame: bool = False,
     rst_normalization: Optional[str] = None,
 ):
+    '''
+    Get the zernikegram assuming complex spherical harmonics
+    '''
 
     # print("getting hologram")
 
@@ -422,10 +424,7 @@ def get_hologram(
     else:
         nonzero_len = len(ns)
         nmax_per_l = np.array([len(np.unique(ns[ls == l])) for l in range(L_max + 1)])
-    if real_sph_harm:
-        value_dtype = "float32"
-    else:
-        value_dtype = "complex64"
+
     if keep_zeros:
         dt = np.dtype(
             [
@@ -441,14 +440,6 @@ def get_hologram(
                 for l in range(L_max + 1)
             ]
         )
-    if real_sph_harm:
-        dt_real = np.dtype(
-            [
-                (str(l), "float32", (nmax_per_l[l] * len(channels), 2 * l + 1))
-                for l in range(L_max + 1)
-            ]
-        )
-        arr_real = np.zeros(shape=(1,), dtype=dt_real)
 
     arr = np.zeros(shape=(1,), dtype=dt)
     arr_weights = np.empty(
@@ -513,12 +504,7 @@ def get_hologram(
                 nmax_per_l[l] * ch_num,
                 num_m,
             )
-    if real_sph_harm:
-        for l in range(L_max + 1):
-            arr_real[0][l] = np.einsum(
-                "nm,cm->cn", change_basis_complex_to_real(l), np.conj(arr[0][l])
-            ).real
-        return arr_real[0], np.array(list(zip(ns, ls, ms)))
+
     if request_frame:
         frame = get_frame(nh)
     else:
@@ -545,7 +531,7 @@ def get_frame(nh):
             central_C_coords.shape,
             central_CA_coords.shape,
         )
-        logger.info(f"{central_N_coords=}")
+        logger.info(f"{central_N_coords}")
         # if central_N_coords.shape[0] == 3:
         #     print('-----'*16)
         #     print(nh['res_id'])

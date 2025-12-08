@@ -22,7 +22,7 @@ conda activate hermes
 **Step 3:** Install base requirements.
 ```bash
 pip3 install torch torchvision
-pip install scikit-learn numpy pandas matplotlib tqdm pyyaml e3nn==0.5.0 h5py hdf5plugin rich sqlitedict
+pip install scikit-learn numpy pandas matplotlib tqdm pyyaml e3nn==0.5.0 h5py hdf5plugin rich sqlitedict stopit
 ```
 
 **If you want to use the pyrosetta models - Step 4:** Install `pyrosetta`. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta). We are aware of the limitations posed by pyrosetta's license and are working on releasing a version that uss biopython instead and other open source code soon.

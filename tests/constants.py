@@ -1,0 +1,2 @@
+TEMPDIR = 'temp'
+OUTDIR = 'output'

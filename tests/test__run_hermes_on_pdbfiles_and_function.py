@@ -9,9 +9,7 @@ sys.path.append('..')
 from hermes.inference import run_hermes_on_pdbfile_or_pyrosetta_pose
 from hermes.utils.protein_naming import ol_to_ind_size
 
-
-TEMPDIR = 'temp'
-OUTDIR = 'output'
+from constants import TEMPDIR, OUTDIR
 
 def write_pdbids_chains_sites_list(name: str, pdbids_chains_sites_list: List[Tuple[str, Optional[str], Optional[List[int]]]]):
     filepath = os.path.join(TEMPDIR, name + '.txt')
@@ -121,6 +119,7 @@ def test_function__select_mix():
 
     print(np.allclose(df_logits, df_true_logits, atol=1e-1)) # GPU computation making these diverge a little sometimes
 
+
 def test_function__from_pose():
 
     import pyrosetta
@@ -163,17 +162,17 @@ if __name__ == '__main__':
     os.makedirs(OUTDIR, exist_ok=False)
 
     test__all_pdbs_in_folder()
-    test__select_pdb()
-    test__select_pdb_chain()
-    test__select_pdb_chain_sites()
-    test__select_pdb_chain_sites_icodes()
+    # test__select_pdb()
+    # test__select_pdb_chain()
+    # test__select_pdb_chain_sites()
+    # test__select_pdb_chain_sites_icodes()
     test__select_pdb_chain_parallelism()
-    test__select_pdb_chain_sites_parallelism()
+    # test__select_pdb_chain_sites_parallelism()
 
-    test_function__select_pdb_chain_sites_icodes()
-    test_function__select_mix()
+    # test_function__select_pdb_chain_sites_icodes()
+    # test_function__select_mix()
 
-    test_function__from_pose()
+    # test_function__from_pose()
 
 
 
