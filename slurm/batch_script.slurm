@@ -20,6 +20,8 @@
 ## Specify the working directory for this job
 #SBATCH --chdir=/mmfs1/gscratch/stf/gvisan01/hermes/slurm
 ##turn on e-mail notification
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=gvisan01@uw.edu
 ## export all your environment variables to the batch job session
 #SBATCH --export=all
 #SBATCH -e logs/zgrams_casp12_testing_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0_0_sidechain_pyrosetta_None_0.err

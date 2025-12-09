@@ -245,23 +245,29 @@ def get_single_zernikegram(
         C_coords = np_nh["coords"][
             np.logical_and(central_res_mask, np_nh["atom_names"] == C)
         ]
-        assert (
-            C_coords.shape[0] == 1
-        ), f"C_coords.shape[0] is {C_coords.shape[0]} instead of 1"
 
         O_coords = np_nh["coords"][
             np.logical_and(central_res_mask, np_nh["atom_names"] == O)
         ]
-        assert (
-            O_coords.shape[0] == 1
-        ), f"O_coords.shape[0] is {O_coords.shape[0]} instead of 1"
 
         N_coords = np_nh["coords"][
             np.logical_and(central_res_mask, np_nh["atom_names"] == N)
         ]
-        assert (
-            N_coords.shape[0] == 1
-        ), f"N_coords.shape[0] is {N_coords.shape[0]} instead of 1"
+
+        try:
+            assert (
+                C_coords.shape[0] == 1
+            ), f"C_coords.shape[0] is {C_coords.shape[0]} instead of 1"
+            assert (
+                O_coords.shape[0] == 1
+            ), f"O_coords.shape[0] is {O_coords.shape[0]} instead of 1"
+            assert (
+                N_coords.shape[0] == 1
+            ), f"N_coords.shape[0] is {N_coords.shape[0]} instead of 1"
+        except:
+            logger.exception(e)
+            logger.warn("wrong central residue backbone atoms with", np_nh[0])
+            return (None,)
 
         # convert coords to cartesian and add CA at [0, 0, 0]
         from zernikegrams.utils.conversions import spherical_to_cartesian__numpy
