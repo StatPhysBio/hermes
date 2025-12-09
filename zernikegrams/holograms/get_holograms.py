@@ -312,7 +312,7 @@ def get_zernikegrams_from_dataset(
     mode: str = "ns",
     channels: List[str] = ["C", "N", "O", "S", "H", "SASA", "charge"],
     request_frame: bool = False,
-    sph_harm_normalization: str = "integral",
+    sph_harm_normalization: str = "component",
     rst_normalization: Optional[str] = None,
     exclude_residues_with_no_sidechain: bool = False,
     angles_db: Optional[str] = None,
