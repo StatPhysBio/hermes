@@ -2,6 +2,7 @@
 import os, sys
 import numpy as np
 import h5py
+import hdf5plugin
 
 import torch
 
@@ -181,84 +182,83 @@ def load_data(hparams, splits=['train', 'valid'], get_norm_factor_if_training=Tr
 
 
 
-from protein_holography_pytorch.preprocessing_faster import get_neighborhoods, get_structural_info, get_zernikegrams
+# from protein_holography_pytorch.preprocessing_faster import get_neighborhoods, get_structural_info, get_zernikegrams
 
+# def get_zernikegrams_from_pdb(hparams: Dict,
+#                                data_filepath: str,
+#                                parser: str = 'pyrosetta',
+#                                verbose: bool = False):
+#     '''
+#     Just an intuitive wrapper around get_zernikegrams_from_pdbs() for the case when a single pdb is provided.
+#     '''
+#     assert data_filepath[-4:] == '.pdb'
+#     return get_zernikegrams_from_pdbs(hparams, data_filepath, pdb_dir=None, parser=parser, verbose=verbose)
 
-def get_zernikegrams_from_pdb(hparams: Dict,
-                               data_filepath: str,
-                               parser: str = 'pyrosetta',
-                               verbose: bool = False):
-    '''
-    Just an intuitive wrapper around get_zernikegrams_from_pdbs() for the case when a single pdb is provided.
-    '''
-    assert data_filepath[-4:] == '.pdb'
-    return get_zernikegrams_from_pdbs(hparams, data_filepath, pdb_dir=None, parser=parser, verbose=verbose)
+# def get_zernikegrams_from_pdbs(hparams: Dict,
+#                                data_filepath: str,
+#                                pdb_dir: Optional[str] = None,
+#                                parser: str = 'pyrosetta',
+#                                verbose: bool = False):
 
-def get_zernikegrams_from_pdbs(hparams: Dict,
-                               data_filepath: str,
-                               pdb_dir: Optional[str] = None,
-                               parser: str = 'pyrosetta',
-                               verbose: bool = False):
+#     if data_filepath[-4:] == '.pdb': # --> single pdb is provided
+#         protein = get_structural_info(data_filepath, parser=parser)
+#         nbs = get_neighborhoods(protein, hparams['rcut'], remove_central_residue = hparams['remove_central_residue'], backbone_only = False)
 
-    if data_filepath[-4:] == '.pdb': # --> single pdb is provided
-        protein = get_structural_info(data_filepath, parser=parser)
-        nbs = get_neighborhoods(protein, hparams['rcut'], remove_central_residue = hparams['remove_central_residue'], backbone_only = False)
-
-    else: # (data_filepath[-4:] == '.txt' and pdb_dir is not None) --> list of pdbs is provided
-        with open(data_filepath, 'r') as f:
-            pdb_list = [pdb.strip() for pdb in f.readlines()]
+#     else: # (data_filepath[-4:] == '.txt' and pdb_dir is not None) --> list of pdbs is provided
+#         with open(data_filepath, 'r') as f:
+#             pdb_list = [pdb.strip() for pdb in f.readlines()]
         
-        if verbose: print('Collecting neighborhoods from %d PDB files...' % len(pdb_list))
-        sys.stdout.flush()
+#         if verbose: print('Collecting neighborhoods from %d PDB files...' % len(pdb_list))
+#         sys.stdout.flush()
         
-        proteins = get_structural_info([os.path.join(pdb_dir, pdb+'.pdb') for pdb in pdb_list], parser=parser)
-        nbs = get_neighborhoods(proteins, hparams['rcut'], remove_central_residue = hparams['remove_central_residue'], backbone_only = False)
+#         proteins = get_structural_info([os.path.join(pdb_dir, pdb+'.pdb') for pdb in pdb_list], parser=parser)
+#         nbs = get_neighborhoods(proteins, hparams['rcut'], remove_central_residue = hparams['remove_central_residue'], backbone_only = False)
 
-    if verbose: print('Generating zernikegrams...')
-    sys.stdout.flush()
-    zgrams_data = get_zernikegrams(nbs, hparams['rcut'], hparams['radial_func_max'], hparams['lmax'], hparams['channels'].split(','), radial_func_mode=hparams['radial_func_mode'], backbone_only=False, request_frame=False, get_physicochemical_info_for_hydrogens=hparams['get_physicochemical_info_for_hydrogens'], rst_normalization=hparams['rst_normalization'])
+#     if verbose: print('Generating zernikegrams...')
+#     sys.stdout.flush()
+#     zgrams_data = get_zernikegrams(nbs, hparams['rcut'], hparams['radial_func_max'], hparams['lmax'], hparams['channels'].split(','), radial_func_mode=hparams['radial_func_mode'], backbone_only=False, request_frame=False, get_physicochemical_info_for_hydrogens=hparams['get_physicochemical_info_for_hydrogens'], rst_normalization=hparams['rst_normalization'])
 
-    if verbose: print(zgrams_data['zernikegram'].shape)
+#     if verbose: print(zgrams_data['zernikegram'].shape)
 
-    return prepare_zgrams(hparams, zgrams_data, verbose=verbose)
+#     return prepare_zgrams(hparams, zgrams_data, verbose=verbose)
 
 
-def get_zernikegrams_from_hdf5(hparams: Dict,
-                               data_filepath: str,
-                               input_dataset_name: str = 'data',
-                               verbose:bool = False):
+# def get_zernikegrams_from_hdf5(hparams: Dict,
+#                                data_filepath: str,
+#                                input_dataset_name: str = 'data',
+#                                verbose:bool = False):
     
-    import h5py
-    import hdf5plugin # for reading compressed files
+#     import h5py
+#     import hdf5plugin # for reading compressed files
     
-    with h5py.File(data_filepath, 'r') as f:
-        mask = ~np.logical_and.reduce(f[input_dataset_name]['res_id'] == np.array([b'', b'', b'', b'', b'', b'']), axis=1) # select non-empty zernikegrams only
-        zgrams_data = f[input_dataset_name][mask]
+#     with h5py.File(data_filepath, 'r') as f:
+#         mask = ~np.logical_and.reduce(f[input_dataset_name]['res_id'] == np.array([b'', b'', b'', b'', b'', b'']), axis=1) # select non-empty zernikegrams only
+#         zgrams_data = f[input_dataset_name][mask]
 
-    return prepare_zgrams(hparams, zgrams_data, verbose=verbose)
+#     return prepare_zgrams(hparams, zgrams_data, verbose=verbose)
 
 
 
-def prepare_zgrams(hparams, zgrams_data, verbose=False):
+# def prepare_zgrams(hparams, zgrams_data, verbose=False):
 
-    data_irreps, ls_indices = get_data_irreps(hparams)
+#     data_irreps, ls_indices = get_data_irreps(hparams)
     
-    if hparams['normalize_input']:
-        normalize_input_at_runtime = True
-    else:
-        normalize_input_at_runtime = False
+#     if hparams['normalize_input']:
+#         normalize_input_at_runtime = True
+#     else:
+#         normalize_input_at_runtime = False
     
-    def stringify(data_id):
-        return '_'.join(list(map(lambda x: x.decode('utf-8'), list(data_id))))
+#     def stringify(data_id):
+#         return '_'.join(list(map(lambda x: x.decode('utf-8'), list(data_id))))
 
-    if zgrams_data['frame'] is None:
-        zgrams_data['frame'] = np.zeros((zgrams_data['label'].shape[0], 3, 3))
+#     if zgrams_data['frame'] is None:
+#         zgrams_data['frame'] = np.zeros((zgrams_data['label'].shape[0], 3, 3))
 
-    if verbose: print('Power: %.4f' % (np.mean(np.sqrt(np.einsum('bf,bf,f->b', zgrams_data['zernikegram'][:1000], zgrams_data['zernikegram'][:1000], 1.0 / (2*ls_indices + 1))))))
+#     if verbose: print('Power: %.4f' % (np.mean(np.sqrt(np.einsum('bf,bf,f->b', zgrams_data['zernikegram'][:1000], zgrams_data['zernikegram'][:1000], 1.0 / (2*ls_indices + 1))))))
 
-    dataset = ZernikegramsDataset(zgrams_data['zernikegram'], data_irreps, zgrams_data['label'], list(zip(list(zgrams_data['frame']), list(map(stringify, zgrams_data['res_id'])))))
+#     dataset = ZernikegramsDataset(zgrams_data['zernikegram'], data_irreps, zgrams_data['label'], list(zip(list(zgrams_data['frame']), list(map(stringify, zgrams_data['res_id'])))))
 
-    return dataset, data_irreps, normalize_input_at_runtime
+#     return dataset, data_irreps, normalize_input_at_runtime
 
 
 

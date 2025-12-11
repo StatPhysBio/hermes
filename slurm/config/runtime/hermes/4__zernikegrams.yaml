@@ -1,6 +1,6 @@
 
 account: stf
-partition: compute
+partition: compute-hugemem
 nodes: 1
 cores: 32
 walltime: '15:00:00'
@@ -36,7 +36,7 @@ parameters:
   which_charges: [pyrosetta]
   relaxation: [None]
   relaxation_num: [0]
-  pdb_list_filename: [casp12_training__0, casp12_training__1, casp12_training__2, casp12_training__3, casp12_training__4, casp12_training__5, casp12_training__6, casp12_training__7, casp12_training__8, casp12_training__9, casp12_validation, casp12_testing]
+  pdb_list_filename: [casp12_training__9] # [casp12_training__0, casp12_training__1, casp12_training__2, casp12_training__3, casp12_training__4, casp12_training__5, casp12_training__6, casp12_training__7, casp12_training__8, casp12_training__9, casp12_validation, casp12_testing]
 
   
 command: |

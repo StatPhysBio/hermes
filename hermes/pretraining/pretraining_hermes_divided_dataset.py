@@ -88,7 +88,6 @@ def hermes_inference_on_test_data(model_dir: Union[List[str], str], # either pat
 
     ########## THE CODE BLOCK BELOW MAY BE CHANGED TO ACCOMODATE A DIFFERENT DATA-LOADING PIPELINE ##########
 
-    # from protein_holography_pytorch.utils.data import load_data
     from .data import load_data
     output_filepath = os.path.join(model_dir_list[0], 'test_data_results-{}.npz'.format(model_name))
     datasets, data_irreps, _ = load_data(hparams, splits=['test'])
@@ -232,7 +231,7 @@ def pretraining_hermes_divided_dataset(model_dir: str, pretrained_model_dir: Opt
     if hparams['lr_scheduler'] is None:
         lr_scheduler = None
     elif hparams['lr_scheduler'] == 'reduce_lr_on_plateau':
-        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08, verbose=True)
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08) # , verbose=True)
     else:
         raise NotImplementedError()
 

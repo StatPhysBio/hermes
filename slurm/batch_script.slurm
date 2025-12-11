@@ -1,10 +1,10 @@
 #!/bin/bash
 ## Job Name
-#SBATCH --job-name=zgrams_casp12_testing_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0_0_sidechain_pyrosetta_None_0
+#SBATCH --job-name=zgrams_casp12_training__9_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0_0_sidechain_pyrosetta_None_0
 ## Allocation Definition
 ## The account and partition options should be the same except in a few cases (e.g. ckpt queue and genpool queue).
 #SBATCH --account=stf
-#SBATCH --partition=compute
+#SBATCH --partition=compute-hugemem
 ## Resources
 ## Total number of Nodes
 #SBATCH --nodes=1
@@ -20,18 +20,16 @@
 ## Specify the working directory for this job
 #SBATCH --chdir=/mmfs1/gscratch/stf/gvisan01/hermes/slurm
 ##turn on e-mail notification
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=gvisan01@uw.edu
 ## export all your environment variables to the batch job session
 #SBATCH --export=all
-#SBATCH -e logs/zgrams_casp12_testing_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0_0_sidechain_pyrosetta_None_0.err
-#SBATCH -o logs/zgrams_casp12_testing_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0_0_sidechain_pyrosetta_None_0.log
+#SBATCH -e logs/zgrams_casp12_training__9_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0_0_sidechain_pyrosetta_None_0.err
+#SBATCH -o logs/zgrams_casp12_training__9_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0_0_sidechain_pyrosetta_None_0.log
 
 cd /gscratch/stf/gvisan01/hermes/zernikegrams/holograms/
 
 python -u get_holograms.py \
-                      --hdf5_in /gscratch/stf/gvisan01/casp12/neighborhoods_larger/neighborhoods-no_central_sidechain-casp12_testing-r_max=12.5-charges=pyrosetta-noise=0_0-relaxation=None_0.hdf5 \
-                      --hdf5_out /gscratch/stf/gvisan01/casp12/zernikegrams_larger/zernikegrams-no_central_sidechain-casp12_testing-r_max=12.5-l_max=5-radial_func_mode=ks-radial_func_max=12-channels=C,N,O,S,H,SASA,charge-rst_normalization=square-charges=pyrosetta-noise=0_0-relaxation=None_0.hdf5 \
+                      --hdf5_in /gscratch/stf/gvisan01/casp12/neighborhoods_larger/neighborhoods-no_central_sidechain-casp12_training__9-r_max=12.5-charges=pyrosetta-noise=0_0-relaxation=None_0.hdf5 \
+                      --hdf5_out /gscratch/stf/gvisan01/casp12/zernikegrams_larger/zernikegrams-no_central_sidechain-casp12_training__9-r_max=12.5-l_max=5-radial_func_mode=ks-radial_func_max=12-channels=C,N,O,S,H,SASA,charge-rst_normalization=square-charges=pyrosetta-noise=0_0-relaxation=None_0.hdf5 \
                       --r_max 12.5 \
                       --l_max 5 \
                       --radial_func_mode ks \

@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 def process_data(ind, hdf5_file, neighborhood_list):
     assert process_data.callback
+
     with h5py.File(hdf5_file, "r") as f:
         neighborhood = f[neighborhood_list][ind]
         if "proportion_sidechain_removed" in f:

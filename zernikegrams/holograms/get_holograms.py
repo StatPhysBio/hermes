@@ -207,7 +207,7 @@ def get_single_zernikegram(
         )
     except Exception as e:
         logger.exception(e)
-        logger.warn("Error with", np_nh[0])
+        logger.warning(f"Error with {np_nh[0]}")
         # print(traceback.format_exc())
         return (None,)
 
@@ -264,9 +264,9 @@ def get_single_zernikegram(
             assert (
                 N_coords.shape[0] == 1
             ), f"N_coords.shape[0] is {N_coords.shape[0]} instead of 1"
-        except:
+        except Exception as e:
             logger.exception(e)
-            logger.warn("wrong central residue backbone atoms with", np_nh[0])
+            logger.warning(f"wrong central residue backbone atoms with {np_nh[0]}")
             return (None,)
 
         # convert coords to cartesian and add CA at [0, 0, 0]
@@ -424,7 +424,7 @@ def get_zernikegrams_from_dataset(
                 )
             ):
 
-                new_time = time()
+                # new_time = time()
                 # print('%d - %.5fs' % (i, new_time - init_time), end='\r', file=sys.stderr)
                 try:
                     if hgm is None or hgm[0] is None:
