@@ -77,6 +77,10 @@ if __name__ == '__main__':
                         help="1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities.\n \
                               There should not be a big difference, unless the ensembled models are trained very differently.")
     
+    parser.add_argument('-sw', '--subtract_wildtype_logit_or_logproba', type=int, default=0, choices=[0, 1],
+                        help='1 for True, 0 for False. If True, will subtract the wildtype logit or logproba from the logits or logprobas of all other aminoacids. Default is False. \
+                              We recommend doing this when evaluating mutation effects, since those are defined relative to the wild-type. Note that logits and logprobas will be equivalent after subtracting the wildtype logit or logproba.')
+    
     parser.add_argument('-bs', '--batch_size', type=int, default=512,
                         help='Batch size for the model (number of sites). Higher batch sizes are faster, but may not fit in memory. Default is 512.')
 
@@ -113,7 +117,7 @@ if __name__ == '__main__':
     embeddings_out = [] if 'embeddings' in args.request else None
 
 
-    def update_output(inference, df, embeddings=None):
+    def update_output(inference, df, subtract_wildtype=True, embeddings=None):
 
         all_res_ids = inference['res_ids'].astype(str)
         all_res_ids = all_res_ids[:, indices_of_res_ids] # rearrange to put pdb in front, and remove secondary structure
@@ -123,20 +127,34 @@ if __name__ == '__main__':
         inference['logits'] = np.mean(inference['logits'], axis=0)
         inference['embeddings'] = np.mean(inference['embeddings'], axis=0)
 
+        def subtract_wildtype_fn(wildtypes_N, logits_or_logprobas_N20):
+            wildtype_indices = np.array([ol_to_ind_size[wt] for wt in wildtypes_N])
+            logits_or_logprobas_N20 -= logits_or_logprobas_N20[np.arange(len(wildtypes_N)), wildtype_indices][:, None]
+            return logits_or_logprobas_N20
+
         additional_data = []
         for request in args.request:
+
             if request == 'probas':
                 if args.ensemble_at_logits_level:
                     additional_data.append(softmax(inference['logits'].astype(np.float64), axis=1))
                 else:
                     additional_data.append(inference['probabilities'])
+
             elif request == 'logprobas':
                 if args.ensemble_at_logits_level:
-                    additional_data.append(log_softmax(inference['logits'].astype(np.float64), axis=1))
+                    logprobas = log_softmax(inference['logits'].astype(np.float64), axis=1)
                 else:
-                    additional_data.append(np.log(inference['probabilities']))
+                    logprobas = np.log(inference['probabilities'])
+                if subtract_wildtype:
+                    logprobas = subtract_wildtype_fn(all_res_ids[:, 2], logprobas)
+                additional_data.append(logprobas)
+
             elif request == 'logits':
-                additional_data.append(inference['logits'])
+                logits = inference['logits']
+                if subtract_wildtype:
+                    logits = subtract_wildtype_fn(all_res_ids[:, 2], logits)
+                additional_data.append(logits)
         
         if additional_data:
             additional_data = np.concatenate(additional_data, axis=1)
@@ -221,7 +239,7 @@ if __name__ == '__main__':
 
             os.remove(zernikegrams_hdf5_file)
             
-            df_out, embeddings_out = update_output(inference, df_out, embeddings_out)
+            df_out, embeddings_out = update_output(inference, df_out, args.subtract_wildtype_logit_or_logproba, embeddings_out)
 
         else:
             if args.loading_bar:
@@ -265,7 +283,7 @@ if __name__ == '__main__':
                 else:
                     if args.verbose: print('Accuracy: %.3f' % accuracy_score(inference['targets'], inference['best_indices']))
                 
-                df_out, embeddings_out = update_output(inference, df_out, embeddings_out)
+                df_out, embeddings_out = update_output(inference, df_out, args.subtract_wildtype_logit_or_logproba, embeddings_out)
 
     else:
         raise ValueError('Either --hdf5_file or --folder_with_pdbs must be specified.')

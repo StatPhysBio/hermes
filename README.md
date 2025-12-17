@@ -74,8 +74,8 @@ Note that, to use the pyrosetta models, a local installation of pyrosetta is nec
 The script `run_hermes_on_pdbfiles.py` can be given as input a set of PDB files - with optionally pdb-specific chains - and it will output a csv file where every row is a uniquely-identified site, and columns are the site's mutation probabilities. If embeddings are requested, they will be outputted in a separate file called `{CSV_FILENAME}-embeddings.npy`. We note that, for models fine-tuned to predict ddG values, output probabilities are meaningless, and we recommend using the `logits` output instead.
 
 ```bash
-usage: run_hermes_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBID_CHAIN_SITES] [-pp PARALLELISM] -o OUTPUT_FILEPATH
-                                 [-r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]] [-an {0,1}] [-el {0,1}] [-bs BATCH_SIZE] [-v {0,1}] [-lb {0,1}]
+usage: run_hermes_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBID_CHAIN_SITES] [-pp PARALLELISM] -o OUTPUT_FILEPATH [-r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]]
+                                 [-an {0,1}] [-el {0,1}] [-sw {0,1}] [-bs BATCH_SIZE] [-v {0,1}] [-lb {0,1}]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -86,12 +86,11 @@ optional arguments:
   -pd FOLDER_WITH_PDBS, --folder_with_pdbs FOLDER_WITH_PDBS
                         Directory containing PDB files to run inference on. By default, inference is run on all sites in the structure, unless --file_with_pdbid_chain_sites is specified. Cannot be specified together with --hdf5_file.
   -pn FILE_WITH_PDBID_CHAIN_SITES, --file_with_pdbid_chain_sites FILE_WITH_PDBID_CHAIN_SITES
-                        [Optional] Path to a .txt file containing tuples of "pdbid chain sites" to run inference on. Meant to be used with --folder_with_pdbs. If not specified, inference will be run on all sites in all the structures
-                        found in --folder_with_pdbs. Each line should be in the format "pdbid chain sites", e.g. "1aon A 3 4 5 6", and furhermore: sites can have insertion codes specified, in the format [resnum]-[icode], e.g. 12-A; if
-                        sites are not specified, inference will be run on all sites in the chain; if chain is not specified for a given line, inference will be run on all chains in that structure, and positions cannot be specified.
+                        [Optional] Path to a .txt file containing tuples of "pdbid chain sites" to run inference on. Meant to be used with --folder_with_pdbs. If not specified, inference will be run on all sites in all the structures found in
+                        --folder_with_pdbs. Each line should be in the format "pdbid chain sites", e.g. "1aon A 3 4 5 6", and furhermore: sites can have insertion codes specified, in the format [resnum]-[icode], e.g. 12-A; if sites are not specified,
+                        inference will be run on all sites in the chain; if chain is not specified for a given line, inference will be run on all chains in that structure, and positions cannot be specified.
   -pp PARALLELISM, --parallelism PARALLELISM
-                        If zero (default), pdb files are processed one by one. If greater than zero, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a
-                        temporary hdf5 file.
+                        If zero (default), pdb files are processed one by one. If greater than zero, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a temporary hdf5 file.
   -o OUTPUT_FILEPATH, --output_filepath OUTPUT_FILEPATH
                         Must be a ".csv file". Embeddings will be saved separately, in a parallel array, with the same filename but with the extension "-embeddings.npy".
   -r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...], --request {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]
@@ -99,8 +98,11 @@ optional arguments:
   -an {0,1}, --add_same_noise_level_as_training {0,1}
                         1 for True, 0 for False. If True, will add the same noise level as was used during training. This is useful for debugging purposes. Default is False.
   -el {0,1}, --ensemble_at_logits_level {0,1}
-                        1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. There should not be a
-                        big difference, unless the ensembled models are trained very differently.
+                        1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. There should not be a big difference,
+                        unless the ensembled models are trained very differently.
+  -sw {0,1}, --subtract_wildtype_logit_or_logproba {0,1}
+                        1 for True, 0 for False. If True, will subtract the wildtype logit or logproba from the logits or logprobas of all other aminoacids. Default is False. We recommend doing this when evaluating mutation effects, since those are
+                        defined relative to the wild-type. Note that logits and logprobas will be equivalent after subtracting the wildtype logit or logproba.
   -bs BATCH_SIZE, --batch_size BATCH_SIZE
                         Batch size for the model (number of sites). Higher batch sizes are faster, but may not fit in memory. Default is 512.
   -v {0,1}, --verbose {0,1}

@@ -23,14 +23,15 @@ def write_pdbids_chains_sites_list(name: str, pdbids_chains_sites_list: List[Tup
                     f.write(' ' + str(site))
             f.write('\n')
 
-def get_script_call(name, m='hermes_py_050', pn=False, pp=0):
+def get_script_call(name, m='hermes_py_050', pn=False, pp=0, sw=0):
 
     call = f"python -u ../run_hermes_on_pdbfiles.py \
                 -m {m} \
                 -pd pdbs \
-                -r logits \
+                -r logits logprobas \
                 -o {os.path.join(OUTDIR, name+'.csv')} \
                 -pp {pp} \
+                -sw {sw} \
             "
     if pn:
         call += f"-pn {os.path.join(TEMPDIR, name + '.txt')}"
@@ -40,6 +41,11 @@ def get_script_call(name, m='hermes_py_050', pn=False, pp=0):
 
 def test__all_pdbs_in_folder():
     call = get_script_call('test__all_pdbs_in_folder', m='hermes_py_050', pn=False, pp=0)
+    os.system(call)
+
+
+def test__all_pdbs_in_folder_with_subtracting_wildtype():
+    call = get_script_call('test__all_pdbs_in_folder_with_subtracting_wildtype', m='hermes_py_050', pn=False, pp=0, sw=1)
     os.system(call)
 
 def test__select_pdb():
@@ -162,17 +168,18 @@ if __name__ == '__main__':
     os.makedirs(OUTDIR, exist_ok=False)
 
     test__all_pdbs_in_folder()
-    test__select_pdb()
-    test__select_pdb_chain()
-    test__select_pdb_chain_sites()
-    test__select_pdb_chain_sites_icodes()
-    test__select_pdb_chain_parallelism()
-    test__select_pdb_chain_sites_parallelism()
+    test__all_pdbs_in_folder_with_subtracting_wildtype()
+    # test__select_pdb()
+    # test__select_pdb_chain()
+    # test__select_pdb_chain_sites()
+    # test__select_pdb_chain_sites_icodes()
+    # test__select_pdb_chain_parallelism()
+    # test__select_pdb_chain_sites_parallelism()
 
-    test_function__select_pdb_chain_sites_icodes()
-    test_function__select_mix()
+    # test_function__select_pdb_chain_sites_icodes()
+    # test_function__select_mix()
 
-    test_function__from_pose()
+    # test_function__from_pose()
 
 
 
