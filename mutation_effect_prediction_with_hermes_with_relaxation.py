@@ -102,7 +102,7 @@ if __name__ == '__main__':
     '''
 
     trained_models_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'trained_models', args.model_version)
-    model_dir_list = [os.path.join(trained_models_path, model_rel_path) for model_rel_path in os.listdir(trained_models_path)]
+    model_dir_list = [os.path.join(trained_models_path, model_rel_path) for model_rel_path in os.listdir(trained_models_path) if os.path.isdir(os.path.join(trained_models_path, model_rel_path))]
     models, hparams, finetuning_hparams = load_hermes_models(model_dir_list)
     data_irreps, _ = get_data_irreps(hparams)
 
