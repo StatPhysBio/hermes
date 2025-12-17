@@ -1,17 +1,17 @@
 #!/bin/bash
 ## Job Name
-#SBATCH --job-name=zgrams_casp12_testing_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0.5_10009_sidechain_pyrosetta_None_0
+#SBATCH --job-name=neighborhoods_casp12_testing_12.5_0_0_sidechain_pyrosetta_None_0
 ## Allocation Definition
 ## The account and partition options should be the same except in a few cases (e.g. ckpt queue and genpool queue).
 #SBATCH --account=stf
-#SBATCH --partition=compute
+#SBATCH --partition=cpu-g2
 ## Resources
 ## Total number of Nodes
 #SBATCH --nodes=1
 ## Number of cores per node
-#SBATCH --ntasks-per-node=8
+#SBATCH --ntasks-per-node=1
 ## Walltime (3 hours). Do not specify a walltime substantially more than your job needs.
-#SBATCH --time=23:00:00
+#SBATCH --time=6:00:00
 ## Memory per node. It is important to specify the memory since the default memory is very small.
 ## For mox, --mem may be more than 100G depending on the memory of your nodes.
 ## For ikt, --mem may be 58G or more depending on the memory of your nodes.
@@ -22,18 +22,15 @@
 ##turn on e-mail notification
 ## export all your environment variables to the batch job session
 #SBATCH --export=all
-#SBATCH -e logs/zgrams_casp12_testing_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0.5_10009_sidechain_pyrosetta_None_0.err
-#SBATCH -o logs/zgrams_casp12_testing_12.5_5_ks_12_square_C,N,O,S,H,SASA,charge_0.5_10009_sidechain_pyrosetta_None_0.log
+#SBATCH -e logs/neighborhoods_casp12_testing_12.5_0_0_sidechain_pyrosetta_None_0.err
+#SBATCH -o logs/neighborhoods_casp12_testing_12.5_0_0_sidechain_pyrosetta_None_0.log
 
-cd /gscratch/stf/gvisan01/hermes/zernikegrams/holograms/
+cd /gscratch/stf/gvisan01/hermes/zernikegrams/neighborhoods/
 
-python -u get_holograms.py \
-                      --hdf5_in /gscratch/scrubbed/gvisan01/casp12/neighborhoods_larger/neighborhoods-no_central_sidechain-casp12_testing-r_max=12.5-charges=pyrosetta-noise=0.5_10009-relaxation=None_0.hdf5 \
-                      --hdf5_out /gscratch/scrubbed/gvisan01/casp12/zernikegrams_larger/zernikegrams-no_central_sidechain-casp12_testing-r_max=12.5-l_max=5-radial_func_mode=ks-radial_func_max=12-channels=C,N,O,S,H,SASA,charge-rst_normalization=square-charges=pyrosetta-noise=0.5_10009-relaxation=None_0.hdf5 \
+python -u get_neighborhoods.py \
+                      --hdf5_in /gscratch/stf/gvisan01/casp12/structural_info/structural_info-casp12_testing-charges=pyrosetta-noise=0_0-relaxation=None_0.hdf5 \
+                      --hdf5_out /gscratch/scrubbed/gvisan01/casp12/neighborhoods_larger/neighborhoods-no_central_sidechain-casp12_testing-r_max=12.5-charges=pyrosetta-noise=0_0-relaxation=None_0.hdf5 \
                       --r_max 12.5 \
-                      --l_max 5 \
-                      --radial_func_mode ks \
-                      --radial_func_max 12 \
-                      --channels C,N,O,S,H,SASA,charge \
-                      --rst_normalization square \
-                      --parallelism 8
+                      --remove_central_sidechain \
+                      --filter_out_chains_not_in_proteinnet \
+                      --parallelism 1

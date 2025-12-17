@@ -1,6 +1,6 @@
 
 account: stf
-partition: compute
+partition: cpu-g2
 nodes: 1
 cores: 1
 walltime: '6:00:00'
@@ -16,10 +16,10 @@ parameters:
 
   r_max: [12.5]
 
-  noise: [0.5]
-  seed: [10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009]
-  # noise: [0]
-  # seed: [0]
+  # noise: [0.5]
+  # seed: [10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009]
+  noise: [0]
+  seed: [0]
 
   remove_central_what: [sidechain] # residue or sidechain
   

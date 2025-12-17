@@ -88,10 +88,10 @@ def get_neighborhoods_fn(
 
 def get_proteinnet__pdb_chain_pairs(testing=False):
     if testing:
-        f = open("/gscratch/stf/gvisan01/casp12/validation")
+        f = open("/gscratch/stf/gvisan01/hermes/training_data/pretraining/casp12_chains/validation")
         print("Using ProteinNet validation chains.")
     else:
-        f = open("/gscratch/stf/gvisan01/casp12/training_30")
+        f = open("/gscratch/stf/gvisan01/hermes/training_data/pretraining/casp12_chains/training_30")
         print("Using ProteinNet training_30 chains.")
     lines = f.readlines()
     f.close()

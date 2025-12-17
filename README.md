@@ -69,9 +69,9 @@ Models live in the `trained_models/` directory. We only include some of the mode
 Note that, to use the pyrosetta models, a local installation of pyrosetta is necessary, whereas the biopython models use a fully open-source pipeline.
 
 
-## Getting site-level mutation probabilities and embeddings
+## Getting site-level mutation scores, probabilities and embeddings
 
-The script `run_hermes_on_pdbfiles.py` can be given as input a set of PDB files - with optionally pdb-specific chains - and it will output a csv file where every row is a uniquely-identified site, and columns are the site's mutation probabilities. If embeddings are requested, they will be outputted in a separate file called `{CSV_FILENAME}-embeddings.npy`.
+The script `run_hermes_on_pdbfiles.py` can be given as input a set of PDB files - with optionally pdb-specific chains - and it will output a csv file where every row is a uniquely-identified site, and columns are the site's mutation probabilities. If embeddings are requested, they will be outputted in a separate file called `{CSV_FILENAME}-embeddings.npy`. We note that, for models fine-tuned to predict ddG values, output probabilities are meaningless, and we recommend using the `logits` output instead.
 
 ```bash
 usage: run_hermes_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBID_CHAIN_SITES] [-pp PARALLELISM] -o OUTPUT_FILEPATH
@@ -277,6 +277,7 @@ Fine-tuning can be easily done in a few steps. To see examples, [download our fi
 3. **Create a fine-tuning config.** See `./training_data/finetuning/cdna117k/configs/hermes_bp_000.yaml` for a thorough example of what information needs to be provided and how.
 
 4. **Fine-tune the model!** Simply run `finetune_hermes.py` with your config file.
+
 
 
 
