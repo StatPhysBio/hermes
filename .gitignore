@@ -11,7 +11,6 @@ TODO.md
 slurm_logs/
 __pycache__/
 .pytest_cache/
-training_data/pretraining/
 training_data/finetuning/rosetta_ddg/premade_zernikegrams/
 training_data/finetuning/skempi/premade_zernikegrams/
 training_data/finetuning/cdna117k/premade_zernikegrams/
@@ -30,4 +29,4 @@ split_files/
 input_csv/
 casp12_relaxed_pred/
 *.egg-info/
-*_12p5_nb/
+*_12p5_nb*/

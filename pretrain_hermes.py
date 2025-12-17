@@ -52,6 +52,10 @@ if __name__ == '__main__':
     parser.add_argument('--eval_only', action='store_true', default=False, help='for debugging purposes')
     args = parser.parse_args()
 
+    if args.train_with_noise:
+        args.model_dir = os.path.join(args.model_dir, f"so3_convnet_noise=0.5_seed={10000 + args.model_index}")
+    else:
+        args.model_dir = os.path.join(args.model_dir, f"so3_convnet_seed={10000 + args.model_index}")
 
     # make directory if it does not already exist
     if not os.path.exists(args.model_dir):

@@ -11,9 +11,9 @@
 #SBATCH -o /gscratch/scrubbed/gvisan01/slurm_logs/zernikegrams.log
 
 python -u make_zernikegrams_for_finetuning.py \
-                -m hermes_py_000 \
+                -m hermes_py_000_12p5_nb \
                 -n 0 \
-                -pd /gscratch/stf/gvisan01/casp12/pdbs \
-                -o /gscratch/stf/gvisan01/hermes/training_data/finetuning/casp12_relaxed_pred/premade_zernikegrams \
-                -pr /gscratch/stf/gvisan01/hermes/training_data/finetuning/casp12_relaxed_pred/pdb_to_residues.json
+                -pd /gscratch/stf/gvisan01/hermes_inference/training_data/finetuning/cdna117k/pdbs \
+                -o /gscratch/stf/gvisan01/hermes_inference/training_data/finetuning/cdna117k/premade_zernikegrams \
+                -pr /gscratch/stf/gvisan01/hermes_inference/training_data/finetuning/cdna117k/pdb_to_residues.json
 
