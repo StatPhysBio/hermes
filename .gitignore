@@ -30,3 +30,5 @@ input_csv/
 casp12_relaxed_pred/
 *.egg-info/
 *_12p5_nb*/
+tests/output/
+tests/temp/
