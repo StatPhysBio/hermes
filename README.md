@@ -279,6 +279,16 @@ Fine-tuning can be easily done in a few steps. To see examples, [download our fi
 4. **Fine-tune the model!** Simply run `finetune_hermes.py` with your config file.
 
 
+## Pre-training HERMES models
+
+We provide code to pre-train HERMES models on wild-type amino-acid classification, on arbitrary PDB files. This is more involved than fine-tuning, in part due to legacy reasons, and in part due to higher data quantity in pre-training.
+There are two main steps:
+
+1. **Generating hdf5 files with Zernikegrams** with desired specifications (channels, neighborhood radius, `l_max`, etc.). This is itself done in 4 steps, each generating hdf5 files that get fed as input to the next step: (i) extracting structural information from PDB files, (ii) optionally adding noise to coordinates, (iii) extracting neighborhoods of residues, (iv) generating each neighborhood's zernikegram. See example scripts in `slurm/` and in particular `slurm/config/runtime/hermes/`.
+
+2. **Pre-training the model.** This is done using `pretrain_hermes.py` with a config file that specifies the model architecture and training parameters, and the path to the hdf5 files with zernikegrams. See `training_data/pretraining/config/so3_convnet.yaml` as an example.
+
+We provide the PDBids and chains of ProteinNet's 30% similarity split of CASP12 in `training_data/pretraining/`.
 
 
 ## References
