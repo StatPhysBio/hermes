@@ -54,7 +54,7 @@ Installation tips:
 
 ## Provided pre-trained and fine-tuned models
 
-Models live in the `trained_models/` directory. We only include some of the models in the repository, Some notable models:
+Models live in the `trained_models/` directory. We only include some of the models in the repository, the remaining ones can be downloaded from [zenodo](https://doi.org/10.5281/zenodo.18249988), Some notable models:
 
 - `hermes_{bp/py}_{000/050}`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Using these models equals running the HERMES-fixed protocol (concept figure, D.1).
 
@@ -270,7 +270,7 @@ The HERMES-relaxed protocol, used on pre-trained models like `hermes_py_050`, re
 
 ## Want to fine-tune on your mutation effect dataset?
 
-Fine-tuning can be easily done in a few steps. To see examples, [download our fine-tuning data](https://doi.org/10.5281/zenodo.17546961) and place it in the `training_data` folder.
+Fine-tuning can be easily done in a few steps. To see examples, [download our fine-tuning data](https://doi.org/10.5281/zenodo.18249988) and place it in the `training_data` folder.
 
 1. **Prepare the data.** Prepare the targets in three .csv files, which must have `{train}`, `{valid}`, and `{test}` in the name. Each .csv file must have the following columns: `[pdbid, chainid, variant, score]`. The scores under `score` should be such that lower means better (i.e. following the energy convention). Also, place all the pdbfiles for training, validation and testing in a single directory.
 
