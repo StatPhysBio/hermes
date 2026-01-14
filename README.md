@@ -1,6 +1,7 @@
 # HERMES: Holographic Equivariant neuRal network model for Mutational Effect and Stability prediction
 
-Code for the paper [HERMES: Holographic Equivariant neuRal network model for Mutational Effect and Stability prediction](https://www.biorxiv.org/content/10.1101/2024.07.09.602403v1.full).
+Source code to run HERMES models for predicting the effect of mutations on protein stability and protein-protein binding affinity (or any other phenotype provided you have the fine-tuning data!). See the [paper](https://www.biorxiv.org/content/10.1101/2024.07.09.602403v3) for details, as well as the [code and data that accompany it](https://github.com/StatPhysBio/hermes_experiments).
+
 
 ![Schematic of HERMES](images/hermes_with_inference.png)
 
