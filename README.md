@@ -26,10 +26,10 @@ pip3 install torch torchvision
 pip install scikit-learn numpy pandas matplotlib tqdm pyyaml e3nn==0.5.0 h5py hdf5plugin rich sqlitedict stopit
 ```
 
-**If you want to use the pyrosetta models - Step 4:** Install `pyrosetta`. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta). We are aware of the limitations posed by pyrosetta's license and are working on releasing a version that uss biopython instead and other open source code soon.
+**If you want to use the pyrosetta models - Step 4:** Install `pyrosetta`. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta).
 To download pyrosetta, after obtaining a license from the link above, follow instructions [here](https://www.pyrosetta.org/downloads#h.6vttn15ac69d). We recommend downloading the `.whl` file for the python version you're using, and installing with pip.
 
-**If you want to use the biopython models - Step 5:** Install `biopython`, `pdbfixer`, and `reduce`. `biopython` is used as parser of pdb files, `pdbfixer` fixes fixes common issues found in pdbfiles, and `reduce` adds hydrogens to pdb files. Unfortunately, `pdbfixer` and `reduce` are not available to install via pip, and the most straightforward choice is to use conda:
+**If you want to use the biopython models (fully open source!) - Step 5:** Install `biopython`, `pdbfixer`, and `reduce`. `biopython` is used as parser of pdb files, `pdbfixer` fixes fixes common issues found in pdbfiles, and `reduce` adds hydrogens to pdb files. Unfortunately, `pdbfixer` and `reduce` are not available to install via pip, and the most straightforward choice is to use conda:
 ```bash
 pip install biopython
 conda config --add channels conda-forge
