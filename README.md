@@ -50,7 +50,7 @@ Feel free to use `pip install -e .` instead if you plan on making changes to the
 
 Installation tips:
 1. The error `{ENVIRONMENT_PATH}/bin/../lib/libstdc++.so.6: version 'GLIBCXX_3.4.30' not found`, as required by OpenMM, can be fixed via `conda install -c conda-forge libstdcxx-ng`. See https://stackoverflow.com/questions/48453497/anaconda-libstdc-so-6-version-glibcxx-3-4-20-not-found
-
+2. We exported the environment we used in the `environment.yml` file. If you run into errors that could stem from version mismatches, we recommend using the package versions specified there.
 
 
 ## Provided pre-trained and fine-tuned models
