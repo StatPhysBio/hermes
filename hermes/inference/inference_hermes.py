@@ -491,7 +491,9 @@ def predict_from_pdbfile(pdb_file_or_pose: str, # or Pose
                           add_same_noise_level_as_training: bool = False,
                           ensemble_with_noise: bool = False,
                           chain: Optional[str] = None,
-                          regions: Optional[Dict[str, Union[str, List[Tuple[str, int, str]]]]] = None):
+                          regions: Optional[Dict[str, Union[str, List[Tuple[str, int, str]]]]] = None,
+                          ensemble_size: int = 10,
+                          model_idxs: Optional[List[int]] = None):
 
     if chain is not None and regions is not None:
         raise ValueError("Cannot specify both chain and regions")
@@ -585,11 +587,11 @@ def predict_from_pdbfile(pdb_file_or_pose: str, # or Pose
                 np_embeddings = get_esm_embeddings(pdb_name, zgrams_dict['res_id'], '_'.join(finetuning_hparams['embeddings_model_version'].split('_')[:4]), sequence_pdb_alignment_json, embeddings_cache_file=embeddings_cache_file)
         
         if regions is None: # return the predictions
-            ensemble_predictions_dict = predict_from_zernikegrams(zgrams_dict['zernikegram'], zgrams_dict['res_id'], models, batch_size, data_irreps, np_embeddings=np_embeddings)
+            ensemble_predictions_dict = predict_from_zernikegrams(zgrams_dict['zernikegram'], zgrams_dict['res_id'], models, batch_size, data_irreps, np_embeddings=np_embeddings, ensemble_size=ensemble_size, model_idxs=model_idxs)
         else: # return the predictions for each region, in a dict indexed by region_name
             ensemble_predictions_dict = {}
             for region_name in regions:
-                ensemble_predictions_dict[region_name] = predict_from_zernikegrams(zgrams_dict['zernikegram'], zgrams_dict['res_id'], models, batch_size, data_irreps, np_embeddings=np_embeddings, region=regions[region_name])
+                ensemble_predictions_dict[region_name] = predict_from_zernikegrams(zgrams_dict['zernikegram'], zgrams_dict['res_id'], models, batch_size, data_irreps, np_embeddings=np_embeddings, region=regions[region_name], ensemble_size=ensemble_size, model_idxs=model_idxs)
         
         ensemble_predictions_dict_list.append(ensemble_predictions_dict)
     
@@ -630,7 +632,9 @@ def predict_from_zernikegrams(
     batch_size: int,
     data_irreps: o3.Irreps,
     region: Optional[List[Tuple[str, int, str]]] = None,
-    np_embeddings: Optional[np.ndarray] = None
+    np_embeddings: Optional[np.ndarray] = None,
+    ensemble_size: int = 10,
+    model_idxs: Optional[List[int]] = None,
 ):
     if region is not None:
         region_idxs = get_res_locs_from_tups(np_res_ids, region)
@@ -653,7 +657,20 @@ def predict_from_zernikegrams(
         dataset = ZernikegramsDataset(np_zgrams, data_irreps, labels, list(zip(list(frames), list(map(tuple, np_res_ids)))))
 
     ensemble_predictions_dict = {'embeddings': [], 'logits': [], 'probabilities': [], 'best_indices': [], 'targets': None, 'res_ids': np_res_ids, 'extra_predictions': []}
-    for model in models:
+
+    ## subsample ensemble if ensemble_size < 10
+    if model_idxs is not None:
+        models_to_run = [models[i] for i in model_idxs]
+    else:
+        if ensemble_size < 10:
+            indices = np.random.choice(np.arange(10), size=ensemble_size, replace=False)
+            models_to_run = [models[i] for i in indices]
+        else:
+            models_to_run = models # default behavior
+    
+    # print('len(models_to_run) =', len(models_to_run))
+
+    for model in models_to_run:
 
         # not sure if I should re-instantiate the dataloader?
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=False, drop_last=False)

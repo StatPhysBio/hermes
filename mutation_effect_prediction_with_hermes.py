@@ -55,7 +55,7 @@ def get_file_that_matches_specs(inference_dir, pdb, chain, resnum):
 import stopit
 
 @stopit.threading_timeoutable(60*10) # stop it if it takes more than 10 minutes
-def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, models, hparams, finetuning_hparams, sequence_pdb_alignment_json, embeddings_cache, batch_size, ensemble_at_logits_level, add_same_noise_level_as_training):
+def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, models, hparams, finetuning_hparams, sequence_pdb_alignment_json, embeddings_cache, batch_size, ensemble_at_logits_level, add_same_noise_level_as_training, ensemble_size, model_idxs):
 
     # ## do not make predictions if they already exist (nice if some error or timehout happened on some PDB)
     # if os.path.exists(os.path.join(output_dir, f"{make_filename(model_version, pdb, chain, resnums)}.npz")):
@@ -68,11 +68,10 @@ def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, mode
 
     ## assuming icode is ' ' for now!!
     region_ids = [(chain, resnum, ' ') for resnum in resnums]
-    # print('Region IDs:', region_ids)
 
     requested_regions = {'region': region_ids}
     try:
-        ensemble_predictions_dict = predict_from_pdbfile(os.path.join(pdbdir, f'{pdb}.pdb'), models, hparams, batch_size, finetuning_hparams=finetuning_hparams, sequence_pdb_alignment_json=sequence_pdb_alignment_json, embeddings_cache_file=embeddings_cache, regions=requested_regions, add_same_noise_level_as_training=add_same_noise_level_as_training)
+        ensemble_predictions_dict = predict_from_pdbfile(os.path.join(pdbdir, f'{pdb}.pdb'), models, hparams, batch_size, finetuning_hparams=finetuning_hparams, sequence_pdb_alignment_json=sequence_pdb_alignment_json, embeddings_cache_file=embeddings_cache, regions=requested_regions, add_same_noise_level_as_training=add_same_noise_level_as_training, ensemble_size=ensemble_size, model_idxs=model_idxs)
     except Exception as e:
         print(f'Error making predictions for {pdb} {chain} {resnums}: {e}')
         return
@@ -85,6 +84,12 @@ def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, mode
         logps = np.log(np.mean(ensemble_predictions_dict['probabilities'], axis=0))
 
     resnums_in_res_ids = ensemble_predictions_dict['res_ids'][:, 3].astype(int)
+
+    # print()
+    # print(resnums_in_res_ids)
+    # print(resnums)
+    # print()
+
     if not np.all(resnums_in_res_ids == np.array(resnums)):
         print(f"WARNING: Resnums in res_ids do not match the requested resnums. Some resnums were not computed.")
         if pes.shape[0] != resnums_in_res_ids.shape[0]:
@@ -138,6 +143,13 @@ if __name__ == '__main__':
 
     parser.add_argument('--use_mt_structure', type=int, default=0,
                         help='0 for false, 1 for true. If toggled, compute logits for mutations on the corresponding mutated structure.')
+    
+    parser.add_argument('--ensemble_size', type=int, default=10,
+                        help='Size of the HERMES ensemble to consider. If 10 (default), all 10 models will be ensembled.' \
+                             'If lower than 10, `ensemble_size` models will be sampled without replacement and their predictions ensembled.')
+
+    parser.add_argument('--model_idxs', type=optional_int, nargs='+', default=None,
+                        help='Model index ensembles to ensemble. Must be between [0-9]. Overrides --ensemble_size.')
 
     parser.add_argument('-el', '--ensemble_at_logits_level', default=1, type=int, choices=[0, 1],
                         help="1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. \
@@ -270,7 +282,7 @@ if __name__ == '__main__':
                 resnums_chunks = [resnums[i:i+args.chunk_size] for i in range(0, len(resnums), args.chunk_size)]
                 for res_chunk in resnums_chunks:
                     # print(f'Running inference for {pdb} {chain} {res_chunk}')
-                    make_prediction(inference_dir, args.folder_with_pdbs, chain, pdb, res_chunk, args.model_version, models, hparams, finetuning_hparams, args.sequence_pdb_alignment_json, args.embeddings_cache, args.batch_size, args.ensemble_at_logits_level, args.add_same_noise_level_as_training)
+                    make_prediction(inference_dir, args.folder_with_pdbs, chain, pdb, res_chunk, args.model_version, models, hparams, finetuning_hparams, args.sequence_pdb_alignment_json, args.embeddings_cache, args.batch_size, args.ensemble_at_logits_level, args.add_same_noise_level_as_training, args.ensemble_size, args.model_idxs)
     end = time()
     print(f'Inference took {end - start} seconds')
 

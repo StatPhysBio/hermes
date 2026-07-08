@@ -32,7 +32,8 @@ Dynamic: summary
 
 # HERMES: Holographic Equivariant neuRal network model for Mutational Effect and Stability prediction
 
-Code for the paper [HERMES: Holographic Equivariant neuRal network model for Mutational Effect and Stability prediction](https://www.biorxiv.org/content/10.1101/2024.07.09.602403v1.full).
+Source code to run HERMES models for predicting the effect of mutations on protein stability and protein-protein binding affinity (or any other phenotype provided you have the fine-tuning data!). See the [paper](https://www.biorxiv.org/content/10.1101/2024.07.09.602403v3) for details, as well as the [code and data that accompany it](https://github.com/StatPhysBio/hermes_experiments).
+
 
 ![Schematic of HERMES](images/hermes_with_inference.png)
 
@@ -57,10 +58,10 @@ pip3 install torch torchvision
 pip install scikit-learn numpy pandas matplotlib tqdm pyyaml e3nn==0.5.0 h5py hdf5plugin rich sqlitedict stopit
 ```
 
-**If you want to use the pyrosetta models - Step 4:** Install `pyrosetta`. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta). We are aware of the limitations posed by pyrosetta's license and are working on releasing a version that uss biopython instead and other open source code soon.
+**If you want to use the pyrosetta models - Step 4:** Install `pyrosetta`. This is required for the use of models trained on structures processed using pyrosetta. A license is available at no cost to academics and can be obtained [here](https://www.pyrosetta.org/home/licensing-pyrosetta).
 To download pyrosetta, after obtaining a license from the link above, follow instructions [here](https://www.pyrosetta.org/downloads#h.6vttn15ac69d). We recommend downloading the `.whl` file for the python version you're using, and installing with pip.
 
-**If you want to use the biopython models - Step 5:** Install `biopython`, `pdbfixer`, and `reduce`. `biopython` is used as parser of pdb files, `pdbfixer` fixes fixes common issues found in pdbfiles, and `reduce` adds hydrogens to pdb files. Unfortunately, `pdbfixer` and `reduce` are not available to install via pip, and the most straightforward choice is to use conda:
+**If you want to use the biopython models (fully open source!) - Step 5:** Install `biopython`, `pdbfixer`, and `reduce`. `biopython` is used as parser of pdb files, `pdbfixer` fixes fixes common issues found in pdbfiles, and `reduce` adds hydrogens to pdb files. Unfortunately, `pdbfixer` and `reduce` are not available to install via pip, and the most straightforward choice is to use conda:
 ```bash
 pip install biopython
 conda config --add channels conda-forge
@@ -69,7 +70,7 @@ conda install -c conda-forge pdbfixer
 conda config --add channels bioconda
 conda install reduce -c bioconda
 ```
-If you run into troubles with conda, both can be installed from source as well, though we did not try it ([pdbfixer](https://github.com/openmm/pdbfixer), [reduce](https://github.com/rlabduke/reduce)).
+If you run into troubles with conda, both can be installed from source as well, though we did not try it ([pdbfixer](https://github.com/openmm/pdbfixer), [reduce](https://github.com/rlabduke/reduce)). This is by far the slowest installation step due to the use of conda.
 
 **Step 6:** Install `hermes` as a package. This will install some of the other necessary packages as well.
 ```bash
@@ -81,12 +82,13 @@ Feel free to use `pip install -e .` instead if you plan on making changes to the
 
 Installation tips:
 1. The error `{ENVIRONMENT_PATH}/bin/../lib/libstdc++.so.6: version 'GLIBCXX_3.4.30' not found`, as required by OpenMM, can be fixed via `conda install -c conda-forge libstdcxx-ng`. See https://stackoverflow.com/questions/48453497/anaconda-libstdc-so-6-version-glibcxx-3-4-20-not-found
-
+2. We exported the environment we used in the `environment.yml` file. If you run into errors that could stem from version mismatches, we recommend using the package versions specified there.
+3. The whole installation shouldn't take longer than 10/15 minutes, with the installation of `pdbfixer` being the slowest and most variable step.
 
 
 ## Provided pre-trained and fine-tuned models
 
-Models live in the `trained_models/` directory. We only include some of the models in the repository, Some notable models:
+Models live in the `trained_models/` directory. We only include some of the models in the repository, the remaining ones can be downloaded from [zenodo](https://doi.org/10.5281/zenodo.18249988), Some notable models:
 
 - `hermes_{bp/py}_{000/050}`: Pre-trained for masked amino-acid classification on ~10k CASP12 ProteinNet chains. Using these models equals running the HERMES-fixed protocol (concept figure, D.1).
 
@@ -101,13 +103,13 @@ Models live in the `trained_models/` directory. We only include some of the mode
 Note that, to use the pyrosetta models, a local installation of pyrosetta is necessary, whereas the biopython models use a fully open-source pipeline.
 
 
-## Getting site-level mutation probabilities and embeddings
+## Getting site-level mutation scores, probabilities and embeddings
 
-The script `run_hermes_on_pdbfiles.py` can be given as input a set of PDB files - with optionally pdb-specific chains - and it will output a csv file where every row is a uniquely-identified site, and columns are the site's mutation probabilities. If embeddings are requested, they will be outputted in a separate file called `{CSV_FILENAME}-embeddings.npy`.
+The script `run_hermes_on_pdbfiles.py` can be given as input a set of PDB files - with optionally pdb-specific chains - and it will output a csv file where every row is a uniquely-identified site, and columns are the site's mutation probabilities. If embeddings are requested, they will be outputted in a separate file called `{CSV_FILENAME}-embeddings.npy`. We note that, for models fine-tuned to predict ddG values, output probabilities are meaningless, and we recommend using the `logits` output instead.
 
 ```bash
-usage: run_hermes_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBID_CHAIN_SITES] [-pp PARALLELISM] -o OUTPUT_FILEPATH
-                                 [-r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]] [-an {0,1}] [-el {0,1}] [-bs BATCH_SIZE] [-v {0,1}] [-lb {0,1}]
+usage: run_hermes_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBID_CHAIN_SITES] [-pp PARALLELISM] -o OUTPUT_FILEPATH [-r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]]
+                                 [-an {0,1}] [-el {0,1}] [-sw {0,1}] [-bs BATCH_SIZE] [-v {0,1}] [-lb {0,1}]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -118,12 +120,11 @@ optional arguments:
   -pd FOLDER_WITH_PDBS, --folder_with_pdbs FOLDER_WITH_PDBS
                         Directory containing PDB files to run inference on. By default, inference is run on all sites in the structure, unless --file_with_pdbid_chain_sites is specified. Cannot be specified together with --hdf5_file.
   -pn FILE_WITH_PDBID_CHAIN_SITES, --file_with_pdbid_chain_sites FILE_WITH_PDBID_CHAIN_SITES
-                        [Optional] Path to a .txt file containing tuples of "pdbid chain sites" to run inference on. Meant to be used with --folder_with_pdbs. If not specified, inference will be run on all sites in all the structures
-                        found in --folder_with_pdbs. Each line should be in the format "pdbid chain sites", e.g. "1aon A 3 4 5 6", and furhermore: sites can have insertion codes specified, in the format [resnum]-[icode], e.g. 12-A; if
-                        sites are not specified, inference will be run on all sites in the chain; if chain is not specified for a given line, inference will be run on all chains in that structure, and positions cannot be specified.
+                        [Optional] Path to a .txt file containing tuples of "pdbid chain sites" to run inference on. Meant to be used with --folder_with_pdbs. If not specified, inference will be run on all sites in all the structures found in
+                        --folder_with_pdbs. Each line should be in the format "pdbid chain sites", e.g. "1aon A 3 4 5 6", and furhermore: sites can have insertion codes specified, in the format [resnum]-[icode], e.g. 12-A; if sites are not specified,
+                        inference will be run on all sites in the chain; if chain is not specified for a given line, inference will be run on all chains in that structure, and positions cannot be specified.
   -pp PARALLELISM, --parallelism PARALLELISM
-                        If zero (default), pdb files are processed one by one. If greater than zero, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a
-                        temporary hdf5 file.
+                        If zero (default), pdb files are processed one by one. If greater than zero, pdb files are processed in parallel with specified parallelism (and number of cores available), by first generating zernikegrams in a temporary hdf5 file.
   -o OUTPUT_FILEPATH, --output_filepath OUTPUT_FILEPATH
                         Must be a ".csv file". Embeddings will be saved separately, in a parallel array, with the same filename but with the extension "-embeddings.npy".
   -r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...], --request {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]
@@ -131,8 +132,11 @@ optional arguments:
   -an {0,1}, --add_same_noise_level_as_training {0,1}
                         1 for True, 0 for False. If True, will add the same noise level as was used during training. This is useful for debugging purposes. Default is False.
   -el {0,1}, --ensemble_at_logits_level {0,1}
-                        1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. There should not be a
-                        big difference, unless the ensembled models are trained very differently.
+                        1 for True, 0 for False. When computing probabilities and log-probabilities, ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities. There should not be a big difference,
+                        unless the ensembled models are trained very differently.
+  -sw {0,1}, --subtract_wildtype_logit_or_logproba {0,1}
+                        1 for True, 0 for False. If True, will subtract the wildtype logit or logproba from the logits or logprobas of all other aminoacids. Default is False. We recommend doing this when evaluating mutation effects, since those are
+                        defined relative to the wild-type. Note that logits and logprobas will be equivalent after subtracting the wildtype logit or logproba.
   -bs BATCH_SIZE, --batch_size BATCH_SIZE
                         Batch size for the model (number of sites). Higher batch sizes are faster, but may not fit in memory. Default is 512.
   -v {0,1}, --verbose {0,1}
@@ -300,7 +304,7 @@ The HERMES-relaxed protocol, used on pre-trained models like `hermes_py_050`, re
 
 ## Want to fine-tune on your mutation effect dataset?
 
-Fine-tuning can be easily done in a few steps. To see examples, [download our fine-tuning data](https://doi.org/10.5281/zenodo.17546961) and place it in the `training_data` folder.
+Fine-tuning can be easily done in a few steps. To see examples, [download our fine-tuning data](https://doi.org/10.5281/zenodo.18249988) and place it in the `training_data` folder.
 
 1. **Prepare the data.** Prepare the targets in three .csv files, which must have `{train}`, `{valid}`, and `{test}` in the name. Each .csv file must have the following columns: `[pdbid, chainid, variant, score]`. The scores under `score` should be such that lower means better (i.e. following the energy convention). Also, place all the pdbfiles for training, validation and testing in a single directory.
 
@@ -310,6 +314,17 @@ Fine-tuning can be easily done in a few steps. To see examples, [download our fi
 
 4. **Fine-tune the model!** Simply run `finetune_hermes.py` with your config file.
 
+
+## Pre-training HERMES models
+
+We provide code to pre-train HERMES models on wild-type amino-acid classification, on arbitrary PDB files. This is more involved than fine-tuning, in part due to legacy reasons, and in part due to higher data quantity in pre-training.
+There are two main steps:
+
+1. **Generating hdf5 files with Zernikegrams** with desired specifications (channels, neighborhood radius, `l_max`, etc.). This is itself done in 4 steps, each generating hdf5 files that get fed as input to the next step: (i) extracting structural information from PDB files, (ii) optionally adding noise to coordinates, (iii) extracting neighborhoods of residues, (iv) generating each neighborhood's zernikegram. See example scripts in `slurm/` and in particular `slurm/config/runtime/hermes/`.
+
+2. **Pre-training the model.** This is done using `pretrain_hermes.py` with a config file that specifies the model architecture and training parameters, and the path to the hdf5 files with zernikegrams. See `training_data/pretraining/config/so3_convnet.yaml` as an example.
+
+We provide the PDBids and chains of ProteinNet's 30% similarity split of CASP12 in `training_data/pretraining/`.
 
 
 ## References

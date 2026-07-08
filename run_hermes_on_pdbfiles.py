@@ -23,6 +23,7 @@ from hermes.inference.inference_hermes import predict_from_hdf5file, predict_fro
 from hermes.utils.protein_naming import ind_to_ol_size, ol_to_ind_size
 
 import argparse
+from hermes.utils.argparse import *
 
 
 def check_input_arguments(args):
@@ -81,6 +82,10 @@ if __name__ == '__main__':
                         help='1 for True, 0 for False. If True, will subtract the wildtype logit or logproba from the logits or logprobas of all other aminoacids. Default is False. \
                               We recommend doing this when evaluating mutation effects, since those are defined relative to the wild-type. Note that logits and logprobas will be equivalent after subtracting the wildtype logit or logproba.')
     
+    parser.add_argument('--model_idxs', type=optional_int, nargs='+', default=None,
+                        help='Model index ensembles to ensemble. Must be between [0-9]. Overrides --ensemble_size.\
+                              Currently only applicable if predicting from pdbfiles and without parallelism.')
+
     parser.add_argument('-bs', '--batch_size', type=int, default=512,
                         help='Batch size for the model (number of sites). Higher batch sizes are faster, but may not fit in memory. Default is 512.')
 
@@ -268,7 +273,7 @@ if __name__ == '__main__':
                             icode = ' '
                         regions_argument['region'].append((chain, resnum, icode))
                 
-                inference = predict_from_pdbfile(pdbfile, models, hparams, args.batch_size, chain=chain_argument, regions=regions_argument, add_same_noise_level_as_training=args.add_same_noise_level_as_training)
+                inference = predict_from_pdbfile(pdbfile, models, hparams, args.batch_size, chain=chain_argument, regions=regions_argument, add_same_noise_level_as_training=args.add_same_noise_level_as_training, model_idxs=args.model_idxs)
                 
                 if regions_argument is not None: # just a little annoying thing I have to do for legacy code :(
                     inference = inference['region']

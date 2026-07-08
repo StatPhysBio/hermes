@@ -205,39 +205,12 @@ df, embeddings = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', pose, 
 ```
 
 
-### Visualize predictions easily in an Nx20 heatmap
+### Scripts to visualize predictions
 
-We provide an easy-to-use script to generate heatmaps of the HERMES predictions:
+In `visualization` we provide two ways of visualizing the predictions of HERMES.
 
-```bash
-usage: generate_heatmap.py [-h] [--csv_file CSV_FILE] [--metrics {logprobas,probas,logits} [{logprobas,probas,logits} ...]]
-                           [--pdbid PDBID [PDBID ...]] [--chain_sep] [--center_wt] [--output OUTPUT]
-
-Generate heatmap plots of HERMES inference results
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --csv_file CSV_FILE   Path to CSV file containing HERMES inference results
-  --request {logprobas,probas,logits} [{logprobas,probas,logits} ...]
-                        HERMES-predicted metrics to be plotted
-  --pdbid PDBID [PDBID ...]
-                        PDB IDs to filter (use 'pdbid' or 'pdbid_CHAIN')
-  --chain_sep           Generate separate plots for each chain
-  --center_wt           Subtract the wild-type value within each site
-  --output OUTPUT       Output directory, otherwise plots are saved in the current directory
-```
-
-As an example, this is the heatmap of `hermes_py_050` log-probabilities, centered at the wild-type values, for Protein G. "x" indicates the wild-type amino acid. To re-create it, run the following commands:
-```bash
-python run_hermes_on_pdbfiles.py -m hermes_py_050 -pd experiments/Protein_G/pdbs -o experiments/Protein_G/full_protein_hermes_py_050.csv -r logprobas
-
-python generate_heatmap.py --csv_file experiments/Protein_G/full_protein_hermes_py_050.csv --request logprobas --pdbid 1PGA --center_wt --output experiments/Protein_G/
-```
-
-
-![Protein G heatmap](experiments/Protein_G/aa_logprobas_per_pos_1PGA_centeredWT.png)
-
-Credit: Ella Carlander
+1. `plot_logit_heatmap.py` generates heatmaps of HERMES predictions.
+2. `color_by_value.py` is intended to be used within PyMOL to visualize the structure, with each residue colored by a value of interest (e.g. the predicted probability of a specific amino acid, or the median probability across the 20 amino-acids).
 
 
 ## Scoring specific mutations
@@ -251,6 +224,15 @@ The columns are not expected to have specific names, but the names must ben prov
 Run `python mutation_effect_prediction_with_hermes.py -h` for more information on the script, and see `experiments/Protein_G/` for a simple example.
 
 Note that, for simplicity, the script assumes empty insertion codes. In `hermes/utils/rename_resnums.py` we provide a function `rename_resnums()` that uses BioPython to sequentially rename the resnums in a pdb file, removing insertion codes, and also saves a mapping between the new resnums, and the old resnums+icodes.
+
+
+## Suggesting antigen-stabilizing mutations with HERMES
+
+We provide a convenient script to suggest mutations for vaccine antigen design, called `suggest_antigen_stabilizing_mutations_hermes.py`.
+The desired pre-fusion, and optionally post-fusion, structure(s) must be provided.
+The script provides two sets of mutations:
+1. Mutations that stabilize the pre-fusion conformation without regards for post-fusion, focusing on **core** sites only (defined as having SASA < 1 Ang).
+2. Mutations stabilize pre-fusion *and* de-stabilize post-fusion. Only run if the post-fusion structure is provided.
 
 
 ## HERMES-relaxed protocol

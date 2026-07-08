@@ -71,6 +71,12 @@ def optional_str(astr: Union[None, str]) -> Union[None, str]:
     else:
         return astr
 
+def optional_int(anint: Union[None, int]) -> Union[None, int]:
+    if anint is None:
+        return None
+    else:
+        return int(anint)
+
 def args_to_dict(args: argparse.ArgumentParser, ignore_params: Optional[Set] = None):
     adict = {}
     for arg in vars(args):

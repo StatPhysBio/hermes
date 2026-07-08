@@ -205,9 +205,9 @@ def get_dG_of_binding(pdbfile_or_pose: Union[str, pyrosetta.rosetta.core.pose.Po
     if not pyrosetta_was_already_initialized:
         # init pyrosetta with desired flags
         if add_hydrogens and ignore_waters:
-            flags = default_flags
+            flags = init_flags
         elif add_hydrogens and not ignore_waters:
-            flags = wet_flags
+            flags = init_flags + ' -ignore_waters 0'
         else:
             raise NotImplementedError('add_hydrogens=False is not yet supported')
         pyrosetta.init(flags)
