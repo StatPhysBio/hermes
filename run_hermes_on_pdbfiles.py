@@ -1,16 +1,5 @@
 
 
-'''
-
-Change this a bunch:
-# 1. Make user select what to return. Whether probabilities, logits, embeddings, or combinations of them. --> DONE
-# 2. Make the output be a single .csv file with the res_ids and the requested data. Rows are sites --> DONE BUT NEED TO TEST
-3. Make the .txt (multi-pdb) option *optionally* split the output by pdb file, and assign pdbid name to each output file.
-# 4. Use different inference code. Namely, the inference code of TCRpMHC stuff
-# 5. Change model_dir to be the model config name
-
-'''
-
 import os, sys
 import numpy as np
 import pandas as pd

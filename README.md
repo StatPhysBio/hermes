@@ -234,6 +234,31 @@ The script provides two sets of mutations:
 1. Mutations that stabilize the pre-fusion conformation without regards for post-fusion, focusing on **core** sites only (defined as having SASA < 1 Ang).
 2. Mutations stabilize pre-fusion *and* de-stabilize post-fusion. Only run if the post-fusion structure is provided.
 
+```bash
+usage: suggest_antigen_stabilizing_mutations_hermes.py [-h] --model_version MODEL_VERSION --pre_pdbpath PRE_PDBPATH --pre_chains
+                                                       PRE_CHAINS [PRE_CHAINS ...] [--post_pdbpath POST_PDBPATH]
+                                                       [--post_chains POST_CHAINS [POST_CHAINS ...]] --outdir OUTDIR
+                                                       [--num_mutations NUM_MUTATIONS] [--maximum_muts_same_site MAXIMUM_MUTS_SAME_SITE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --model_version MODEL_VERSION
+                        HERMES model version to use
+  --pre_pdbpath PRE_PDBPATH
+                        path to pre-fusion pdb file
+  --pre_chains PRE_CHAINS [PRE_CHAINS ...]
+                        chains in the pre-fusion pdb file
+  --post_pdbpath POST_PDBPATH
+                        path to post-fusion pdb file; if not provided, the script will only suggest stabilizing mutations in the pre-
+                        fusion core
+  --post_chains POST_CHAINS [POST_CHAINS ...]
+                        chains in the post-fusion pdb file; must be provided if post_pdbpath is provided
+  --outdir OUTDIR       output directory; descriptive .csv files will be written here
+  --num_mutations NUM_MUTATIONS
+                        number of mutations to suggest
+  --maximum_muts_same_site MAXIMUM_MUTS_SAME_SITE
+                        maximum number of mutations to suggest per site
+```
 
 ## HERMES-relaxed protocol
 

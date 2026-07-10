@@ -17,12 +17,12 @@ ALL_INFO_COLUMNS = BASE_INFO_COLUMNS + EXTRA_INFO_COLUMNS
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_version', type=str, required=True)
-    parser.add_argument('--pre_pdbpath', type=str, required=True)
-    parser.add_argument('--pre_chains', type=str, required=True, nargs='+')
-    parser.add_argument('--post_pdbpath', type=str, default=None)
-    parser.add_argument('--post_chains', type=str, default=None, nargs='+')
-    parser.add_argument('--outdir', type=str, required=True)
+    parser.add_argument('--model_version', type=str, required=True, help='HERMES model version to use')
+    parser.add_argument('--pre_pdbpath', type=str, required=True, help='path to pre-fusion pdb file')
+    parser.add_argument('--pre_chains', type=str, required=True, nargs='+', help='chains in the pre-fusion pdb file')
+    parser.add_argument('--post_pdbpath', type=str, default=None, help='path to post-fusion pdb file; if not provided, the script will only suggest stabilizing mutations in the pre-fusion core')
+    parser.add_argument('--post_chains', type=str, default=None, nargs='+', help='chains in the post-fusion pdb file; must be provided if post_pdbpath is provided')
+    parser.add_argument('--outdir', type=str, required=True, help='output directory; descriptive .csv files will be written here')
     parser.add_argument('--num_mutations', type=int, default=80, help='number of mutations to suggest')
     parser.add_argument('--maximum_muts_same_site', type=int, default=3, help='maximum number of mutations to suggest per site')
     args = parser.parse_args()
