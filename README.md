@@ -268,15 +268,6 @@ To run predictions for a HERMES model using the HERMES-relaxed protocol, use the
 PyRosetta relaxations render the HERMES-relaxed protocol slow. To avoid this price, we created HERMES-amortized models, which are fine-tuned to regress over predictions made with the HERMES-relaxed protocol, leading to models that can be run very cheaply with the HERMES-fixed protocol.
 
 
-### Performance on stability prediction
-
-See below for a benchmarking of some of the models on the T2837 dataset of stability ddG effects. All models shown here use PyRosetta preprocessing:
-![Results on T2837 dataset of stability effects](images/t2837_radial_plots.png)
-
-The HERMES-relaxed protocol, used on pre-trained models like `hermes_py_050`, results in predictions with much higher recall but slightly lower precision than the HERMES-fixed protocol: i.e. more of the truly stabilizing mutations are correctly identified as such (`Delta log P > 0` when `ddG < 0`), but at the price of a higher proportion of False Positives. Specifically, we observe that the predictions made with HERMES-relaxed do not correlate with amino-acid size as much as those made with HERMES-fixed, meaning for example that the mutation `GLY -> TRP` is much more often predicted to be stabilizing by HERMES-relaxed, than by HERMES-fixed. The F1-score of HERMES-relaxed is higher than that of HERMES-fixed, making HERMES-relaxed preferrable.
-
-
-
 ## Want to fine-tune on your mutation effect dataset?
 
 Fine-tuning can be easily done in a few steps. To see examples, [download our fine-tuning data](https://doi.org/10.5281/zenodo.18249988) and place it in the `training_data` folder.
