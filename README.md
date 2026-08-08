@@ -120,7 +120,7 @@ Some common use cases:
 ```bash
 python run_hermes_on_pdbfiles.py -pd pdbs -m hermes_bp_000 -o all_sites.csv -r probas embeddings
 ```
-The above command will output two csv files: one called `all_sites.csv` with mutation probabilities, the other called `all_sites-embeddings.npy` with embeddings, for all sites in the PDB files found in the `pdbs` directory. This effectively runs the HERMES-fixed protocol.
+The above command will output two files: one called `all_sites.csv` with mutation probabilities, the other called `all_sites-embeddings.npy` with embeddings, for all sites in the PDB files found in the `pdbs` directory. This effectively runs the HERMES-fixed HEMRES-amortized protocol.
 
 **Request to process specific pdbs and chains.**
 The requested pdbs and chains should be listed in a text file, with one pdb and, optionally, a *single* chain per line. If the chain is not specified, then all chains are considered. To consider multiple chains, list the pdb multiple times with each different chain. Note that we DO NOT delete the atoms of the non-requested chains.
