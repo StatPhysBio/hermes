@@ -221,7 +221,7 @@ If desired, the script supports the use of the mutant structure to predict the m
 
 The columns are not expected to have specific names, but the names must ben provided as input to the script.
 
-Run `python mutation_effect_prediction_with_hermes.py -h` for more information on the script, and see `experiments/Protein_G/` for a simple example.
+Run `python mutation_effect_prediction_with_hermes.py -h` for more information on the script.
 
 Note that, for simplicity, the script assumes empty insertion codes. In `hermes/utils/rename_resnums.py` we provide a function `rename_resnums()` that uses BioPython to sequentially rename the resnums in a pdb file, removing insertion codes, and also saves a mapping between the new resnums, and the old resnums+icodes.
 
