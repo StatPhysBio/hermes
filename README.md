@@ -47,6 +47,11 @@ pip install .
 
 Feel free to use `pip install -e .` instead if you plan on making changes to the code and want to test them without reinstalling the package.
 
+Note that the trained models are too large to be shipped inside the python package, so they always live in the `trained_models/` directory of your clone of this repository. The command-line scripts (e.g. `run_hermes_on_pdbfiles.py`) find them automatically, since they are run from the repository. If instead you use the python API (see [Running HERMES with a function instead of a script](#running-hermes-with-a-function-instead-of-a-script)) from a script that lives outside the repository, point the `HERMES_TRAINED_MODELS_DIR` environment variable at that directory:
+```bash
+export HERMES_TRAINED_MODELS_DIR=/path/to/hermes/trained_models
+```
+
 
 Installation tips:
 1. The error `{ENVIRONMENT_PATH}/bin/../lib/libstdc++.so.6: version 'GLIBCXX_3.4.30' not found`, as required by OpenMM, can be fixed via `conda install -c conda-forge libstdcxx-ng`. See https://stackoverflow.com/questions/48453497/anaconda-libstdc-so-6-version-glibcxx-3-4-20-not-found
