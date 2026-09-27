@@ -10,6 +10,34 @@ from hermes.inference.inference_hermes import predict_from_pdbfile, load_hermes_
 HERMES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../..')
 
 
+def get_trained_models_path(model_version: str) -> str:
+    '''
+    Locate the directory holding the weights of `model_version`.
+
+    By default we look in the `trained_models` directory of the repository this
+    file lives in. The trained models are too large to ship inside the python
+    package, so when `hermes` is installed (`pip install .`) and used from
+    outside the repository, the location must be provided explicitly via the
+    HERMES_TRAINED_MODELS_DIR environment variable.
+    '''
+    trained_models_dir = os.environ.get(
+        'HERMES_TRAINED_MODELS_DIR', os.path.join(HERMES_DIR, 'trained_models')
+    )
+    trained_models_path = os.path.join(trained_models_dir, model_version)
+
+    if not os.path.isdir(trained_models_path):
+        raise FileNotFoundError(
+            f'Could not find the weights of model "{model_version}" in '
+            f'"{trained_models_path}".\n'
+            f'Trained models are not shipped with the installed python package '
+            f'because of their size. Either run from a clone of the hermes '
+            f'repository, or point the HERMES_TRAINED_MODELS_DIR environment '
+            f'variable at the `trained_models` directory of your clone.'
+        )
+
+    return trained_models_path
+
+
 def run_hermes_on_pdbfile_or_pyrosetta_pose(
     model_version: str,
     pdbfile_or_pose: str, # or Pose
@@ -71,7 +99,7 @@ def run_hermes_on_pdbfile_or_pyrosetta_pose(
     '''
 
     # get model
-    trained_models_path = os.path.join(HERMES_DIR, 'trained_models', model_version)
+    trained_models_path = get_trained_models_path(model_version)
     model_dir_list = [os.path.join(trained_models_path, model_rel_path) for model_rel_path in os.listdir(trained_models_path)]
     models, hparams, _ = load_hermes_models(model_dir_list)
 

@@ -1,0 +1,8 @@
+include README.md
+include LICENSE
+include environment.yml
+
+# Data files that are read at import time by the zernikegrams package.
+# They must end up inside site-packages, next to the modules that load them.
+include zernikegrams/structural_info/charges.rtp
+include zernikegrams/holograms/YZX_XYZ_cob.npy

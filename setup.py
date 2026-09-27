@@ -25,6 +25,15 @@ setuptools.setup(
     python_requires='>=3.9',
     packages=setuptools.find_packages(),
     include_package_data=True,
+    # These files are opened at import time, relative to the module that loads
+    # them, so they must be copied into site-packages alongside the .py files.
+    # `include_package_data=True` alone is not enough: it only picks up files
+    # that are already part of the sdist (i.e. listed in MANIFEST.in), so we
+    # declare them explicitly here as well.
+    package_data={
+        "zernikegrams.structural_info": ["charges.rtp"],
+        "zernikegrams.holograms": ["YZX_XYZ_cob.npy"],
+    },
     cmdclass={"install": CustomInstall},
     install_requires=[
         "argparse",
