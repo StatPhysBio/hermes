@@ -14,6 +14,10 @@ import simtk
 import openmm
 import openmm.app
 
+from zernikegrams.utils import log_config as logging
+
+logger = logging.getLogger(__name__)
+
 PDBIO = Bio.PDB.PDBIO()
 PDB_PARSER = Bio.PDB.PDBParser(PERMISSIVE=0, QUIET=True)
 
@@ -92,19 +96,20 @@ def _step_1_reduce(
 ):
 
     # Add hydrogens using reduce program
-    command = [
-        reduce_executable,
-        "-BUILD",
-        "-DB",
-        os.path.join(
-            os.path.dirname(os.path.dirname(reduce_executable)),
-            "reduce_wwPDB_het_dict.txt",
-        ),
-        "-Quiet",
-        pdb_input_filename,
-    ]
-    with open(os.devnull, "w") as devnull:
-        error_code = subprocess.Popen(command, stdout=temp1, stderr=devnull).wait()
+    # Source installs (e.g. ~/local/bin/reduce) keep the het dictionary at ~/local/reduce_wwPDB_het_dict.txt.
+    # Otherwise (e.g. conda's bare "reduce"), fall back to reduce's compiled-in default dictionary.
+    het_dict = os.path.join(
+        os.path.dirname(os.path.dirname(reduce_executable)),
+        "reduce_wwPDB_het_dict.txt",
+    )
+    command = [reduce_executable, "-BUILD"]
+    if os.path.isfile(het_dict):
+        command += ["-DB", het_dict]
+    command += ["-Quiet", pdb_input_filename]
+    result = subprocess.run(command, stdout=temp1, stderr=subprocess.PIPE, text=True)
+    for line in result.stderr.splitlines():
+        if "ERROR" in line:
+            logger.warning(f"reduce ({pdbid}): {line}")
     temp1.flush()
 
     first_model = PDB_PARSER.get_structure(pdbid, temp1.name)[0]
