@@ -57,6 +57,7 @@ Installation tips:
 1. The error `{ENVIRONMENT_PATH}/bin/../lib/libstdc++.so.6: version 'GLIBCXX_3.4.30' not found`, as required by OpenMM, can be fixed via `conda install -c conda-forge libstdcxx-ng`. See https://stackoverflow.com/questions/48453497/anaconda-libstdc-so-6-version-glibcxx-3-4-20-not-found
 2. We exported the environment we used in the `environment.yml` file. If you run into errors that could stem from version mismatches, we recommend using the package versions specified there.
 3. The whole installation shouldn't take longer than 10/15 minutes, with the installation of `pdbfixer` being the slowest and most variable step.
+4. The first time you run a HERMES model, the Wigner 3j coefficients are computed, which takes a few minutes. They are then cached - by default in `$XDG_CACHE_HOME/hermes`, i.e. `~/.cache/hermes` - and reused by every later run, including runs in other conda environments. Set `HERMES_CACHE_DIR` to keep them somewhere else, which is worth doing if your home directory is not shared across the nodes you run on.
 
 
 ## Provided pre-trained and fine-tuned models
