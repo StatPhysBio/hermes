@@ -258,7 +258,8 @@ def get_zernikegrams_in_parallel(folder_with_pdbs: str,
                                  parallelism: int,
                                  pdb_files_and_chains: Optional[List[Tuple[str, str]]] = None,
                                  add_same_noise_level_as_training: bool = False,
-                                 hdf5_name: Optional[str] = None):
+                                 hdf5_name: Optional[str] = None,
+                                 seed: Optional[int] = None):
     '''
     if hdf5_name is None, then a temporary file is created and returned
     '''
@@ -275,7 +276,8 @@ def get_zernikegrams_in_parallel(folder_with_pdbs: str,
                                     'fix': True,
                                     'hydrogens': 'H' in channels,
                                     'extra_molecules': hparams['extra_molecules'],
-                                    'multi_struct': 'warn'}
+                                    'multi_struct': 'warn',
+                                    'seed': seed}
 
     if add_same_noise_level_as_training:
         add_noise_kwargs = {'noise': hparams['noise'],
@@ -495,7 +497,8 @@ def predict_from_pdbfile(pdb_file_or_pose: str, # or Pose
                           chain: Optional[str] = None,
                           regions: Optional[Dict[str, Union[str, List[Tuple[str, int, str]]]]] = None,
                           ensemble_size: int = 10,
-                          model_idxs: Optional[List[int]] = None):
+                          model_idxs: Optional[List[int]] = None,
+                          seed: Optional[int] = None):
 
     if chain is not None and regions is not None:
         raise ValueError("Cannot specify both chain and regions")
@@ -550,7 +553,8 @@ def predict_from_pdbfile(pdb_file_or_pose: str, # or Pose
                                   'fix': True,
                                   'hydrogens': 'H' in channels,
                                   'extra_molecules': hparams['extra_molecules'],
-                                  'multi_struct': 'warn'}
+                                  'multi_struct': 'warn',
+                                  'seed': seed}
     
     if add_same_noise_level_as_training:
         add_noise_kwargs_list = [{'noise': hparams['noise'],

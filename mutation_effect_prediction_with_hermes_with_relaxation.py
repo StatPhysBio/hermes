@@ -14,6 +14,7 @@ from hermes.inference.inference_hermes import get_data_irreps, predict_from_zern
 
 from hermes.utils.protein_naming import ind_to_ol_size, ol_to_ind_size
 from hermes.pyrosetta_utils import PyrosettaPose
+import pyrosetta
 
 import argparse
 from hermes.utils.argparse import *
@@ -86,6 +87,9 @@ if __name__ == '__main__':
     parser.add_argument('--num_splits', type=int, default=1, help='Number of splits to make in the CSV file. Useful for parallelizing the script.')
 
     parser.add_argument('--split_idx', type=int, default=0, help='Split index')
+
+    parser.add_argument('--seed', type=int, default=None,
+                        help='Seed for the PyRosetta relaxations, making predictions reproducible. Default is None (not seeded).')
 
     parser.add_argument('--verbose', type=int, default=0, choices=[0, 1],
                         help='1 for True, 0 for False. If True, will print more information to the console.')
@@ -195,6 +199,8 @@ if __name__ == '__main__':
                 
                     # mutate and relax wts (usually the wts correspond to what's already in the structure, but let's assume it doesn't and also just apply the relaxation)
                     if not(args.relax_wt and key == 'wt'):
+                        if args.seed is not None:
+                            pyrosetta.rosetta.numeric.random.rg().set_seed(args.seed + k) # different seed for each relaxation in the ensemble
                         pose.make_mutations_and_fastrelax_around_it(mut_dict,
                                                                     backbone_flexible_distance_threshold=args.backbone_flexible_distance_threshold,
                                                                     sidechain_flexible_distance_threshold=args.sidechain_flexible_distance_threshold,

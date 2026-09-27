@@ -3,6 +3,7 @@
 # under the apache 2 license https://www.apache.org/licenses/LICENSE-2.0
 
 import os
+import random
 import subprocess
 import tempfile
 
@@ -96,16 +97,9 @@ def _step_1_reduce(
 ):
 
     # Add hydrogens using reduce program
-    # Source installs (e.g. ~/local/bin/reduce) keep the het dictionary at ~/local/reduce_wwPDB_het_dict.txt.
-    # Otherwise (e.g. conda's bare "reduce"), fall back to reduce's compiled-in default dictionary.
-    het_dict = os.path.join(
-        os.path.dirname(os.path.dirname(reduce_executable)),
-        "reduce_wwPDB_het_dict.txt",
-    )
-    command = [reduce_executable, "-BUILD"]
-    if os.path.isfile(het_dict):
-        command += ["-DB", het_dict]
-    command += ["-Quiet", pdb_input_filename]
+    # reduce gets an empty het dictionary, so it adds no hydrogens to hetero residues: pdbfixer adds those in step 3,
+    # and hydrogens from both tools clash (e.g. "Atom HO6 defined twice" on NAG). This matches the released preprocessing.
+    command = [reduce_executable, "-BUILD", "-DB", os.devnull, "-Quiet", pdb_input_filename]
     result = subprocess.run(command, stdout=temp1, stderr=subprocess.PIPE, text=True)
     for line in result.stderr.splitlines():
         if "ERROR" in line:
@@ -117,7 +111,7 @@ def _step_1_reduce(
     return first_model
 
 
-def _step_3_pdbfixer(first_model, temp3, hydrogens):
+def _step_3_pdbfixer(first_model, temp3, hydrogens, seed=None):
     for chain in first_model:
         for res in chain:
             for atom in res:
@@ -127,13 +121,17 @@ def _step_3_pdbfixer(first_model, temp3, hydrogens):
     temp3.flush()
 
     # Use PDBFixer to fix common PDB errors
-    fixer = pdbfixer.PDBFixer(temp3.name)
+    # With a seed, use the Reference platform: the multithreaded CPU platform is not bit-reproducible
+    platform = None if seed is None else openmm.Platform.getPlatformByName("Reference")
+    fixer = pdbfixer.PDBFixer(temp3.name, platform=platform)
     fixer.findMissingResidues()
     fixer.findNonstandardResidues()
     fixer.replaceNonstandardResidues()
     fixer.findMissingAtoms()
-    fixer.addMissingAtoms()
+    fixer.addMissingAtoms(seed=seed)
     if hydrogens:
+        if seed is not None:
+            random.seed(seed)  # openmm's Modeller.addHydrogens places hydrogens using the global `random` module
         fixer.addMissingHydrogens(7.0)
     return temp3, fixer
 
@@ -218,7 +216,7 @@ def _step_4_fix_numbering(fixer, temp3, temp4):
     return structure_after
 
 
-def clean_pdb(pdb_input_filename: str, out_path: str, reduce_executable: str, hydrogens: bool, extra_molecules: bool):
+def clean_pdb(pdb_input_filename: str, out_path: str, reduce_executable: str, hydrogens: bool, extra_molecules: bool, seed: int = None):
     """
     Function to clean pdbs using reduce and pdbfixer.
 
@@ -234,6 +232,9 @@ def clean_pdb(pdb_input_filename: str, out_path: str, reduce_executable: str, hy
         include hydrogens
     extra_molecules: bool
         include extra_molecules (whatever is flagged as hetero)
+    seed: int
+        seed for pdbfixer's placement of missing atoms and hydrogens, which is random.
+        If None (default), the output differs slightly between runs.
     """
 
     pdbid = pdb_input_filename.split("/")[-1].split(".pdb")[0]
@@ -268,7 +269,7 @@ def clean_pdb(pdb_input_filename: str, out_path: str, reduce_executable: str, hy
 
                 # Step 3: Replace altloc chars to " " and use pdbfixer
                 with tempfile.NamedTemporaryFile(mode="wt", delete=True) as temp3:
-                    temp_3, fixer = _step_3_pdbfixer(first_model, temp3, hydrogens)
+                    temp_3, fixer = _step_3_pdbfixer(first_model, temp3, hydrogens, seed)
 
                     # Step 4: Correct for pdbfixer not preserving insertion codes
                     with tempfile.NamedTemporaryFile(mode="wt", delete=True) as temp4:

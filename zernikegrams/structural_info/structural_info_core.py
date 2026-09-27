@@ -253,6 +253,7 @@ def get_structural_info_from_protein__biopython(
     extra_molecules: bool = True,
     multi_struct: str = "warn",
     fixed_pdb_dir: str = None,
+    seed: int = None,
 ) -> Tuple[str, Tuple[npt.NDArray, npt.NDArray, npt.NDArray, npt.NDArray]]:
     
     from Bio.PDB import (
@@ -287,7 +288,7 @@ def get_structural_info_from_protein__biopython(
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             with remove_whiteout(tmp_dir):
-                clean_pdb(pdb_file, tmp.name, REDUCER, hydrogens, extra_molecules)
+                clean_pdb(pdb_file, tmp.name, REDUCER, hydrogens, extra_molecules, seed)
 
         remove_waters_pdb(original=tmp.name, waterless=tmp.name, header=True)
 

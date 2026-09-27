@@ -75,6 +75,9 @@ if __name__ == '__main__':
                         help='Model index ensembles to ensemble. Must be between [0-9]. Overrides --ensemble_size.\
                               Currently only applicable if predicting from pdbfiles and without parallelism.')
 
+    parser.add_argument('--seed', type=int, default=None,
+                        help='Seed for the random placement of missing atoms and hydrogens when parsing pdbfiles with biopython models (hermes_bp_*), making predictions reproducible. Default is None (not seeded).')
+
     parser.add_argument('-bs', '--batch_size', type=int, default=512,
                         help='Batch size for the model (number of sites). Higher batch sizes are faster, but may not fit in memory. Default is 512.')
 
@@ -222,7 +225,7 @@ if __name__ == '__main__':
             print(f"Warning: you're running with parallelism > 0, so all sites on the requested chains will be evaluated.")
 
             pdb_files_and_chains = zip(pdb_files, chains)
-            zernikegrams_hdf5_file = get_zernikegrams_in_parallel(args.folder_with_pdbs, hparams, args.parallelism, pdb_files_and_chains=pdb_files_and_chains, add_same_noise_level_as_training=args.add_same_noise_level_as_training)
+            zernikegrams_hdf5_file = get_zernikegrams_in_parallel(args.folder_with_pdbs, hparams, args.parallelism, pdb_files_and_chains=pdb_files_and_chains, add_same_noise_level_as_training=args.add_same_noise_level_as_training, seed=args.seed)
 
             inference = predict_from_hdf5file(zernikegrams_hdf5_file, models, hparams, args.batch_size)
 
@@ -262,7 +265,7 @@ if __name__ == '__main__':
                             icode = ' '
                         regions_argument['region'].append((chain, resnum, icode))
                 
-                inference = predict_from_pdbfile(pdbfile, models, hparams, args.batch_size, chain=chain_argument, regions=regions_argument, add_same_noise_level_as_training=args.add_same_noise_level_as_training, model_idxs=args.model_idxs)
+                inference = predict_from_pdbfile(pdbfile, models, hparams, args.batch_size, chain=chain_argument, regions=regions_argument, add_same_noise_level_as_training=args.add_same_noise_level_as_training, model_idxs=args.model_idxs, seed=args.seed)
                 
                 if regions_argument is not None: # just a little annoying thing I have to do for legacy code :(
                     inference = inference['region']

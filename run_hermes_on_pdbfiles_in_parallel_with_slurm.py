@@ -35,6 +35,9 @@ if __name__ == '__main__':
     
     parser.add_argument('-bs', '--batch_size', type=int, default=512)
 
+    parser.add_argument('--seed', type=int, default=None,
+                        help='Seed for the random placement of missing atoms and hydrogens when parsing pdbfiles with biopython models (hermes_bp_*), making predictions reproducible. Default is None (not seeded).')
+
     parser.add_argument('-r', '--request', nargs='+', type=str, default=['logits'], choices=['logprobas', 'probas', 'embeddings', 'logits'],
                         help='Which data to return. Can be a combination of "logprobas", "probas", "embeddings", and "logits".')
     
@@ -97,6 +100,8 @@ if __name__ == '__main__':
                                 -r {" ".join(args.request)} \
                                 -v 1 \
                                 -bs {args.batch_size}'
+        if args.seed is not None:
+            slurm_script += f' --seed {args.seed}'
         
         slurm_script_filepath = 'job.slurm'
         with open(slurm_script_filepath, 'w') as f:

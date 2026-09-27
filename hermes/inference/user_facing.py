@@ -45,6 +45,7 @@ def run_hermes_on_pdbfile_or_pyrosetta_pose(
     request: Union[str, List[str]] = 'logits',
     batch_size: int = 256,
     ensemble_at_logits_level: bool = True,
+    seed: Optional[int] = None,
 ) -> Tuple[pd.DataFrame, Optional[np.ndarray]]:
     '''
     Args:
@@ -72,6 +73,10 @@ def run_hermes_on_pdbfile_or_pyrosetta_pose(
         As each HERMES model is an ensemble of 10 architectures, when computing probabilities and log-probabilities,
         this flag ensembles the logits before computing the softmax, as opposed to ansembling the individual models' probabilities.
         There should not be a big difference, unless the ensembled models are trained very differently.
+    
+    seed: Optional[int] (default None)
+        Seed for the random placement of missing atoms and hydrogens when parsing a pdbfile with a biopython model (hermes_bp_*).
+        Without a seed, predictions vary slightly between runs. Has no effect for pyrosetta models (hermes_py_*), which do not use this step.
     
     Returns:
     ----
@@ -130,7 +135,7 @@ def run_hermes_on_pdbfile_or_pyrosetta_pose(
                         icode = ' '
                     regions['specific_sites'].append((chain, resnum, icode))
     
-    region_name_to_results = predict_from_pdbfile(pdbfile_or_pose, models, hparams, batch_size, regions=regions, chain=None, add_same_noise_level_as_training=False, ensemble_with_noise=False)
+    region_name_to_results = predict_from_pdbfile(pdbfile_or_pose, models, hparams, batch_size, regions=regions, chain=None, add_same_noise_level_as_training=False, ensemble_with_noise=False, seed=seed)
 
     output_list = [convert_predictions_results_to_standard_dataframe(region_name_to_results[region_name], request, ensemble_at_logits_level=ensemble_at_logits_level) for region_name in region_name_to_results]
 
