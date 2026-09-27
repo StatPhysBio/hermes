@@ -55,7 +55,7 @@ def get_file_that_matches_specs(inference_dir, pdb, chain, resnum):
 import stopit
 
 @stopit.threading_timeoutable(60*10) # stop it if it takes more than 10 minutes
-def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, models, hparams, finetuning_hparams, sequence_pdb_alignment_json, embeddings_cache, batch_size, ensemble_at_logits_level, add_same_noise_level_as_training, ensemble_size, model_idxs):
+def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, models, hparams, finetuning_hparams, sequence_pdb_alignment_json, embeddings_cache, batch_size, ensemble_at_logits_level, add_same_noise_level_as_training, ensemble_size, model_idxs, seed=None):
 
     # ## do not make predictions if they already exist (nice if some error or timehout happened on some PDB)
     # if os.path.exists(os.path.join(output_dir, f"{make_filename(model_version, pdb, chain, resnums)}.npz")):
@@ -71,7 +71,7 @@ def make_prediction(output_dir, pdbdir, chain, pdb, resnums, model_version, mode
 
     requested_regions = {'region': region_ids}
     try:
-        ensemble_predictions_dict = predict_from_pdbfile(os.path.join(pdbdir, f'{pdb}.pdb'), models, hparams, batch_size, finetuning_hparams=finetuning_hparams, sequence_pdb_alignment_json=sequence_pdb_alignment_json, embeddings_cache_file=embeddings_cache, regions=requested_regions, add_same_noise_level_as_training=add_same_noise_level_as_training, ensemble_size=ensemble_size, model_idxs=model_idxs)
+        ensemble_predictions_dict = predict_from_pdbfile(os.path.join(pdbdir, f'{pdb}.pdb'), models, hparams, batch_size, finetuning_hparams=finetuning_hparams, sequence_pdb_alignment_json=sequence_pdb_alignment_json, embeddings_cache_file=embeddings_cache, regions=requested_regions, add_same_noise_level_as_training=add_same_noise_level_as_training, ensemble_size=ensemble_size, model_idxs=model_idxs, seed=seed)
     except Exception as e:
         print(f'Error making predictions for {pdb} {chain} {resnums}: {e}')
         return
@@ -168,6 +168,9 @@ if __name__ == '__main__':
     parser.add_argument('--num_splits', type=int, default=1, help='Number of splits to make in the CSV file. Useful for parallelizing the script.')
 
     parser.add_argument('--split_idx', type=int, default=0, help='Split index')
+
+    parser.add_argument('--seed', type=int, default=None,
+                        help='Seed for the random placement of missing atoms and hydrogens when parsing pdbfiles with biopython models (hermes_bp_*), making predictions reproducible. Default is None (not seeded).')
     
     # These are only used for making a scatter plot. Useful for a quick visualization. Do not need to use them
     parser.add_argument('--dms_column', type=optional_str, nargs='+', default=None,
@@ -282,7 +285,7 @@ if __name__ == '__main__':
                 resnums_chunks = [resnums[i:i+args.chunk_size] for i in range(0, len(resnums), args.chunk_size)]
                 for res_chunk in resnums_chunks:
                     # print(f'Running inference for {pdb} {chain} {res_chunk}')
-                    make_prediction(inference_dir, args.folder_with_pdbs, chain, pdb, res_chunk, args.model_version, models, hparams, finetuning_hparams, args.sequence_pdb_alignment_json, args.embeddings_cache, args.batch_size, args.ensemble_at_logits_level, args.add_same_noise_level_as_training, args.ensemble_size, args.model_idxs)
+                    make_prediction(inference_dir, args.folder_with_pdbs, chain, pdb, res_chunk, args.model_version, models, hparams, finetuning_hparams, args.sequence_pdb_alignment_json, args.embeddings_cache, args.batch_size, args.ensemble_at_logits_level, args.add_same_noise_level_as_training, args.ensemble_size, args.model_idxs, args.seed)
     end = time()
     print(f'Inference took {end - start} seconds')
 

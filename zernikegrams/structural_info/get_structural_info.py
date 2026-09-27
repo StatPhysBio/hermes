@@ -168,11 +168,13 @@ def get_structural_info_fn(pdb_file_or_pose: str, # or Pose
                             fix: bool = False,
                             hydrogens: bool = False,
                             extra_molecules: bool = True,
-                            multi_struct: str = "warn"):
+                            multi_struct: str = "warn",
+                            seed: Optional[int] = None):
 
     """
     Get structural info from a single pdb file.
     If padded_length is None, does not pad the protein.
+    seed makes the biopython parser's placement of missing atoms and hydrogens reproducible.
     """
 
     if isinstance(pdb_file_or_pose, str):
@@ -201,7 +203,8 @@ def get_structural_info_fn(pdb_file_or_pose: str, # or Pose
                     fix=fix,
                     hydrogens=hydrogens,
                     extra_molecules=extra_molecules,
-                    multi_struct=multi_struct)
+                    multi_struct=multi_struct,
+                    seed=seed)
         else:
             si = get_padded_structural_info(
                     pdb_file_or_pose,
@@ -214,7 +217,8 @@ def get_structural_info_fn(pdb_file_or_pose: str, # or Pose
                     fix=fix,
                     hydrogens=hydrogens,
                     extra_molecules=extra_molecules,
-                    multi_struct=multi_struct)
+                    multi_struct=multi_struct,
+                    seed=seed)
 
         if si[0] is None:
             print(f"Failed to process {pdb_file_or_pose if isinstance(pdb_file_or_pose, str) else 'pose'}", file=sys.stderr)
@@ -487,6 +491,7 @@ def get_padded_structural_info(
     extra_molecules: bool = True,
     multi_struct: str = "warn",
     fixed_pdb_dir: str = None,
+    seed: Optional[int] = None,
 ) -> Tuple[
     bytes, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray
 ]:
@@ -507,6 +512,7 @@ def get_padded_structural_info(
     extra_molecules: Whether or not to keep extra_molecules
     multi_struct: Behavior for handling PDBs with multiple structures
     fixed_pdb_dir: Directory to save fixed pdbs
+    seed: Seed for the biopython parser's placement of missing atoms and hydrogens
 
     Returns
     -------
@@ -537,6 +543,7 @@ def get_padded_structural_info(
             extra_molecules=extra_molecules,
             multi_struct=multi_struct,
             fixed_pdb_dir=fixed_pdb_dir,
+            seed=seed,
         )
 
         mat_structural_info = pad_structural_info(

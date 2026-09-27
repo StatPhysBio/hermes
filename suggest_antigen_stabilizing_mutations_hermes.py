@@ -25,6 +25,7 @@ if __name__ == '__main__':
     parser.add_argument('--outdir', type=str, required=True, help='output directory; descriptive .csv files will be written here')
     parser.add_argument('--num_mutations', type=int, default=80, help='number of mutations to suggest')
     parser.add_argument('--maximum_muts_same_site', type=int, default=3, help='maximum number of mutations to suggest per site')
+    parser.add_argument('--seed', type=int, default=None, help='Seed for the random placement of missing atoms and hydrogens when parsing pdbfiles with biopython models (hermes_bp_*), making predictions reproducible. Default is None (not seeded).')
     args = parser.parse_args()
 
     ## 1) bookkeeping
@@ -60,6 +61,7 @@ if __name__ == '__main__':
         chain_and_sites_list=args.pre_chains,
         request='logits',
         batch_size = 256, # can tweak this to optimize memory usage
+        seed=args.seed,
     )
     df_base_pre = pd.merge(df_results_pre, df_info, how='inner', on=BASE_INFO_COLUMNS)
     df_base_pre = df_base_pre.loc[df_base_pre['pdb'] == pre_pdbid]
@@ -72,6 +74,7 @@ if __name__ == '__main__':
             chain_and_sites_list=args.post_chains,
             request='logits',
             batch_size = 256, # can tweak this to optimize memory usage
+            seed=args.seed,
         )
         df_base_post = pd.merge(df_results_post, df_info, how='inner', on=BASE_INFO_COLUMNS)
         df_base_post = df_base_post.loc[df_base_post['pdb'] == post_pdbid]

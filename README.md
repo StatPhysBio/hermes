@@ -83,7 +83,7 @@ The script `run_hermes_on_pdbfiles.py` can be given as input a set of PDB files 
 
 ```bash
 usage: run_hermes_on_pdbfiles.py [-h] -m MODEL_VERSION [-hf HDF5_FILE] [-pd FOLDER_WITH_PDBS] [-pn FILE_WITH_PDBID_CHAIN_SITES] [-pp PARALLELISM] -o OUTPUT_FILEPATH [-r {logprobas,probas,embeddings,logits} [{logprobas,probas,embeddings,logits} ...]]
-                                 [-an {0,1}] [-el {0,1}] [-sw {0,1}] [-bs BATCH_SIZE] [-v {0,1}] [-lb {0,1}]
+                                 [-an {0,1}] [-el {0,1}] [-sw {0,1}] [--seed SEED] [-bs BATCH_SIZE] [-v {0,1}] [-lb {0,1}]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -111,6 +111,7 @@ optional arguments:
   -sw {0,1}, --subtract_wildtype_logit_or_logproba {0,1}
                         1 for True, 0 for False. If True, will subtract the wildtype logit or logproba from the logits or logprobas of all other aminoacids. Default is False. We recommend doing this when evaluating mutation effects, since those are
                         defined relative to the wild-type. Note that logits and logprobas will be equivalent after subtracting the wildtype logit or logproba.
+  --seed SEED           Seed for the random placement of missing atoms and hydrogens when parsing pdbfiles with biopython models (hermes_bp_*), making predictions reproducible. Default is None (not seeded).
   -bs BATCH_SIZE, --batch_size BATCH_SIZE
                         Batch size for the model (number of sites). Higher batch sizes are faster, but may not fit in memory. Default is 512.
   -v {0,1}, --verbose {0,1}
@@ -167,7 +168,7 @@ Below are the times to run `hermes_bp_000` on 15 PDBs using a single A40 GPU, an
 **Parallel processing with SLURM.**
 A more efficient option for parallel processing, which however requires more code to set up, is to call the script `run_hermes_on_pdbfiles.py` in parallel on subsets of the PDB files and then merge the results. This is most convenient when using a job scheduler like SLURM. We provide a script that automatically runs all HERMES models on all PDB files in a directory, by submitting a single-core job per PDB-model combination. It is the responsibility of the user to then merge the results if they so desire. The script it easily modifiable and we invite the experienced users to modify it to their needs. The script is called `run_hermes_on_pdbfiles_in_parallel_with_slurm.py`:
 ```bash
-usage: run_hermes_on_pdbfiles_in_parallel_with_slurm.py [-h] -m MODEL_NAME [-pd FOLDER_WITH_PDBS] [-df DUMPFILES_FOLDER] [-of OUTPUT_FOLDER] [-hf HERMES_FOLDER] [-bs BATCH_SIZE] [-A ACCOUNT] [-P PARTITION] [-G {0,1}] [-C NUM_CORES]
+usage: run_hermes_on_pdbfiles_in_parallel_with_slurm.py [-h] -m MODEL_NAME [-pd FOLDER_WITH_PDBS] [-df DUMPFILES_FOLDER] [-of OUTPUT_FOLDER] [-hf HERMES_FOLDER] [-bs BATCH_SIZE] [--seed SEED] [-A ACCOUNT] [-P PARTITION] [-G {0,1}] [-C NUM_CORES]
                                                         [-W WALLTIME] [-M MEMORY] [-E {0,1}] [-EA EMAIL_ADDRESS]
 
 optional arguments:
@@ -182,6 +183,7 @@ optional arguments:
   -hf HERMES_FOLDER, --hermes_folder HERMES_FOLDER
                         Path to the HERMES folder, containing the run_hermes_on_pdbfiles.py script.
   -bs BATCH_SIZE, --batch_size BATCH_SIZE
+  --seed SEED           Seed for the random placement of missing atoms and hydrogens when parsing pdbfiles with biopython models (hermes_bp_*), making predictions reproducible. Default is None (not seeded).
   -A ACCOUNT, --account ACCOUNT
   -P PARTITION, --partition PARTITION
   -G {0,1}, --use_gpu {0,1}
@@ -201,6 +203,9 @@ from hermes.inference import run_hermes_on_pdbfile_or_pyrosetta_pose
 ## from pdbfile
 df, embeddings = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', '5jzy.pdb', chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])], request=['probas', 'embeddings'])
 
+## with a biopython model, provide a seed to make predictions reproducible (see "Reproducibility" below)
+df, embeddings = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_bp_050', '5jzy.pdb', chain_and_sites_list=['L'], request='logits', seed=0)
+
 ## from pyrosetta pose - faster if you're planning on running HERMES on the same protein after making some changes (mutations / relaxations) with pyrosetta
 import pyrosetta
 init_flags = '-ignore_unrecognized_res 1 -include_current -ex1 -ex2 -mute all -include_sugars -ignore_zero_occupancy false -obey_ENDMDL 1' # flags HERMES was trained with, and used by default for inference
@@ -217,6 +222,16 @@ In `visualization` we provide two ways of visualizing the predictions of HERMES.
 
 1. `plot_logit_heatmap.py` generates heatmaps of HERMES predictions.
 2. `color_by_value.py` is intended to be used within PyMOL to visualize the structure, with each residue colored by a value of interest (e.g. the predicted probability of a specific amino acid, or the median probability across the 20 amino-acids).
+
+
+### Reproducibility
+
+When parsing pdbfiles, the biopython models (`hermes_bp_*`) use `pdbfixer` to add missing heavy atoms and hydrogens. `pdbfixer` places these atoms randomly and then energy-minimizes them, so, by default, their coordinates - and therefore HERMES predictions - differ slightly between runs. The effect on aggregate metrics is small, but individual predictions, and the ranking of the top-scoring mutations, can change between runs.
+
+To make predictions reproducible, provide a seed: `--seed` in `run_hermes_on_pdbfiles.py`, `run_hermes_on_pdbfiles_in_parallel_with_slurm.py`, `mutation_effect_prediction_with_hermes.py` and `suggest_antigen_stabilizing_mutations_hermes.py`, or `seed=` in `run_hermes_on_pdbfile_or_pyrosetta_pose()`. With a seed, `pdbfixer` runs on OpenMM's single-threaded `Reference` platform, since the multithreaded `CPU` platform is not bit-reproducible; this is slightly slower. Exact reproduction also requires the same versions of `pdbfixer` and `openmm`. Different seeds give different, equally valid placements; to reduce the variance of individual predictions, one can average predictions over several seeds. \
+The pyrosetta models (`hermes_py_*`) do not use `pdbfixer`, so the seed has no effect on them.
+
+In `mutation_effect_prediction_with_hermes_with_relaxation.py` (the HERMES-relaxed protocol, see below), `--seed` instead seeds the PyRosetta relaxations.
 
 
 ## Scoring specific mutations
@@ -245,6 +260,7 @@ usage: suggest_antigen_stabilizing_mutations_hermes.py [-h] --model_version MODE
                                                        PRE_CHAINS [PRE_CHAINS ...] [--post_pdbpath POST_PDBPATH]
                                                        [--post_chains POST_CHAINS [POST_CHAINS ...]] --outdir OUTDIR
                                                        [--num_mutations NUM_MUTATIONS] [--maximum_muts_same_site MAXIMUM_MUTS_SAME_SITE]
+                                                       [--seed SEED]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -264,6 +280,7 @@ optional arguments:
                         number of mutations to suggest
   --maximum_muts_same_site MAXIMUM_MUTS_SAME_SITE
                         maximum number of mutations to suggest per site
+  --seed SEED           Seed for the random placement of missing atoms and hydrogens when parsing pdbfiles with biopython models (hermes_bp_*), making predictions reproducible. Default is None (not seeded).
 ```
 
 ## HERMES-relaxed protocol
