@@ -63,7 +63,7 @@ def run_hermes_on_pdbfile_or_pyrosetta_pose(
         If None (default) then all sites on all chains in the pdbfile_or_pose are considered
     
     request: Union[str, List[str]] (default 'logits')
-        which output to provide, can be a single str or a list of str; options are ['logits', 'logprobas', 'probas']
+        which output to provide, can be a single str or a list of str; options are ['logits', 'logprobas', 'probas', 'embeddings']
     
     batch_size: int (default 256)
         Batch size to run the HERMES forward pass
@@ -98,6 +98,9 @@ def run_hermes_on_pdbfile_or_pyrosetta_pose(
         chain_and_sites_list = ['A', ('C', ['10', '11', '13-A', '20'])]
     '''
 
+    if isinstance(request, str):
+        request = [request]
+
     # get model
     trained_models_path = get_trained_models_path(model_version)
     model_dir_list = [os.path.join(trained_models_path, model_rel_path) for model_rel_path in os.listdir(trained_models_path)]
@@ -129,12 +132,13 @@ def run_hermes_on_pdbfile_or_pyrosetta_pose(
     
     region_name_to_results = predict_from_pdbfile(pdbfile_or_pose, models, hparams, batch_size, regions=regions, chain=None, add_same_noise_level_as_training=False, ensemble_with_noise=False)
 
-    output_list = [convert_predictions_results_to_standard_dataframe(region_name_to_results[region_name], request if isinstance(request, list) else [request], ensemble_at_logits_level=ensemble_at_logits_level) for region_name in region_name_to_results]
-    
+    output_list = [convert_predictions_results_to_standard_dataframe(region_name_to_results[region_name], request, ensemble_at_logits_level=ensemble_at_logits_level) for region_name in region_name_to_results]
+
     output_df = pd.concat([out[0] for out in output_list])
 
     if 'embeddings' in request:
-        output_embeddings = pd.concat([out[1] for out in output_list])
+        # embeddings are numpy arrays, stacked in the same region order as output_df
+        output_embeddings = np.concatenate([out[1] for out in output_list], axis=0)
     else:
         output_embeddings = None
     
