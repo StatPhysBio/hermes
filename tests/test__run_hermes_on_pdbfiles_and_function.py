@@ -126,6 +126,31 @@ def test_function__select_mix():
     print(np.allclose(df_logits, df_true_logits, atol=1e-1)) # GPU computation making these diverge a little sometimes
 
 
+def test_function__embeddings_request():
+    # multiple regions, so that outputs of different regions get concatenated
+    chain_and_sites_list = [('L', ['14', '14-A', '14-B', '14-D']), 'H']
+
+    df1, embeddings1 = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request=['probas', 'embeddings'])
+    df2, embeddings2 = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request=['embeddings', 'probas'])
+
+    # the order of the request should not matter
+    for df, embeddings in [(df1, embeddings1), (df2, embeddings2)]:
+        assert isinstance(embeddings, np.ndarray)
+        assert embeddings.ndim == 2
+        assert embeddings.shape[0] == len(df)
+        assert 'proba_A' in df.columns
+    assert np.allclose(embeddings1, embeddings2, atol=1e-3)
+
+    # embeddings alone, requested as a single string
+    df3, embeddings3 = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request='embeddings')
+    assert embeddings3.shape == embeddings1.shape
+    assert 'proba_A' not in df3.columns
+
+    # no embeddings if not requested
+    _, embeddings4 = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request=['probas'])
+    assert embeddings4 is None
+
+
 def test_function__from_pose():
 
     import pyrosetta

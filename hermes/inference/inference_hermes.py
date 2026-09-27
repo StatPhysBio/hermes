@@ -32,12 +32,12 @@ def initialize_df(request):
     indices_of_res_ids = np.array([1, 2, 0, 3, 4]) # rearrange to put pdb in front, and remove secondary structure, here as single point of truth
     res_id_fields = res_id_fields[indices_of_res_ids]
     data_columns = []
-    for request in request:
-        if request == 'probas':
+    for req in request:
+        if req == 'probas':
             data_columns.extend([f'proba_{ind_to_ol_size[i]}' for i in range(len(ind_to_ol_size))]) # len(ind_to_ol_size) == num aminoacids
-        elif request == 'logprobas':
+        elif req == 'logprobas':
             data_columns.extend([f'logproba_{ind_to_ol_size[i]}' for i in range(len(ind_to_ol_size))])
-        elif request == 'logits':
+        elif req == 'logits':
             data_columns.extend([f'logit_{ind_to_ol_size[i]}' for i in range(len(ind_to_ol_size))])
     columns = np.concatenate([res_id_fields, data_columns])
     df = pd.DataFrame(columns=columns)
@@ -55,18 +55,18 @@ def update_output(inference, request, df, indices_of_res_ids, columns, ensemble_
     inference['embeddings'] = np.mean(inference['embeddings'], axis=0)
 
     additional_data = []
-    for request in request:
-        if request == 'probas':
+    for req in request:
+        if req == 'probas':
             if ensemble_at_logits_level:
                 additional_data.append(softmax(inference['logits'].astype(np.float64), axis=1))
             else:
                 additional_data.append(inference['probabilities'])
-        elif request == 'logprobas':
+        elif req == 'logprobas':
             if ensemble_at_logits_level:
                 additional_data.append(log_softmax(inference['logits'].astype(np.float64), axis=1))
             else:
                 additional_data.append(np.log(inference['probabilities']))
-        elif request == 'logits':
+        elif req == 'logits':
             additional_data.append(inference['logits'])
     
     if additional_data:
@@ -105,6 +105,8 @@ def convert_predictions_results_to_standard_dataframe(results: Dict[str, Any], r
     '''
     results is intended to be *for a specific region*
     '''
+    if isinstance(request, str):
+        request = [request]
     df, embeddings, indices_of_res_ids, columns = initialize_df(request)
     df, embeddings = update_output(results, request, df, indices_of_res_ids, columns, ensemble_at_logits_level=ensemble_at_logits_level, embeddings=embeddings)
     df = fix_types_in_dataframe(df)
