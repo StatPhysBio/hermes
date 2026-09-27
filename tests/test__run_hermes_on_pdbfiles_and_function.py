@@ -9,7 +9,7 @@ sys.path.append('..')
 from hermes.inference import run_hermes_on_pdbfile_or_pyrosetta_pose
 from hermes.utils.protein_naming import ol_to_ind_size
 
-from constants import TEMPDIR, OUTDIR
+from constants import TEMPDIR, OUTDIR, MODEL_VERSION, PYROSETTA_MODEL_VERSION, SEED
 
 def write_pdbids_chains_sites_list(name: str, pdbids_chains_sites_list: List[Tuple[str, Optional[str], Optional[List[int]]]]):
     filepath = os.path.join(TEMPDIR, name + '.txt')
@@ -23,7 +23,7 @@ def write_pdbids_chains_sites_list(name: str, pdbids_chains_sites_list: List[Tup
                     f.write(' ' + str(site))
             f.write('\n')
 
-def get_script_call(name, m='hermes_py_050', pn=False, pp=0, sw=0):
+def get_script_call(name, m=MODEL_VERSION, pn=False, pp=0, sw=0):
 
     call = f"python -u ../run_hermes_on_pdbfiles.py \
                 -m {m} \
@@ -32,6 +32,7 @@ def get_script_call(name, m='hermes_py_050', pn=False, pp=0, sw=0):
                 -o {os.path.join(OUTDIR, name+'.csv')} \
                 -pp {pp} \
                 -sw {sw} \
+                --seed {SEED} \
             "
     if pn:
         call += f"-pn {os.path.join(TEMPDIR, name + '.txt')}"
@@ -40,42 +41,42 @@ def get_script_call(name, m='hermes_py_050', pn=False, pp=0, sw=0):
 
 
 def test__all_pdbs_in_folder():
-    call = get_script_call('test__all_pdbs_in_folder', m='hermes_py_050', pn=False, pp=0)
+    call = get_script_call('test__all_pdbs_in_folder', pn=False, pp=0)
     os.system(call)
 
 
 def test__all_pdbs_in_folder_with_subtracting_wildtype():
-    call = get_script_call('test__all_pdbs_in_folder_with_subtracting_wildtype', m='hermes_py_050', pn=False, pp=0, sw=1)
+    call = get_script_call('test__all_pdbs_in_folder_with_subtracting_wildtype', pn=False, pp=0, sw=1)
     os.system(call)
 
 def test__select_pdb():
     write_pdbids_chains_sites_list('test__select_pdb', [('1a0f', None, None)])
-    call = get_script_call('test__select_pdb', m='hermes_py_050', pn=True, pp=0)
+    call = get_script_call('test__select_pdb', pn=True, pp=0)
     os.system(call)
 
 def test__select_pdb_chain():
     write_pdbids_chains_sites_list('test__select_pdb_chain', [('1a0f', 'A', None), ('1bni', 'B', None)])
-    call = get_script_call('test__select_pdb_chain', m='hermes_py_050', pn=True, pp=0)
+    call = get_script_call('test__select_pdb_chain', pn=True, pp=0)
     os.system(call)
 
 def test__select_pdb_chain_sites():
     write_pdbids_chains_sites_list('test__select_pdb_chain_sites', [('1a0f', 'A', [3, 4, 5, 6]), ('1bni', 'B', [10, 11, 12, 13])])
-    call = get_script_call('test__select_pdb_chain_sites', m='hermes_py_050', pn=True, pp=0)
+    call = get_script_call('test__select_pdb_chain_sites', pn=True, pp=0)
     os.system(call)
 
 def test__select_pdb_chain_sites_icodes():
     write_pdbids_chains_sites_list('test__select_pdb_chain_sites_icodes', [('5jzy', 'L', [14, '14-A', '14-B', '14-D'])])
-    call = get_script_call('test__select_pdb_chain_sites_icodes', m='hermes_py_050', pn=True, pp=0)
+    call = get_script_call('test__select_pdb_chain_sites_icodes', pn=True, pp=0)
     os.system(call)
 
 def test__select_pdb_chain_parallelism():
     write_pdbids_chains_sites_list('test__select_pdb_chain_parallelism', [('1a0f', 'A', None), ('1bni', 'B', None)])
-    call = get_script_call('test__select_pdb_chain_parallelism', m='hermes_py_050', pn=True, pp=2)
+    call = get_script_call('test__select_pdb_chain_parallelism', pn=True, pp=2)
     os.system(call)
 
 def test__select_pdb_chain_sites_parallelism():
     write_pdbids_chains_sites_list('test__select_pdb_chain_sites_parallelism', [('1a0f', 'A', [3, 4, 5, 6]), ('1bni', 'B', [10, 11, 12, 13])])
-    call = get_script_call('test__select_pdb_chain_sites_parallelism', m='hermes_py_050', pn=True, pp=2)
+    call = get_script_call('test__select_pdb_chain_sites_parallelism', pn=True, pp=2)
     os.system(call)
 
 
@@ -84,7 +85,7 @@ def test_function__select_pdb_chain_sites_icodes():
 
     # first make the csv file with the script, as ground truth
     write_pdbids_chains_sites_list('test_function__select_pdb_chain_sites_icodes', [('5jzy', 'L', [14, '14-A', '14-B', '14-D'])])
-    call = get_script_call('test_function__select_pdb_chain_sites_icodes', m='hermes_py_050', pn=True, pp=0)
+    call = get_script_call('test_function__select_pdb_chain_sites_icodes', pn=True, pp=0)
     os.system(call)
     df_true = pd.read_csv(os.path.join(OUTDIR, 'test_function__select_pdb_chain_sites_icodes.csv'))
     df_true_logits = []
@@ -92,7 +93,7 @@ def test_function__select_pdb_chain_sites_icodes():
         df_true_logits.append(df_true[f'logit_{aa}'])
     df_true_logits = np.vstack(df_true_logits)
 
-    df, _ = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
+    df, _ = run_hermes_on_pdbfile_or_pyrosetta_pose(MODEL_VERSION, './pdbs/5jzy.pdb', chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])], seed=SEED)
 
     df_logits = []
     for aa in sorted(list(ol_to_ind_size.keys())):
@@ -105,7 +106,7 @@ def test_function__select_pdb_chain_sites_icodes():
 def test_function__select_mix():
     # first make the csv file with the script, as ground truth
     write_pdbids_chains_sites_list('test_function__select_mix', [('5jzy', 'L', [14, '14-A', '14-B', '14-D']), ('5jzy', 'H', None)])
-    call = get_script_call('test_function__select_mix', m='hermes_py_050', pn=True, pp=0)
+    call = get_script_call('test_function__select_mix', pn=True, pp=0)
     os.system(call)
     df_true = pd.read_csv(os.path.join(OUTDIR, 'test_function__select_mix.csv'))
     df_true_logits = []
@@ -113,7 +114,7 @@ def test_function__select_mix():
         df_true_logits.append(df_true[f'logit_{aa}'])
     df_true_logits = np.vstack(df_true_logits)
 
-    df, _ = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D']), 'H'])
+    df, _ = run_hermes_on_pdbfile_or_pyrosetta_pose(MODEL_VERSION, './pdbs/5jzy.pdb', chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D']), 'H'], seed=SEED)
 
     df_logits = []
     for aa in sorted(list(ol_to_ind_size.keys())):
@@ -130,8 +131,8 @@ def test_function__embeddings_request():
     # multiple regions, so that outputs of different regions get concatenated
     chain_and_sites_list = [('L', ['14', '14-A', '14-B', '14-D']), 'H']
 
-    df1, embeddings1 = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request=['probas', 'embeddings'])
-    df2, embeddings2 = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request=['embeddings', 'probas'])
+    df1, embeddings1 = run_hermes_on_pdbfile_or_pyrosetta_pose(MODEL_VERSION, './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request=['probas', 'embeddings'], seed=SEED)
+    df2, embeddings2 = run_hermes_on_pdbfile_or_pyrosetta_pose(MODEL_VERSION, './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request=['embeddings', 'probas'], seed=SEED)
 
     # the order of the request should not matter
     for df, embeddings in [(df1, embeddings1), (df2, embeddings2)]:
@@ -142,12 +143,12 @@ def test_function__embeddings_request():
     assert np.allclose(embeddings1, embeddings2, atol=1e-3)
 
     # embeddings alone, requested as a single string
-    df3, embeddings3 = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request='embeddings')
+    df3, embeddings3 = run_hermes_on_pdbfile_or_pyrosetta_pose(MODEL_VERSION, './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request='embeddings', seed=SEED)
     assert embeddings3.shape == embeddings1.shape
     assert 'proba_A' not in df3.columns
 
     # no embeddings if not requested
-    _, embeddings4 = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request=['probas'])
+    _, embeddings4 = run_hermes_on_pdbfile_or_pyrosetta_pose(MODEL_VERSION, './pdbs/5jzy.pdb', chain_and_sites_list=chain_and_sites_list, request=['probas'], seed=SEED)
     assert embeddings4 is None
 
 
@@ -158,8 +159,8 @@ def test_function__from_pose():
     pyrosetta.init(init_flags, silent=True)
 
     pose = pyrosetta.pose_from_pdb('./pdbs/5jzy.pdb')
-    df1, _ = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', pose, chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
-    df2, _ = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', pose, chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
+    df1, _ = run_hermes_on_pdbfile_or_pyrosetta_pose(PYROSETTA_MODEL_VERSION, pose, chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
+    df2, _ = run_hermes_on_pdbfile_or_pyrosetta_pose(PYROSETTA_MODEL_VERSION, pose, chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
 
     def get_logits(df_):
         logits = []
@@ -173,7 +174,7 @@ def test_function__from_pose():
     
     assert np.allclose(df1_logits, df2_logits, atol=1e-1)
 
-    df_from_pdb, _ = run_hermes_on_pdbfile_or_pyrosetta_pose('hermes_py_050', './pdbs/5jzy.pdb', chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
+    df_from_pdb, _ = run_hermes_on_pdbfile_or_pyrosetta_pose(PYROSETTA_MODEL_VERSION, './pdbs/5jzy.pdb', chain_and_sites_list=[('L', ['14', '14-A', '14-B', '14-D'])])
 
     df_from_pdb_logits = get_logits(df_from_pdb)
 
