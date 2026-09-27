@@ -235,8 +235,8 @@ class SO3_ConvNet(torch.nn.Module):
             y_hat = self(X)
 
             if emb_i == -1:
-                # little sanity check
-                assert np.allclose(self.output_head(embeddings).detach().cpu().numpy(), y_hat.detach().cpu().numpy())
+                # little sanity check, with tolerance since GPU computation makes the two passes diverge slightly
+                assert np.allclose(self.output_head(embeddings).detach().cpu().numpy(), y_hat.detach().cpu().numpy(), rtol=1e-3, atol=1e-3)
 
             embeddings_all.append(embeddings.detach().cpu().numpy())
             y_hat_all_logits.append(y_hat.detach().cpu().numpy())
