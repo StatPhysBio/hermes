@@ -20,6 +20,11 @@ def check_input_arguments(args):
     assert args.request, 'At least one of --request must be specified.'
     assert args.hdf5_file or args.folder_with_pdbs, 'Either --hdf5_file or --folder_with_pdbs must be specified.'
     assert not (args.hdf5_file and args.folder_with_pdbs), 'Cannot specify both --hdf5_file and --folder_with_pdbs.'
+    if args.folder_with_pdbs and not args.file_with_pdbid_chain_sites: # pdb files are only downloaded when --file_with_pdbid_chain_sites is given, so they must already be there
+        if not os.path.isdir(args.folder_with_pdbs):
+            raise FileNotFoundError(f'--folder_with_pdbs does not exist or is not a directory: {args.folder_with_pdbs}')
+        if not any(pdb.endswith('.pdb') for pdb in os.listdir(args.folder_with_pdbs)):
+            raise ValueError(f'No ".pdb" files found in --folder_with_pdbs: {args.folder_with_pdbs}')
 
 def download_pdbfile(pdbid, folder_with_pdbs, verbose):
     # downloads from RCSB
@@ -182,9 +187,9 @@ if __name__ == '__main__':
 
     elif args.folder_with_pdbs is not None:
 
-        os.makedirs(args.folder_with_pdbs, exist_ok=True) # make it if it does not exist (i.e. if user wants to download all requested pdb files)
-
         if args.file_with_pdbid_chain_sites is not None:
+            os.makedirs(args.folder_with_pdbs, exist_ok=True) # make it if it does not exist (i.e. if user wants to download all requested pdb files)
+
             pdb_files, chains, sites_list = [], [], []
             with open(args.file_with_pdbid_chain_sites, 'r') as f:
                 lines = f.readlines()
@@ -215,6 +220,9 @@ if __name__ == '__main__':
             pdb_files = [os.path.join(args.folder_with_pdbs, pdb) for pdb in os.listdir(args.folder_with_pdbs) if pdb.endswith('.pdb')]
             chains = [None for _ in pdb_files]
             sites_list = [None for _ in pdb_files]
+
+        if len(pdb_files) == 0:
+            raise ValueError(f'No pdb files to run inference on (--folder_with_pdbs: {args.folder_with_pdbs}, --file_with_pdbid_chain_sites: {args.file_with_pdbid_chain_sites}).')
 
         if args.verbose: print(f'Running inference on {len(pdb_files)} pdb files found in: {args.folder_with_pdbs}')
         
