@@ -96,16 +96,9 @@ def _step_1_reduce(
 ):
 
     # Add hydrogens using reduce program
-    # Source installs (e.g. ~/local/bin/reduce) keep the het dictionary at ~/local/reduce_wwPDB_het_dict.txt.
-    # Otherwise (e.g. conda's bare "reduce"), fall back to reduce's compiled-in default dictionary.
-    het_dict = os.path.join(
-        os.path.dirname(os.path.dirname(reduce_executable)),
-        "reduce_wwPDB_het_dict.txt",
-    )
-    command = [reduce_executable, "-BUILD"]
-    if os.path.isfile(het_dict):
-        command += ["-DB", het_dict]
-    command += ["-Quiet", pdb_input_filename]
+    # reduce gets an empty het dictionary, so it adds no hydrogens to hetero residues: pdbfixer adds those in step 3,
+    # and hydrogens from both tools clash (e.g. "Atom HO6 defined twice" on NAG). This matches the released preprocessing.
+    command = [reduce_executable, "-BUILD", "-DB", os.devnull, "-Quiet", pdb_input_filename]
     result = subprocess.run(command, stdout=temp1, stderr=subprocess.PIPE, text=True)
     for line in result.stderr.splitlines():
         if "ERROR" in line:
